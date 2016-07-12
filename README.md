@@ -11,6 +11,7 @@ This is a multi-use bash script for Linux systems to audit wireless networks.<br
 - Compatibility with many Linux distros (see requirements section).<br/>
 - Easy targeting and selection in every section.<br/>
 - Drag and drop files on console window for entering file paths.<br/>
+- Screen resolution detection for optimal windows viewing.<br/>
 - Controlled Exit. Cleaning tasks and temp files. Option to keep monitor mode if desired.<br/>
 - Multilanguage support and autodetect OS language feature (see supported languages section).<br/>
 - Help hints in every zone/menu for easy use.<br/>
@@ -49,11 +50,16 @@ Optional tools: <- *not necessary to work, only needed for some features*<br/>
 <br/>
 Update tools: <- *not necessary to work, only used for auto-update*<br/>
 `curl`<br/>
-<br/>
+
+#Known incompatibilities
 Impossible compatibility for Mac OSX at the moment. Some reasons:<br/>
 *-Bash version* <- it can be avoided upgrading to 4 or later, this is not the real problem :)<br/>
 *-Aircrack suite* <- this suite for OSX doesn't support airodump and aireplay<br/>
 *-Wireless tools* <- iwconfig doesn't exists for OSX, and airport command can't be used. It generates very different outputs<br/>
+
+Incompatible with OpenBSD and FreeBSD. They are Unix systems but they have some differences with Linux:<br/>
+*-Bash* <- They have no bash. It can be installed, this is not the real problem<br/>
+*-Wireless tools* <- iwconfig doesn't exists for these systems, they use ifconfig instead and it generates very different outputs<br/>
 
 #Disclaimer
 This script must be used only for educational purposes and Pen testing.<br/>
@@ -77,16 +83,14 @@ You can join the project:<br/>
 -Testing and feedback is needed too.<br/>
 <br/>
 *For collaborating translators:*<br/>
-There is a `.ods` file to work with. This file extension (Open Document SpreadSheet) is like an Excel but in non propietary format. It contains all the strings to translate.<br/>
-Fill or review your language strings and mark with `X` the corresponding reviewed cell each time<br/>
-Respect the color style (light red for non reviewed and soft green for reviewed cells).<br/>
+You can take the strings to translate from the code or you can ask me directly by mail. I'll inform you how to proceed.<br/>
 <br/>
 *For collaborating developers:*<br/>
 Debug mode was implemented for faster development skipping intro and initial checks. Use it setting var *"debug_mode"* to 1<br/>
 Please, respect the code style and the UTF-8 files format only using at the end of the lines LF (not CRLF).<br/>
 <br/>
 *For beta testers:*<br/>
-You can download the master version or the beta testing version from the development branch called `dev`
+You can download the master version or the beta testing version from the development branch called `dev`<br/>
 
 #Changelog
 See <a href="https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/changelog.txt" target="_blank">Changelog</a> file to review changes.<br/>

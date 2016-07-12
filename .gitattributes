@@ -8,6 +8,3 @@
 
 # Binary image formats
 *.png binary
-
-# Standard to msysgit
-*.ods diff=odf
