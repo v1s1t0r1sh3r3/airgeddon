@@ -1,3 +1,7 @@
+4.1
+Evil Twin attack added: with integrated sniffing
+Log parsing for Evil Twin attack with sniffing
+
 4.03
 Some compatibility improvements for Raspberry Pi Raspbian Linux
 Additional check for systems which use airmon-zc, now checks for lspci to avoid errors

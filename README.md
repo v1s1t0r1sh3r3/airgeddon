@@ -8,7 +8,7 @@ This is a multi-use bash script for Linux systems to audit wireless networks.<br
 - Assisted Handshake file capture.<br/>
 - Cleaning and optimizing Handshake captured files.<br/>
 - Offline password decrypt on WPA/WPA2 captured files (dictionary, bruteforce and rule based).<br/>
-- Evil Twin attacks: Only AP to sniff with external sniffer. Coming soon with integrated sniffing, sslstrip and captive portal.<br/>
+- Evil Twin attacks: Only AP to sniff with external sniffer and Evil Twin with integrated sniffing. Coming soon with sslstrip and captive portal mode.<br/>
 - Compatibility with many Linux distros (see requirements section).<br/>
 - Easy targeting and selection in every section.<br/>
 - Drag and drop files on console window for entering file paths.<br/>
@@ -50,7 +50,7 @@ Essential tools: <- *the script doesn't work if you don't have installed all of 
 ```
 iwconfig -> wireless-tools
 iw -> iw
-awk -> awk
+awk -> awk / gawk
 airmon-ng -> aircrack-ng
 airodump-ng -> aircrack-ng
 aircrack-ng -> aircrack-ng
@@ -65,6 +65,9 @@ mdk3 -> mdk3
 hashcat -> hashcat
 hostapd -> hostapd
 dhcpd -> isc-dhcp-server / dhcp-server / dhcp
+iptables -> iptables
+ettercap -> ettercap / ettercap-text-only / ettercap-graphical
+etterlog -> ettercap / ettercap-text-only / ettercap-graphical
 ```
 Update tools: <- *not necessary to work, only used for auto-update*<br/>
 ```
@@ -77,7 +80,7 @@ ethtool -> ethtool
 lspci -> pciutils
 rfkill -> rfkill
 ```
-The internal tools are highly recommended to have them installed. They improve functionality and performance. For example, xdpyinfo allow the script to detect the desktop resolution in order to print windows in a better way.
+Is highly recommended to have the internal tools installed. They improve functionality and performance. For example, xdpyinfo allow the script to detect the desktop resolution in order to print windows in a better way.
 
 #Known incompatibilities
 Impossible compatibility for Mac OSX at the moment. Some reasons:<br/>
