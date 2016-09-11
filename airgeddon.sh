@@ -21,6 +21,7 @@ declare -A lang_association=(
 								["ca"]="catalan"
 								["pt"]="portuguese"
 								["ru"]="russian"
+								["gr"]="greek"
 							)
 
 #Repository and contact vars
@@ -194,6 +195,7 @@ function language_strings() {
 	unknown_chipset["catalan"]="Desconegut"
 	unknown_chipset["portuguese"]="Desconhecido"
 	unknown_chipset["russian"]="Неизвестно"
+	unknown_chipset["greek"]="Άγνωστο"
 	unknown_chipsetvar="${unknown_chipset["$language"]}"
 
 	declare -A hintprefix
@@ -203,6 +205,7 @@ function language_strings() {
 	hintprefix["catalan"]="Consell"
 	hintprefix["portuguese"]="Conselho"
 	hintprefix["russian"]="Подсказка"
+	hintprefix["greek"]="Συμβουλή"
 	hintvar="*"${hintprefix[$language]}"*"
 	escaped_hintvar="\*"${hintprefix[$language]}"\*"
 
@@ -213,6 +216,7 @@ function language_strings() {
 	optionaltool_needed["catalan"]="Opció bloquejada, necessita: "
 	optionaltool_needed["portuguese"]="Opção bloqueado requer: "
 	optionaltool_needed["russian"]="Опция заблокирована, требуется: "
+	optionaltool_needed["greek"]="Κλειδωμένη επιλογή, χρειάζεται: "
 
 	declare -A under_construction
 	under_construction["english"]="under construction"
@@ -221,6 +225,7 @@ function language_strings() {
 	under_construction["catalan"]="en construcció"
 	under_construction["portuguese"]="em construção"
 	under_construction["russian"]="на ремонте"
+	under_construction["greek"]="υπό κατασκευή"
 	under_constructionvar="${under_construction["$language"]}"
 
 	declare -gA possible_package_names
@@ -230,6 +235,7 @@ function language_strings() {
 	possible_package_names["catalan"]="Possible nom del paquet"
 	possible_package_names["portuguese"]="Possível nome do pacote"
 	possible_package_names["russian"]="Возможное имя пакета"
+	possible_package_names["greek"]="Πιθανό όνομα πακέτου"
 
 	declare -gA et_misc_texts
 	et_misc_texts["english",0]="Evil Twin AP Info"
@@ -238,6 +244,7 @@ function language_strings() {
 	et_misc_texts["catalan",0]="Info Evil Twin AP"
 	et_misc_texts["portuguese",0]="Info Evil Twin AP"
 	et_misc_texts["russian",0]="Информация о Злом Двойнике ТД"
+	et_misc_texts["greek",0]="Πληροφορίες Evil Twin AP"
 
 	et_misc_texts["english",1]="Channel"
 	et_misc_texts["spanish",1]="Canal"
@@ -245,6 +252,7 @@ function language_strings() {
 	et_misc_texts["catalan",1]="Canal"
 	et_misc_texts["portuguese",1]="Canal"
 	et_misc_texts["russian",1]="Канал"
+	et_misc_texts["greek",1]="Κανάλι"
 
 	et_misc_texts["english",2]="Online time"
 	et_misc_texts["spanish",2]="Tiempo online"
@@ -252,6 +260,7 @@ function language_strings() {
 	et_misc_texts["catalan",2]="Temps online"
 	et_misc_texts["portuguese",2]="Tempo online"
 	et_misc_texts["russian",2]="Время онлайн"
+	et_misc_texts["greek",2]="Διαδικτυακή ώρα"
 
 	et_misc_texts["english",3]="DHCP ips given to possible connected clients"
 	et_misc_texts["spanish",3]="Ips entregadas por DHCP a posibles clientes conectados"
@@ -259,6 +268,7 @@ function language_strings() {
 	et_misc_texts["catalan",3]="Ips lliurades per DHCP a possibles clients connectats"
 	et_misc_texts["portuguese",3]="Ips entregues pelos clientes DHCP ligado ao possível"
 	et_misc_texts["russian",3]="IP, которые DHCP будет давать возможным подключённым клиентам"
+	et_misc_texts["greek",3]="Διευθύνσεις DHCP IPs που έχουν δωθεί σε πιθανούς συνδεδεμένους χρήστες"
 
 	et_misc_texts["english",4]="With this attack you have to use an external sniffer to try to obtain client passwords connected to the network"
 	et_misc_texts["spanish",4]="Con este ataque has de usar un sniffer externo para intentar obtener contraseñas de los clientes conectados a la red"
@@ -266,6 +276,7 @@ function language_strings() {
 	et_misc_texts["catalan",4]="Amb aquest atac has d'utilitzar un sniffer extern per intentar obtenir contrasenyes dels clients connectats a la xarxa"
 	et_misc_texts["portuguese",4]="Com este ataque você tem que usar um sniffer externa para tentar obter as senhas dos clientes conectados à rede"
 	et_misc_texts["russian",4]="С этой атакой вам нужно использовать внешний сниффер для попытки получить пароли клиентов, подключённых к сети"
+	et_misc_texts["greek",4]="Με αυτή την επίθεση θα πρέπει να χρησιμοποιήσετε ένα εξωτερικό sniffer για να μπορέσετε να υποκλέψετε κωδικούς από τους χρήστες που είναι συνδεδεμένοι στο δίκτυο"
 
 	et_misc_texts["english",5]="With this attack, watch the sniffer's screen to see if a password appears"
 	et_misc_texts["spanish",5]="Con este ataque, estate atento a la pantalla del sniffer para ver si aparece alguna contraseña"
@@ -273,6 +284,7 @@ function language_strings() {
 	et_misc_texts["catalan",5]="Amb aquest atac, estigues atent a la pantalla de l'sniffer per veure si apareix alguna contrasenya"
 	et_misc_texts["portuguese",5]="Com este ataque, cuidado com a tela aparece sniffer para ver se uma senha"
 	et_misc_texts["russian",5]="С этой атакой смотрите на окно сниффера, чтобы следить за появлением пароля"
+	et_misc_texts["greek",5]="Με αυτή την επίθεση, παρακολουθήστε την οθόνη του sniffer για να δείτε αν εχει εμφανιστεί κάποιος κωδικός"
 
 	et_misc_texts["english",6]="With this attack, we'll wait for a network client to provide us with the password for the wifi network in our captive portal"
 	et_misc_texts["spanish",6]="Con este ataque, esperaremos a que un cliente de la red nos provea de la contraseña de la red wifi en nuestro portal cautivo"
@@ -280,6 +292,7 @@ function language_strings() {
 	et_misc_texts["catalan",6]="Amb aquest atac, esperarem que un client de la xarxa ens proveeixi de la contrasenya de la xarxa wifi al nostre portal captiu"
 	et_misc_texts["portuguese",6]="Com este ataque, vamos esperar por um cliente de rede nos fornecer a senha para a rede wifi no nosso portal cativo"
 	et_misc_texts["russian",6]="С этой атакой вы будете ожидать, чтобы сетевые клиенты ввели пароль для Wi-Fi сети на нашем перехватывающем портале"
+	et_misc_texts["greek",6]="Με αυτή την επίθεση, θα περιμένουμε για έναν χρήστη του δικτύου να μας παρέχει με τον κωδικό του wifi στην αιχμάλωτη πύλη"
 
 	et_misc_texts["english",7]="No clients connected yet"
 	et_misc_texts["spanish",7]="No hay clientes conectados aún"
@@ -287,6 +300,7 @@ function language_strings() {
 	et_misc_texts["catalan",7]="Encara no hi han clients connectats"
 	et_misc_texts["portuguese",7]="Ainda não há clientes conectados"
 	et_misc_texts["russian",7]="Клиенты ещё не подключены"
+	et_misc_texts["greek",7]="Ακόμα, κανένας συνδεδεμένος χρήστης"
 
 	et_misc_texts["english",8]="Airgeddon. Evil Twin attack captured passwords"
 	et_misc_texts["spanish",8]="Airgeddon. Contraseñas capturadas en ataque Evil Twin"
@@ -294,6 +308,7 @@ function language_strings() {
 	et_misc_texts["catalan",8]="Airgeddon. Contrasenyes capturades amb atac Evil Twin"
 	et_misc_texts["portuguese",8]="Airgeddon. Senhas capturado no ataque ataque Evil Twin"
 	et_misc_texts["russian",8]="Airgeddon. Атака Злой Двойник захватила пароли"
+	et_misc_texts["greek",8]="Airgeddon. Η επίθεση Evil Twin κατέγραψε κωδικούς"
 
 	declare -A arr
 	arr["english",0]="This interface $interface is already in managed mode"
@@ -302,6 +317,7 @@ function language_strings() {
 	arr["catalan",0]="Aquesta interfície $interface ja està en mode managed"
 	arr["portuguese",0]="$pending_of_translation Este interface $interface já está em modo managed"
 	arr["russian",0]="Этот интерфейс $interface уже в управляемом режиме"
+	arr["greek",0]="Αυτή διεπαφή $interface είναι ήδη σε ετερόκλητη λειτουργία (Managed Mode)"
 
 	arr["english",1]="This interface $interface is not a wifi card. It doesn't support managed mode"
 	arr["spanish",1]="Esta interfaz $interface no es una tarjeta wifi. No soporta modo managed"
@@ -309,6 +325,7 @@ function language_strings() {
 	arr["catalan",1]="Aquesta interfície $interface no és una targeta wifi vàlida. No es compatible amb mode managed"
 	arr["portuguese",1]="$pending_of_translation Este interface $interface não é um cartão de wifi. Ele não suporta o modo managed"
 	arr["russian",1]="Этот интерфейс $interface не является Wi-Fi картой. Он не поддерживает управляемый режим"
+	arr["greek",1]="Αυτή η διεπαφή $interface δεν είναι κάρτα wifi. Δεν υποστηρίζει ετερόκλητη λειτουργία (Managed Mode)."
 
 	arr["english",2]="English O.S. language detected. Supported by script. Automatically changed"
 	arr["spanish",2]="Idioma Español del S.O. detectado. Soportado por el script. Se cambió automaticamente"
@@ -316,6 +333,7 @@ function language_strings() {
 	arr["catalan",2]="Idioma Català del S.O. detectat. Suportat pel script. S'ha canviat automàticament"
 	arr["portuguese",2]="$pending_of_translation Portugues do S.O. detectado. Compatível com o script. Ele é automaticamente alterada"
 	arr["russian",2]="Определена ОС на русском. Поддерживается скриптом. Автоматически изменена"
+	arr["greek",2]="Εντοπίστηκε Ελληνική γλώσσα συστήματος. Υποστηρίξιμη από το script. Άλλαξε αυτόματα"
 
 	arr["english",3]="Select target network :"
 	arr["spanish",3]="Selecciona la red objetivo :"
@@ -323,6 +341,7 @@ function language_strings() {
 	arr["catalan",3]="Selecciona la xarxa objectiu :"
 	arr["portuguese",3]="$pending_of_translation Seleccione a rede de destino :"
 	arr["russian",3]="Выбор целевой сети :"
+	arr["greek",3]="Διαλέξτε δίκτυο :"
 
 	arr["english",4]="Press [Enter] key to start attack..."
 	arr["spanish",4]="Pulse la tecla [Enter] para comenzar el ataque..."
@@ -330,6 +349,7 @@ function language_strings() {
 	arr["catalan",4]="Premi la tecla [Enter] per començar l'atac..."
 	arr["portuguese",4]="$pending_of_translation Pressione [Enter] para iniciar o ataque..."
 	arr["russian",4]="Нажмите клавижу [Enter] для начала атаки..."
+	arr["greek",4]="Πατήστε [Enter] για να ξεκινήσει η επίθεση..."
 
 	arr["english",5]="It looks like your internet connection is unstable. The script can't connect to repository. It will continue without updating..."
 	arr["spanish",5]="Parece que tu conexión a internet no es estable. El script no puede conectar al repositorio. Continuará sin actualizarse..."
@@ -337,6 +357,7 @@ function language_strings() {
 	arr["catalan",5]="Sembla que la teva connexió a internet no és estable. El script no pot connectar amb el repositori. Continuarà sense actualitzar-se..."
 	arr["portuguese",5]="$pending_of_translation Parece que sua conexão com a internet não é estável. O script não pode conectar-se ao repositório. Ele continuará sem atualizar..."
 	arr["russian",5]="Интернет-подключение кажется нестабильным. Скрипт не может подключиться к репозиторию. Он продолжит без обновления..."
+	arr["greek",5]="Φαίνεται πως η σύνδεση με το διαδίκτυο δεν είναι σταθερή. Το script δεν μπορεί να συνδεθεί στο repository. Θα συνεχίσει χωρίς να έχει ενημερωθεί..."
 
 	arr["english",6]="Welcome to airgeddon script v$airgeddon_version"
 	arr["spanish",6]="Bienvenid@ a airgeddon script v$airgeddon_version"
@@ -344,6 +365,7 @@ function language_strings() {
 	arr["catalan",6]="Benvingut a airgeddon script v$airgeddon_version"
 	arr["portuguese",6]="$pending_of_translation Bem-vindo ao script airgeddon v$airgeddon_version"
 	arr["russian",6]="Добро пожаловать в скрипт airgeddon v$airgeddon_version"
+	arr["greek",6]="Καλωσήρθατε στο airgeddon v$airgeddon_version"
 
 	arr["english",7]="This script is only for educational purposes. Be good boyz&girlz!"
 	arr["spanish",7]="Este script se ha hecho sólo con fines educativos. Sed buen@s chic@s!"
@@ -351,6 +373,7 @@ function language_strings() {
 	arr["catalan",7]="Aquest script s'ha fet només amb fins educatius. Porteu-vos bé!"
 	arr["portuguese",7]="$pending_of_translation Este script foi feito apenas para fins educacionais. Comportem-se!"
 	arr["russian",7]="Этот скрипт только для образовательных целей. Будьте хорошими мальчиками и девочками!"
+	arr["greek",7]="Αυτό το script είναι για διδακτικούς σκοπούς. Να είστε φρόνιμοι!"
 
 	arr["english",8]="Known compatible distros with this script :"
 	arr["spanish",8]="Distros conocidas compatibles con este script :"
@@ -358,6 +381,7 @@ function language_strings() {
 	arr["catalan",8]="Distros conegudes compatibles amb aquest script :"
 	arr["portuguese",8]="$pending_of_translation Distros conhecidas compatíveis com este script :"
 	arr["russian",8]="Дистрибутивы о которых известно, что они совместимы со скриптом :"
+	arr["greek",8]="Γνώστες εκδόσεις που υποστηρίζουν αυτό το script :"
 
 	arr["english",9]="Detecting system..."
 	arr["spanish",9]="Detectando sistema..."
@@ -365,6 +389,7 @@ function language_strings() {
 	arr["catalan",9]="Detecció del sistema..."
 	arr["portuguese",9]="$pending_of_translation Sistema de detecção de..."
 	arr["russian",9]="Определяем систему..."
+	arr["greek",9]="Το σύστημα εντοπίζεται..."
 
 	arr["english",10]="This interface $interface is already in monitor mode"
 	arr["spanish",10]="Esta interfaz $interface ya está en modo monitor"
@@ -372,6 +397,7 @@ function language_strings() {
 	arr["catalan",10]="Aquesta interfície ja està en mode monitor"
 	arr["portuguese",10]="$pending_of_translation Este $interface de interface já está em modo monitor"
 	arr["russian",10]="Этот интерфейс $interface уже в режиме монитора"
+	arr["greek",10]="Αυτή η διεπαφή $interface είναι ήδη σε λειτουργία παρακολούθησης (Monitor Mode)"
 
 	arr["english",11]="Exiting airgeddon script v$airgeddon_version - See you soon! :)"
 	arr["spanish",11]="Saliendo de airgeddon script v$airgeddon_version - Nos vemos pronto! :)"
@@ -379,6 +405,7 @@ function language_strings() {
 	arr["catalan",11]="Sortint de airgeddon script v$airgeddon_version - Ens veiem aviat! :)"
 	arr["portuguese",11]="$pending_of_translation Deixando airgeddon script v$airgeddon_version - Até breve! :)"
 	arr["russian",11]="Выход из скрипта airgeddon v$airgeddon_version - До встречи! :)"
+	arr["greek",11]="Κλείσιμο του airgeddon v$airgeddon_version - Αντίο :)"
 
 	arr["english",12]=${blue_color}"Interruption detected. "${green_color}"Do you really want to exit? "${normal_color}"[y/n]"
 	arr["spanish",12]=${blue_color}"Detectada interrupción. "${green_color}"¿Quieres realmente salir del script? "${normal_color}"[y/n]"
@@ -386,6 +413,7 @@ function language_strings() {
 	arr["catalan",12]=${blue_color}"Interrupció detectada. "${green_color}"¿Realment vols sortir de l'script? "${normal_color}"[y/n]"
 	arr["portuguese",12]="$pending_of_translation "${blue_color}"Interrupção detectado. "${green_color}"Você quer realmente obter o script? "${normal_color}"[y/n]"
 	arr["russian",12]=${blue_color}"Обнаружено прерывание. "${green_color}"Вы действительно хотите выйти? "${normal_color}"[y/n]"
+	arr["greek",12]=${blue_color}"Εντοπίστηκε διακοπή. "${green_color}"Είστε σίγουροι ότι θέλετε να κλείσετε το script? "${normal_color}"[y/n]"
 
 	arr["english",13]="This interface $interface is not a wifi card. It doesn't support monitor mode"
 	arr["spanish",13]="Esta interfaz $interface no es una tarjeta wifi. No soporta modo monitor"
@@ -393,6 +421,7 @@ function language_strings() {
 	arr["catalan",13]="Aquesta interfície $interface no és una targeta wifi vàlida. No es compatible amb mode monitor"
 	arr["portuguese",13]="$pending_of_translation Este interface $interface não é um cartão de wifi. Ele não suporta modo monitor"
 	arr["russian",13]="Этот интерфейс $interface не является Wi-Fi картой. Он не поддерживает режим монитора"
+	arr["greek",13]="Αυτή η διεπαφή $interface δεν έιναι κάρτα wifi. Δεν υποστηρίζει λειτουργία παρακολούθησης (Monitor Mode)"
 
 	arr["english",14]="This interface $interface is not in monitor mode"
 	arr["spanish",14]="Esta interfaz $interface no está en modo monitor"
@@ -400,6 +429,7 @@ function language_strings() {
 	arr["catalan",14]="Aquesta interfície $interface no està en mode monitor"
 	arr["portuguese",14]="$pending_of_translation Este interface $interface não está em modo monitor"
 	arr["russian",14]="Этот интерфейс $interface не в режиме монитора"
+	arr["greek",14]="Αυτή η διεπαφή $interface δεν είναι σε λειτουργία παρακολούθησης (Monitor Mode)"
 
 	arr["english",15]="The interface changed its name while putting in managed mode. Autoselected"
 	arr["spanish",15]="Esta interfaz ha cambiado su nombre al ponerlo en modo managed. Se ha seleccionado automáticamente"
@@ -407,6 +437,7 @@ function language_strings() {
 	arr["catalan",15]="Aquesta interfície ha canviat de nom al posar-la en mode managed. S'ha triat automàticament"
 	arr["portuguese",15]="$pending_of_translation Esta interface mudou seu nome, colocando-o em modo managed. Foi seleccionado automaticamente"
 	arr["russian",15]="Интерфейс изменил имя во время перевода в управляемый режим. Выбран автоматически"
+	arr["greek",15]="Η διεπάφη άλλαξε όνομα καθώς ήταν σε ετερόκλητη λειτουργία (Managed Mode). Επιλέχθηκε αυτόματα"
 
 	arr["english",16]="Managed mode now is set on $interface"
 	arr["spanish",16]="Se ha puesto el modo managed en $interface"
@@ -414,6 +445,7 @@ function language_strings() {
 	arr["catalan",16]="$interface s'ha configurat en mode managed"
 	arr["portuguese",16]="$pending_of_translation Modo managed $interface"
 	arr["russian",16]="Управляемый режим теперь установлен на $interface"
+	arr["greek",16]="Η διεπαφή $interface είναι τώρα σε ετερόκλητη λειτουργία (Managed Mode)"
 
 	arr["english",17]="Putting your interface in managed mode..."
 	arr["spanish",17]="Poniendo la interfaz en modo managed..."
@@ -421,6 +453,7 @@ function language_strings() {
 	arr["catalan",17]="Configurant la interfície en mode managed..."
 	arr["portuguese",17]="$pending_of_translation Colocar a interface em modo managed..."
 	arr["russian",17]="Переводим ваш интерфейс в управляемый режим..."
+	arr["greek",17]="Ενεργοποιείται η ετερόκλητη λειτουργία (Managed Mode) στην διεπαφή..."
 
 	arr["english",18]="Putting your interface in monitor mode..."
 	arr["spanish",18]="Poniendo la interfaz en modo monitor..."
@@ -428,6 +461,7 @@ function language_strings() {
 	arr["catalan",18]="Configurant la interfície en mode monitor..."
 	arr["portuguese",18]="$pending_of_translation Colocar a interface em modo monitor..."
 	arr["russian",18]="Переводим ваш интерфейс в режим монитора..."
+	arr["greek",18]="Ενεργοποιείται η λειτουργία παρακολούθησης (Monitor Mode) στην διεπαφή..."
 
 	arr["english",19]="Please be patient. Maybe killing some conflicting processes..."
 	arr["spanish",19]="Por favor ten paciencia. Puede que esté matando algunos procesos que podrían causar conflicto..."
@@ -435,6 +469,7 @@ function language_strings() {
 	arr["catalan",19]="Si us plau té paciència. Pot ser que s'estiguin matant alguns processos que podrien causar conflicte..."
 	arr["portuguese",19]="$pending_of_translation Por favor, seja paciente. Pode-se matar alguns processos que podem causar conflitos..."
 	arr["russian",19]="Пожалуйста, будьте терпеливы. Возможно убийство некоторых конфликтующих процессов..."
+	arr["greek",19]="Παρακαλώ δείξτε υπομονή. Ίσως κλείνουν κάποιες εμπλέκουσες διεργασίες..."
 
 	arr["english",20]="This interface $interface doesn't support monitor mode"
 	arr["spanish",20]="Esta interfaz $interface no soporta modo monitor"
@@ -442,6 +477,7 @@ function language_strings() {
 	arr["catalan",20]="Aquesta interfície $interface no suporta mode monitor"
 	arr["portuguese",20]="$pending_of_translation Essa interface $interface não suporta o modo monitor"
 	arr["russian",20]="Этот интерфейс $interface не поддерживает режим монитора"
+	arr["greek",20]="Αυτή η διεπαφή $interface δεν υποστηρίζει λειτουργία παρακολούθησης (Monitor Mode)"
 
 	arr["english",21]="The interface changed its name while putting in monitor mode. Autoselected"
 	arr["spanish",21]="Esta interfaz ha cambiado su nombre al ponerla en modo monitor. Se ha seleccionado automáticamente"
@@ -449,6 +485,7 @@ function language_strings() {
 	arr["catalan",21]="Aquesta interfície ha canviat de nom al posar-la en mode monitor. S'ha seleccionat automàticament"
 	arr["portuguese",21]="$pending_of_translation Esta interface mudou seu nome para colocar no modo monitor. Foi seleccionado automaticamente"
 	arr["russian",21]=" Этот интерфейс изменил своё имя во время перевода в режим монитора. Выбран автоматически"
+	arr["greek",21]=" Η διεπαφή άλλαξε όνομα καθώς ήταν σε λειτουργία παρακολούθησης (Monitor Mode)"
 
 	arr["english",22]="Monitor mode now is set on $interface"
 	arr["spanish",22]="Se ha puesto el modo monitor en $interface"
@@ -456,6 +493,7 @@ function language_strings() {
 	arr["catalan",22]="S'ha configurat el mode monitor en $interface"
 	arr["portuguese",22]="$pending_of_translation Ele foi colocado em $interface do modo monitor"
 	arr["russian",22]="Режим монитора установлен на $interface"
+	arr["greek",22]="Η διεπαφή $interface είναι τώρα σε λειτουργία παρακολούθησης (Monitor Mode)"
 
 	arr["english",23]="There is a problem with the interface selected. Redirecting you to script exit"
 	arr["spanish",23]="Hay un problema con la interfaz seleccionada. Redirigiendo a la salida del script"
@@ -463,6 +501,7 @@ function language_strings() {
 	arr["catalan",23]="Hi ha un problema amb la interfície seleccionada. Redirigint cap a la sortida del script"
 	arr["portuguese",23]="$pending_of_translation Existe um problema com o interface seleccionado. Redirecionando a saída do script"
 	arr["russian",23]="Проблема с выбранным интерфейсом. Перенаправляем вас к выходу из скрипта"
+	arr["greek",23]="Υπάρχει πρόβλημε με την επιλεγμένη διεπαφή. Θα καθοδηγηθείτε στην έξοδο του script."
 
 	arr["english",24]="Select an interface to work with :"
 	arr["spanish",24]="Selecciona una interfaz para trabajar con ella :"
@@ -470,6 +509,7 @@ function language_strings() {
 	arr["catalan",24]="Seleccionar una interfície per treballar-hi :"
 	arr["portuguese",24]="$pending_of_translation Seleccionar uma interface para trabalhar com :"
 	arr["russian",24]="Выберите интерфейс дял работы :"
+	arr["greek",24]="Επιλέξτε διεπαφή :"
 
 	arr["english",25]="Set channel (1-14) :"
 	arr["spanish",25]="Selecciona un canal (1-14) :"
@@ -477,6 +517,7 @@ function language_strings() {
 	arr["catalan",25]="Seleccioni un canal (1-14) :"
 	arr["portuguese",25]="$pending_of_translation Escolha um canal (1-14) :"
 	arr["russian",25]="Установите канал (1-14) :"
+	arr["greek",25]="Θέστε κανάλι (1-14) :"
 
 	arr["english",26]="Channel set to "${normal_color}"$channel"
 	arr["spanish",26]="Canal elegido "${normal_color}"$channel"
@@ -484,6 +525,7 @@ function language_strings() {
 	arr["catalan",26]="El canal "${normal_color}"$channel"${blue_color}" s'ha escollit"
 	arr["portuguese",26]="$pending_of_translation Canal "${normal_color}"$channel"${blue_color}" selecionado"
 	arr["russian",26]="Канал установлен на "${normal_color}"$channel"
+	arr["greek",26]="Το κανάλι "${normal_color}"$channel"${blue_color}" έχει επιλεχθεί"
 
 	arr["english",27]="Type target BSSID (example: 00:11:22:33:44:55) :"
 	arr["spanish",27]="Escribe el BSSID objetivo (ejemplo: 00:11:22:33:44:55) :"
@@ -491,6 +533,7 @@ function language_strings() {
 	arr["catalan",27]="Escriu el BSSID objectiu (exemple: 00:11:22:33:44:55) :"
 	arr["portuguese",27]="$pending_of_translation Escreva o BSSID alvo (exemplo: 00:11:22:33:44:55) :"
 	arr["russian",27]="Тип целевой BSSID (пример: 00:11:22:33:44:55) :"
+	arr["greek",27]="Εισάγετε BSSID στόχου (παράδειγμα: 00:11:22:33:44:55) :"
 
 	arr["english",28]="BSSID set to "${normal_color}"$bssid"
 	arr["spanish",28]="BSSID elegido "${normal_color}"$bssid"
@@ -498,6 +541,7 @@ function language_strings() {
 	arr["catalan",28]="El BSSID escollit "${normal_color}"$bssid"
 	arr["portuguese",28]="$pending_of_translation BSSID escolhida "${normal_color}"$bssid"
 	arr["russian",28]="BSSID установлена на "${normal_color}"$bssid"
+	arr["greek",28]="Το BSSID τέθηκε σε "${normal_color}"$bssid"
 
 	arr["english",29]="Type target ESSID :"
 	arr["spanish",29]="Escribe el ESSID objetivo :"
@@ -505,6 +549,7 @@ function language_strings() {
 	arr["catalan",29]="Escriu el ESSID objectiu :"
 	arr["portuguese",29]="$pending_of_translation Escreva o ESSID alvo :"
 	arr["russian",29]="Тип целевой ESSID :"
+	arr["greek",29]="Εισάγετε ESSID στόχου :"
 
 	arr["english",30]="You have selected a hidden network ESSID. Can't be used. Select another one or perform a BSSID based attack instead of this"
 	arr["spanish",30]="Has seleccionado un ESSID de red oculta. No se puede usar. Selecciona otro o ejecuta un ataque basado en BSSID en lugar de este"
@@ -512,6 +557,7 @@ function language_strings() {
 	arr["catalan",30]="Has seleccionat un ESSID de xarxa oculta. No es pot utilitzar. Selecciona un altre o executa un atac basat en BSSID en lloc d'aquest"
 	arr["portuguese",30]="$pending_of_translation Você selecionou uma rede ESSID oculto. Você não pode usar. Selecione outro ou executar um ataque com base BSSID ao invés desta"
 	arr["russian",30]="Вы выбрали сеть со скрытым ESSID. Использование невозможно. Выберите другую или вместо этой выполните атаку, основанную на BSSID"
+	arr["greek",30]="Επιλέξατε ESSID κρυφού δικτύου. Δεν μπορεί να χρησιμοποιηθεί. Επιλέξτε άλλο ή ξεκινήστε μία BSSID βασισμένη επίθεση αντί αυτού"
 
 	arr["english",31]="ESSID set to "${normal_color}"$essid"
 	arr["spanish",31]="ESSID elegido "${normal_color}"$essid"
@@ -519,6 +565,7 @@ function language_strings() {
 	arr["catalan",31]="l'ESSID seleccionat "${normal_color}"$essid"
 	arr["portuguese",31]="$pending_of_translation ESSID escolhido "${normal_color}"$essid"
 	arr["russian",31]="ESSID установлена на "${normal_color}"$essid"
+	arr["greek",31]="Το ESSID τέθηκε σε "${normal_color}"$essid"
 
 	arr["english",32]="All parameters set"
 	arr["spanish",32]="Todos los parámetros están listos"
@@ -526,6 +573,7 @@ function language_strings() {
 	arr["catalan",32]="Tots els paràmetres establerts"
 	arr["portuguese",32]="$pending_of_translation Todos os parâmetros estão prontos"
 	arr["russian",32]="Все параметры установлены"
+	arr["greek",32]="Έχουν τεθεί όλοι οι παράμετροι"
 
 	arr["english",33]="Starting attack. When started, press Ctrl+C to stop..."
 	arr["spanish",33]="Comenzando ataque. Una vez empezado, pulse Ctrl+C para pararlo..."
@@ -533,6 +581,7 @@ function language_strings() {
 	arr["catalan",33]="Començant l'atac. Un cop començat, premeu Ctrl+C per aturar-lo..."
 	arr["portuguese",33]="$pending_of_translation Começando ataque. Uma vez iniciado, pressione Ctrl+C para pará-lo..."
 	arr["russian",33]="Начало атаки. Когда начнётся, нажмите Ctrl+C для остановки..."
+	arr["greek",33]="Έναρξη επίθεσης. Όταν ξεκινήσει, πατήστε Ctrl+C για να σταματήσει..."
 
 	arr["english",34]="Selected interface $interface is in monitor mode. Attack can be performed"
 	arr["spanish",34]="La interfaz seleccionado $interface está en modo monitor. El ataque se puede realizar"
@@ -540,6 +589,7 @@ function language_strings() {
 	arr["catalan",34]="La interfície seleccionada $interface està configurada en mode monitor. L'atac es pot realitzar"
 	arr["portuguese",34]="$pending_of_translation Os $interface de interface selecionada está no modo monitor. O ataque pode ser realizada"
 	arr["russian",34]="Выбранный интерфейс $interface в режиме монитора. Можно выполнить атаку"
+	arr["greek",34]="Η επιλεγμένη διεπαφή $interface είναι σε λειτουργία παρακολούθησης (Monitor Mode). Μπορεί να γίνει επίθεση"
 
 	arr["english",35]="Deauthentication / Dissasociation mdk3 attack chosen (monitor mode needed)"
 	arr["spanish",35]="Elegido ataque de Desautenticación / Desasociación mdk3 (modo monitor requerido)"
@@ -547,6 +597,7 @@ function language_strings() {
 	arr["catalan",35]="Seleccionat atac de Desautenticació / Dissociació mdk3 (es requereix mode monitor)"
 	arr["portuguese",35]="$pending_of_translation Eleito deauth ataque / Separar mdk3 (modo monitor obrigatório)"
 	arr["russian",35]="Выбрана mdk3 атака Деаутентификации / Разъединения (необходим режим монитора)"
+	arr["greek",35]="Deauthentication / Έχει επιλεχθεί επίθεση dissasociation mdk3 (χρειάζεται λειτουργία παρακολούθησης)"
 
 	arr["english",36]="Deauthentication aireplay attack chosen (monitor mode needed)"
 	arr["spanish",36]="Elegido ataque de Desautenticación aireplay (modo monitor requerido)"
@@ -554,6 +605,7 @@ function language_strings() {
 	arr["catalan",36]="Seleccionat atac de Desautenticació aireplay (es requereix mode monitor)"
 	arr["portuguese",36]="$pending_of_translation Aireplay eleito ataque deauth (modo monitor obrigatório)"
 	arr["russian",36]="Выбрана aireplay атака Деаутентификации (необходим режим монитора)"
+	arr["greek",36]="Έχει επιλεχθεί επίθεση deauthentication aireplay (χρειάζεται λειτουργία παρακολούθησης)"
 
 	arr["english",37]="WIDS / WIPS / WDS Confusion attack chosen (monitor mode needed)"
 	arr["spanish",37]="Elegido ataque Confusion WIDS / WIPS / WDS (modo monitor requerido)"
@@ -561,6 +613,7 @@ function language_strings() {
 	arr["catalan",37]="Seleccionat atac Confusion WIDS /WIPS / WDS (es requereix mode monitor)"
 	arr["portuguese",37]="$pending_of_translation Confusão eleito ataque WIDS / WIPS / WDS (modo monitor obrigatório)"
 	arr["russian",37]="Выбрана атака запутывания WIDS / WIPS / WDS (необходим режим монитора)"
+	arr["greek",37]="Έχει επιλεχθεί επίθεση σύγχυσης WIDS / WIPS / WDS (χρειάζεται λειτουργία παρακολούθησης)"
 
 	arr["english",38]="Beacon flood attack chosen (monitor mode needed)"
 	arr["spanish",38]="Elegido ataque Beacon flood (modo monitor requerido)"
@@ -568,6 +621,7 @@ function language_strings() {
 	arr["catalan",38]="Seleccionat atac Beacon flood (es requereix mode monitor)"
 	arr["portuguese",38]="$pending_of_translation Eleito ataque de Beacon flood (modo monitor obrigatório)"
 	arr["russian",38]="Выбрана атака флуда маяками (необходим режим монитора)"
+	arr["greek",38]="Έχει επιλεχθεί επίθεση πλημμύρας δέκτη (χρειάζεται λειτουργία παρακολούθησης)"
 
 	arr["english",39]="Auth DoS attack chosen (monitor mode needed)"
 	arr["spanish",39]="Elegido ataque Auth DoS (modo monitor requerido)"
@@ -575,6 +629,7 @@ function language_strings() {
 	arr["catalan",39]="Seleccionat atac Auth DoS (es requereix mode monitor)"
 	arr["portuguese",39]="$pending_of_translation Auth escolhido ataque DoS (modo monitor obrigatório)"
 	arr["russian",39]="Выбрана атака Auth DoS (необходим режим монитора)"
+	arr["greek",39]="Έχει επιλεχθεί επίθεση Auth DoS (χρειάζεται λειτουργία παρακολούθησης)"
 
 	arr["english",40]="Michael Shutdown (TKIP) attack chosen (monitor mode needed)"
 	arr["spanish",40]="Elegido ataque Michael Shutdown (TKIP) (modo monitor requerido)"
@@ -582,6 +637,7 @@ function language_strings() {
 	arr["catalan",40]="Seleccionat atac Michael Shutdown (TKIP) (es requereix mode monitor)"
 	arr["portuguese",40]="$pending_of_translation Ataque eleito Michael Shutdown (TKIP) (modo monitor obrigatório)"
 	arr["russian",40]="Выбрана атака Michael Shutdown (TKIP) (необходим режим монитора)"
+	arr["greek",40]="Έχει επιλεχθεί επίθεση Michael Shutdown (TKIP) (χρειάζεται λειτουργία παρακολούθησης)"
 
 	arr["english",41]="No interface selected. You'll be redirected to select one"
 	arr["spanish",41]="No hay interfaz seleccionada. Serás redirigido para seleccionar una"
@@ -589,6 +645,7 @@ function language_strings() {
 	arr["catalan",41]="No hi ha intefície seleccionada. Seràs redirigit per seleccionar una"
 	arr["portuguese",41]="$pending_of_translation Sem interface selecionada. Você será redirecionado para selecionar um"
 	arr["russian",41]="Интерфейс не выбран. Вы будете перенаправлены на выбор интерфейса"
+	arr["greek",41]="Δεν έχει επιλεχθεί κάποια διεπαφή. Θα καθοδηγηθείτε για να επιλέξετε μία"
 
 	arr["english",42]="Interface "${pink_color}"$interface"${blue_color}" selected. Mode: "${pink_color}"$ifacemode"${normal_color}
 	arr["spanish",42]="Interfaz "${pink_color}"$interface"${blue_color}" seleccionada. Modo: "${pink_color}"$ifacemode"${normal_color}
@@ -596,6 +653,7 @@ function language_strings() {
 	arr["catalan",42]="Interfície "${pink_color}"$interface"${blue_color}" seleccionada. Mode: "${pink_color}"$ifacemode"${normal_color}
 	arr["portuguese",42]="$pending_of_translation Interface "${pink_color}"$interface"${blue_color}" selecionado. Modo: "${pink_color}"$ifacemode"${normal_color}
 	arr["russian",42]="Интерфейс "${pink_color}"$interface"${blue_color}" выбран. Режим: "${pink_color}"$ifacemode"${normal_color}
+	arr["greek",42]="Η διεπαφή "${pink_color}"$interface"${blue_color}" έχει επιλεχθεί. Λειτουργία: "${pink_color}"$ifacemode"${normal_color}
 
 	arr["english",43]="Selected BSSID: "${pink_color}"$bssid"${normal_color}
 	arr["spanish",43]="BSSID seleccionado: "${pink_color}"$bssid"${normal_color}
@@ -603,6 +661,7 @@ function language_strings() {
 	arr["catalan",43]="BSSID seleccionat: "${pink_color}"$bssid"${normal_color}
 	arr["portuguese",43]="$pending_of_translation BSSID selecionado: "${pink_color}"$bssid"${normal_color}
 	arr["russian",43]="Выбранный BSSID: "${pink_color}"$bssid"${normal_color}
+	arr["greek",43]="Выбранный BSSID: "${pink_color}"$bssid"${normal_color}
 
 	arr["english",44]="Selected channel: "${pink_color}"$channel"${normal_color}
 	arr["spanish",44]="Canal seleccionado: "${pink_color}"$channel"${normal_color}
@@ -610,6 +669,7 @@ function language_strings() {
 	arr["catalan",44]="Canal seleecionat: "${pink_color}"$channel"${normal_color}
 	arr["portuguese",44]="$pending_of_translation Canal selecionado: "${pink_color}"$channel"${normal_color}
 	arr["russian",44]="Выбранный канал: "${pink_color}"$channel"${normal_color}
+	arr["greek",44]="Выбранный канал: "${pink_color}"$channel"${normal_color}
 
 	arr["english",45]="Selected ESSID: "${pink_color}"$essid"${blue_color}" <- can't be used"
 	arr["spanish",45]="ESSID seleccionado: "${pink_color}"$essid"${blue_color}" <- no se puede usar"
@@ -617,6 +677,7 @@ function language_strings() {
 	arr["catalan",45]="ESSID seleccionat: "${pink_color}"$essid"${blue_color}" <- no es pot utilitzar"
 	arr["portuguese",45]="$pending_of_translation ESSID seleccionado: "${pink_color}"$essid"${blue_color}" <- não pode ser utilizada"
 	arr["russian",45]="Выбранный ESSID: "${pink_color}"$essid"${blue_color}" <- не может быть использован"
+	arr["greek",45]="Выбранный ESSID: "${pink_color}"$essid"${blue_color}" <- не может быть использован"
 
 	arr["english",46]="Selected ESSID: "${pink_color}"$essid"${normal_color}
 	arr["spanish",46]="ESSID seleccionado: "${pink_color}"$essid"${normal_color}
@@ -624,6 +685,7 @@ function language_strings() {
 	arr["catalan",46]="ESSID seleccionat: "${pink_color}"$essid"${normal_color}
 	arr["portuguese",46]="$pending_of_translation ESSID selecionado: "${pink_color}"$essid"${normal_color}
 	arr["russian",46]="Выбранный ESSID: "${pink_color}"$essid"${normal_color}
+	arr["greek",46]="Выбранный ESSID: "${pink_color}"$essid"${normal_color}
 
 	arr["english",47]="Select an option from menu :"
 	arr["spanish",47]="Selecciona una opción del menú :"
@@ -631,6 +693,7 @@ function language_strings() {
 	arr["catalan",47]="Selecciona una opció del menú :"
 	arr["portuguese",47]="$pending_of_translation Selecione uma opção de menu :"
 	arr["russian",47]="Выбор опции из меню :"
+	arr["greek",47]="Выбор опции из меню :"
 
 	arr["english",48]="1.  Select another network interface"
 	arr["spanish",48]="1.  Selecciona otra interfaz de red"
@@ -2884,13 +2947,22 @@ function language_menu() {
 		;;
 		6)
 			if [ "$language" = "russian" ]; then
-                                language_strings ${language} 251 "yellow"
-                        else
-                                language="russian"
-                        language_strings ${language} 307 "yellow"
-                        fi
-                        language_strings ${language} 115 "read"
-                ;;
+                language_strings ${language} 251 "yellow"
+            else
+                language="russian"
+                language_strings ${language} 307 "yellow"
+            fi
+            language_strings ${language} 115 "read"
+        ;;
+        7)
+			if [ "$language" = "greek" ]; then
+                language_strings ${language} 251 "yellow"
+            else
+                language="greek"
+                language_strings ${language} 307 "yellow"
+            fi
+            language_strings ${language} 115 "read"
+        ;;
 		*)
 			invalid_language_selected
 		;;
