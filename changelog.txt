@@ -1,3 +1,6 @@
+4.22
+Greek language translation added 
+
 4.2
 Evil Twin attack added: with integrated sniffing using sslstrip
 Evil Twin control window beautified and optimized for small windows
