@@ -2317,7 +2317,7 @@ function language_strings() {
 	arr["catalan",250]="Si veus alguna traducció incorrecta o vols que desapareguin les marques "${cyan_color}"$pending_of_translation"${pink_color}", escriu-me a $mail per col·laborar amb les traduccions"
 	arr["portuguese",250]="$pending_of_translation Se você ver qualquer erro de tradução ou quer marcas "${cyan_color}"$pending_of_translation"${pink_color}", escreva para $mail para colaborar com traduções desaparecer"
 	arr["russian",250]="Если вы видите плохой перевод или просто хотите снять пометку "${cyan_color}"$pending_of_translation"${pink_color}" напишите мне на $mail для сотрудничества с переводчиками"
-	arr["greek",250]="Αν δείτε κάποια κακή μετάφραση ή απλά θέλετε "${cyan_color}"$pending_of_translation"${pink_color}" κάποια σχήματα του λόγου να εξαφανιστούν, στείλτε μου στο $mail για να συνεργαστούμε με τις μεταφράσεις"
+	arr["greek",250]="Αν δείτε κάποια κακή μετάφραση ή απλά θέλετε τα σημάδια "${cyan_color}"$pending_of_translation"${pink_color}"  να εξαφανιστούν, στείλτε μου στο $mail για να συνεργαστούμε με τις μεταφράσεις"
 
 	arr["english",251]="You have chosen the same language that was selected. No changes will be done"
 	arr["spanish",251]="Has elegido el mismo idioma que estaba seleccionado. No se realizarán cambios"
@@ -3218,21 +3218,21 @@ function language_menu() {
 		;;
 		6)
 			if [ "$language" = "russian" ]; then
-                language_strings ${language} 251 "yellow"
+				language_strings ${language} 251 "yellow"
             else
                 language="russian"
                 language_strings ${language} 307 "yellow"
             fi
-            language_strings ${language} 115 "read"
+                language_strings ${language} 115 "read"
         ;;
         7)
 			if [ "$language" = "greek" ]; then
-                language_strings ${language} 251 "yellow"
+				language_strings ${language} 251 "yellow"
             else
                 language="greek"
                 language_strings ${language} 310 "yellow"
             fi
-            language_strings ${language} 115 "read"
+                language_strings ${language} 115 "read"
         ;;
 		*)
 			invalid_language_selected
