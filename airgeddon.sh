@@ -4273,7 +4273,7 @@ function check_and_set_common_algorithms() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 388 "blue"
 	declare -g calculated_pins=("${wps_default_generic_pin}")
 
@@ -4407,7 +4407,7 @@ function restore_et_interface() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 299 "blue"
 
 	disable_rfkill
@@ -4472,7 +4472,7 @@ function managed_option() {
 		language_strings "${language}" 15 "yellow"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 16 "yellow"
 	language_strings "${language}" 115 "read"
 }
@@ -4523,7 +4523,7 @@ function monitor_option() {
 		language_strings "${language}" 21 "yellow"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 22 "yellow"
 	language_strings "${language}" 115 "read"
 }
@@ -4572,7 +4572,7 @@ function language_menu() {
 	language_strings "${language}" 87 "title"
 	current_menu="language_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 81 "green"
 	print_simple_separator
 	language_strings "${language}" 79
@@ -4585,7 +4585,7 @@ function language_menu() {
 	print_hint ${current_menu}
 
 	read -r language_selected
-		echo
+	echo
 	case ${language_selected} in
 		1)
 			if [ "${language}" = "ENGLISH" ]; then
@@ -4857,7 +4857,7 @@ function read_yesno() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" "${1}" "green"
 	read -r yesno
 }
@@ -4889,7 +4889,7 @@ function read_channel() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 25 "green"
 	if [ "${1}" = "wps" ]; then
 		read -r wps_channel
@@ -4929,7 +4929,7 @@ function read_bssid() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 27 "green"
 	if [ "${1}" = "wps" ]; then
 		read -r wps_bssid
@@ -4969,7 +4969,7 @@ function read_essid() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 29 "green"
 	read -r essid
 }
@@ -4991,7 +4991,7 @@ function ask_essid() {
 		read_essid
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 31 "blue"
 }
 
@@ -5002,7 +5002,7 @@ function read_custom_pin() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 363 "green"
 	read -r custom_pin
 }
@@ -5020,7 +5020,7 @@ function ask_custom_pin() {
 		read_custom_pin
 	done
 
-		echo
+	echo
 	language_strings "${language}" 362 "blue"
 }
 
@@ -5031,7 +5031,7 @@ function read_timeout() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	case ${1} in
 		"standard")
 			language_strings "${language}" 393 "green"
@@ -5075,7 +5075,7 @@ function ask_wps_timeout() {
 		esac
 	fi
 
-		echo
+	echo
 	case ${1} in
 		"standard")
 			timeout_secs_per_pin=${timeout}
@@ -5095,12 +5095,12 @@ function exec_wps_custom_pin_bully_attack() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 32 "green"
 
 	set_wps_attack_script "bully" "custompin"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 366 "blue"
 	language_strings "${language}" 4 "read"
@@ -5115,12 +5115,12 @@ function exec_wps_custom_pin_reaver_attack() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 32 "green"
 
 	set_wps_attack_script "reaver" "custompin"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 366 "blue"
 	language_strings "${language}" 4 "read"
@@ -5135,12 +5135,12 @@ function exec_bully_pixiewps_attack() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 32 "green"
 
 	set_wps_attack_script "bully" "pixiedust"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 366 "blue"
 	language_strings "${language}" 4 "read"
@@ -5155,12 +5155,12 @@ function exec_reaver_pixiewps_attack() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 32 "green"
 
 	set_wps_attack_script "reaver" "pixiedust"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 366 "blue"
 	language_strings "${language}" 4 "read"
@@ -5175,12 +5175,12 @@ function exec_wps_bruteforce_pin_bully_attack() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 32 "green"
 
 	set_wps_attack_script "bully" "bruteforce"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 366 "blue"
 	language_strings "${language}" 4 "read"
@@ -5195,12 +5195,12 @@ function exec_wps_bruteforce_pin_reaver_attack() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 32 "green"
 
 	set_wps_attack_script "reaver" "bruteforce"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 366 "blue"
 	language_strings "${language}" 4 "read"
@@ -5245,15 +5245,15 @@ function exec_mdk3deauth() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 89 "title"
 	language_strings "${language}" 32 "green"
 
 	tmpfiles_toclean=1
 	rm -rf "${tmpdir}bl.txt" > /dev/null 2>&1
-		echo "${bssid}" > "${tmpdir}bl.txt"
+	echo "${bssid}" > "${tmpdir}bl.txt"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 4 "read"
 	recalculate_windows_sizes
@@ -5267,13 +5267,13 @@ function exec_aireplaydeauth() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 90 "title"
 	language_strings "${language}" 32 "green"
 
 	${airmon} start "${interface}" "${channel}" > /dev/null 2>&1
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 4 "read"
 	recalculate_windows_sizes
@@ -5287,11 +5287,11 @@ function exec_wdsconfusion() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 91 "title"
 	language_strings "${language}" 32 "green"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 4 "read"
 	recalculate_windows_sizes
@@ -5305,11 +5305,11 @@ function exec_beaconflood() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 92 "title"
 	language_strings "${language}" 32 "green"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 4 "read"
 	recalculate_windows_sizes
@@ -5323,11 +5323,11 @@ function exec_authdos() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 93 "title"
 	language_strings "${language}" 32 "green"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 4 "read"
 	recalculate_windows_sizes
@@ -5341,11 +5341,11 @@ function exec_michaelshutdown() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 94 "title"
 	language_strings "${language}" 32 "green"
 
-		echo
+	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 4 "read"
 	recalculate_windows_sizes
@@ -5359,7 +5359,7 @@ function mdk3_deauth_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 95 "title"
 	language_strings "${language}" 35 "green"
 
@@ -5368,7 +5368,7 @@ function mdk3_deauth_option() {
 		return
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 34 "yellow"
 
 	ask_bssid
@@ -5383,7 +5383,7 @@ function aireplay_deauth_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 96 "title"
 	language_strings "${language}" 36 "green"
 
@@ -5392,7 +5392,7 @@ function aireplay_deauth_option() {
 		return
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 34 "yellow"
 
 	ask_bssid
@@ -5407,7 +5407,7 @@ function wds_confusion_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 97 "title"
 	language_strings "${language}" 37 "green"
 
@@ -5416,7 +5416,7 @@ function wds_confusion_option() {
 		return
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 34 "yellow"
 
 	ask_essid
@@ -5431,7 +5431,7 @@ function beacon_flood_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 98 "title"
 	language_strings "${language}" 38 "green"
 
@@ -5440,7 +5440,7 @@ function beacon_flood_option() {
 		return
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 34 "yellow"
 
 	ask_essid
@@ -5455,7 +5455,7 @@ function auth_dos_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 99 "title"
 	language_strings "${language}" 39 "green"
 
@@ -5464,7 +5464,7 @@ function auth_dos_option() {
 		return
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 34 "yellow"
 
 	ask_bssid
@@ -5478,7 +5478,7 @@ function michael_shutdown_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 100 "title"
 	language_strings "${language}" 40 "green"
 
@@ -5487,7 +5487,7 @@ function michael_shutdown_option() {
 		return
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 34 "yellow"
 
 	ask_bssid
@@ -5506,7 +5506,7 @@ function wps_attacks_parameters() {
 		return 1
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 34 "yellow"
 
 	ask_bssid "wps"
@@ -6049,7 +6049,7 @@ function main_menu() {
 	language_strings "${language}" 101 "title"
 	current_menu="main_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 	language_strings "${language}" 48
@@ -6121,7 +6121,7 @@ function evil_twin_attacks_menu() {
 	language_strings "${language}" 253 "title"
 	current_menu="evil_twin_attacks_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 	language_strings "${language}" 48
@@ -6256,7 +6256,7 @@ function beef_pre_menu() {
 	language_strings "${language}" 407 "title"
 	current_menu="beef_pre_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 
@@ -6327,7 +6327,7 @@ function wps_attacks_menu() {
 	language_strings "${language}" 334 "title"
 	current_menu="wps_attacks_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 	language_strings "${language}" 48
@@ -6556,7 +6556,7 @@ function decrypt_menu() {
 	language_strings "${language}" 170 "title"
 	current_menu="decrypt_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	language_strings "${language}" 176 "separator"
 	language_strings "${language}" 172
@@ -6756,7 +6756,7 @@ function check_valid_file_to_clean() {
 		return 1
 	fi
 
-		echo "1" | aircrack-ng "${1}" 2> /dev/null | egrep "1 handshake" > /dev/null
+	echo "1" | aircrack-ng "${1}" 2> /dev/null | egrep "1 handshake" > /dev/null
 	if [ "$?" != "0" ]; then
 		return 1
 	fi
@@ -6773,7 +6773,7 @@ function check_bssid_in_captured_file() {
 
 	nets_from_file=$(echo "1" | aircrack-ng "${1}" 2> /dev/null | egrep "WPA \([1-9][0-9]? handshake" | awk '{ saved = $1; $1 = ""; print substr($0, 2) }')
 
-		echo
+	echo
 	if [ "${nets_from_file}" = "" ]; then
 		if [ ! -f "${1}" ]; then
 			language_strings "${language}" 161 "red"
@@ -6815,7 +6815,7 @@ function select_wpa_bssid_target_from_captured_file() {
 
 	nets_from_file=$(echo "1" | aircrack-ng "${1}" 2> /dev/null | egrep "WPA \([1-9][0-9]? handshake" | awk '{ saved = $1; $1 = ""; print substr($0, 2) }')
 
-		echo
+	echo
 	if [ "${nets_from_file}" = "" ]; then
 		language_strings "${language}" 216 "red"
 		language_strings "${language}" 115 "read"
@@ -6904,7 +6904,7 @@ function aircrack_dictionary_attack_option() {
 
 	manage_asking_for_dictionary_file
 
-		echo
+	echo
 	language_strings "${language}" 190 "yellow"
 	language_strings "${language}" 115 "read"
 	exec_aircrack_dictionary_attack
@@ -6931,9 +6931,9 @@ function aircrack_bruteforce_attack_option() {
 		set_charset "aircrack"
 	done
 
-		echo
+	echo
 	language_strings "${language}" 209 "blue"
-		echo
+	echo
 	language_strings "${language}" 190 "yellow"
 	language_strings "${language}" 115 "read"
 	exec_aircrack_bruteforce_attack
@@ -6955,7 +6955,7 @@ function hashcat_dictionary_attack_option() {
 
 	manage_asking_for_dictionary_file
 
-		echo
+	echo
 	language_strings "${language}" 190 "yellow"
 	language_strings "${language}" 115 "read"
 	exec_hashcat_dictionary_attack
@@ -6983,9 +6983,9 @@ function hashcat_bruteforce_attack_option() {
 		set_charset "hashcat"
 	done
 
-		echo
+	echo
 	language_strings "${language}" 209 "blue"
-		echo
+	echo
 	language_strings "${language}" 190 "yellow"
 	language_strings "${language}" 115 "read"
 	exec_hashcat_bruteforce_attack
@@ -7010,7 +7010,7 @@ function hashcat_rulebased_attack_option() {
 
 	manage_asking_for_rule_file
 
-		echo
+	echo
 	language_strings "${language}" 190 "yellow"
 	language_strings "${language}" 115 "read"
 	exec_hashcat_rulebased_attack
@@ -7143,7 +7143,7 @@ function set_captive_portal_language() {
 	print_iface_selected
 	print_et_target_vars
 	print_iface_internet_selected
-		echo
+	echo
 	language_strings "${language}" 318 "green"
 	print_simple_separator
 	language_strings "${language}" 79
@@ -7156,7 +7156,7 @@ function set_captive_portal_language() {
 	print_hint ${current_menu}
 
 	read -r captive_portal_language_selected
-		echo
+	echo
 	case ${captive_portal_language_selected} in
 		1)
 			captive_portal_language="ENGLISH"
@@ -7440,7 +7440,7 @@ function exec_et_onlyap_attack() {
 	set_control_script
 	launch_control_window
 
-		echo
+	echo
 	language_strings "${language}" 298 "yellow"
 	language_strings "${language}" 115 "read"
 
@@ -7466,7 +7466,7 @@ function exec_et_sniffing_attack() {
 	set_control_script
 	launch_control_window
 
-		echo
+	echo
 	language_strings "${language}" 298 "yellow"
 	language_strings "${language}" 115 "read"
 
@@ -7496,7 +7496,7 @@ function exec_et_sniffing_sslstrip_attack() {
 	set_control_script
 	launch_control_window
 
-		echo
+	echo
 	language_strings "${language}" 298 "yellow"
 	language_strings "${language}" 115 "read"
 
@@ -7534,7 +7534,7 @@ function exec_et_sniffing_sslstrip2_attack() {
 	set_control_script
 	launch_control_window
 
-		echo
+	echo
 	language_strings "${language}" 298 "yellow"
 	language_strings "${language}" 115 "read"
 
@@ -7571,7 +7571,7 @@ function exec_et_captive_portal_attack() {
 	launch_webserver
 	write_et_processes
 
-		echo
+	echo
 	language_strings "${language}" 298 "yellow"
 	language_strings "${language}" 115 "read"
 
@@ -7594,11 +7594,11 @@ function set_hostapd_config() {
 	et_bssid=${bssid::10}${different_mac_digit}${bssid:11:6}
 
 	{
-		echo -e "interface=${interface}"
-		echo -e "driver=nl80211"
-		echo -e "ssid=${essid}"
-		echo -e "channel=${channel}"
-		echo -e "bssid=${et_bssid}"
+	echo -e "interface=${interface}"
+	echo -e "driver=nl80211"
+	echo -e "ssid=${essid}"
+	echo -e "channel=${channel}"
+	echo -e "bssid=${et_bssid}"
 	} >> "${tmpdir}${hostapd_file}"
 }
 
@@ -7658,13 +7658,13 @@ function set_dhcp_config() {
 	ifconfig "${interface}" up
 
 	{
-		echo -e "authoritative;"
-		echo -e "default-lease-time 600;"
-		echo -e "max-lease-time 7200;"
-		echo -e "subnet ${et_ip_range} netmask ${std_c_mask} {"
-		echo -e "\toption broadcast-address ${et_broadcast_ip};"
-		echo -e "\toption routers ${et_ip_router};"
-		echo -e "\toption subnet-mask ${std_c_mask};"
+	echo -e "authoritative;"
+	echo -e "default-lease-time 600;"
+	echo -e "max-lease-time 7200;"
+	echo -e "subnet ${et_ip_range} netmask ${std_c_mask} {"
+	echo -e "\toption broadcast-address ${et_broadcast_ip};"
+	echo -e "\toption routers ${et_ip_router};"
+	echo -e "\toption subnet-mask ${std_c_mask};"
 	} >> "${tmpdir}${dhcpd_file}"
 
 	if [[ "${et_mode}" != "et_captive_portal" ]] || [[ ${captive_portal_mode} = "internet" ]]; then
@@ -7674,8 +7674,8 @@ function set_dhcp_config() {
 	fi
 
 	{
-		echo -e "\trange ${et_range_start} ${et_range_stop};"
-		echo -e "}"
+	echo -e "\trange ${et_range_start} ${et_range_stop};"
+	echo -e "}"
 	} >> "${tmpdir}${dhcpd_file}"
 
 	leases_found=0
@@ -8475,18 +8475,18 @@ function set_webserver_config() {
 	rm -rf "${tmpdir}${webserver_file}" > /dev/null 2>&1
 
 	{
-		echo -e "server.document-root = \"${tmpdir}${webdir}\"\n"
-		echo -e "server.modules = ("
-		echo -e "\"mod_cgi\""
-		echo -e ")\n"
-		echo -e "server.port = 80\n"
-		echo -e "index-file.names = ( \"${indexfile}\" )\n"
-		echo -e "server.error-handler-404 = \"/\"\n"
-		echo -e "mimetype.assign = ("
-		echo -e "\".css\" => \"text/css\","
-		echo -e "\".js\" => \"text/javascript\""
-		echo -e ")\n"
-		echo -e "cgi.assign = ( \".htm\" => \"/bin/bash\" )"
+	echo -e "server.document-root = \"${tmpdir}${webdir}\"\n"
+	echo -e "server.modules = ("
+	echo -e "\"mod_cgi\""
+	echo -e ")\n"
+	echo -e "server.port = 80\n"
+	echo -e "index-file.names = ( \"${indexfile}\" )\n"
+	echo -e "server.error-handler-404 = \"/\"\n"
+	echo -e "mimetype.assign = ("
+	echo -e "\".css\" => \"text/css\","
+	echo -e "\".js\" => \"text/javascript\""
+	echo -e ")\n"
+	echo -e "cgi.assign = ( \".htm\" => \"/bin/bash\" )"
 	} >> "${tmpdir}${webserver_file}"
 
 	sleep 2
@@ -8503,104 +8503,104 @@ function set_captive_portal_page() {
 	mkdir "${tmpdir}${webdir}" > /dev/null 2>&1
 
 	{
-		echo -e "body * {"
-		echo -e "\tbox-sizing: border-box;"
-		echo -e "\tfont-family: Helvetica, Arial, sans-serif;"
-		echo -e "}\n"
-		echo -e ".button {"
-		echo -e "\tcolor: #ffffff;"
-		echo -e "\tbackground-color: #1b5e20;"
-		echo -e "\tborder-radius: 5px;"
-		echo -e "\tcursor: pointer;"
-		echo -e "\theight: 30px;"
-		echo -e "}\n"
-		echo -e ".content {"
-		echo -e "\twidth: 100%;"
-		echo -e "\tbackground-color: #43a047;"
-		echo -e "\tpadding: 20px;"
-		echo -e "\tmargin: 15px auto 0;"
-		echo -e "\tborder-radius: 15px;"
-		echo -e "\tcolor: #ffffff;"
-		echo -e "}\n"
-		echo -e ".title {"
-		echo -e "\ttext-align: center;"
-		echo -e "\tmargin-bottom: 15px;"
-		echo -e "}\n"
-		echo -e "#password {"
-		echo -e "\twidth: 100%;"
-		echo -e "\tmargin-bottom: 5px;"
-		echo -e "\tborder-radius: 5px;"
-		echo -e "\theight: 30px;"
-		echo -e "}\n"
-		echo -e "#password:hover,"
-		echo -e "#password:focus {"
-		echo -e "\tbox-shadow: 0 0 10px #69f0ae;"
-		echo -e "}\n"
-		echo -e ".bold {"
-		echo -e "\tfont-weight: bold;"
-		echo -e "}\n"
-		echo -e "#showpass {"
-		echo -e "\tvertical-align: top;"
-		echo -e "}\n"
+	echo -e "body * {"
+	echo -e "\tbox-sizing: border-box;"
+	echo -e "\tfont-family: Helvetica, Arial, sans-serif;"
+	echo -e "}\n"
+	echo -e ".button {"
+	echo -e "\tcolor: #ffffff;"
+	echo -e "\tbackground-color: #1b5e20;"
+	echo -e "\tborder-radius: 5px;"
+	echo -e "\tcursor: pointer;"
+	echo -e "\theight: 30px;"
+	echo -e "}\n"
+	echo -e ".content {"
+	echo -e "\twidth: 100%;"
+	echo -e "\tbackground-color: #43a047;"
+	echo -e "\tpadding: 20px;"
+	echo -e "\tmargin: 15px auto 0;"
+	echo -e "\tborder-radius: 15px;"
+	echo -e "\tcolor: #ffffff;"
+	echo -e "}\n"
+	echo -e ".title {"
+	echo -e "\ttext-align: center;"
+	echo -e "\tmargin-bottom: 15px;"
+	echo -e "}\n"
+	echo -e "#password {"
+	echo -e "\twidth: 100%;"
+	echo -e "\tmargin-bottom: 5px;"
+	echo -e "\tborder-radius: 5px;"
+	echo -e "\theight: 30px;"
+	echo -e "}\n"
+	echo -e "#password:hover,"
+	echo -e "#password:focus {"
+	echo -e "\tbox-shadow: 0 0 10px #69f0ae;"
+	echo -e "}\n"
+	echo -e ".bold {"
+	echo -e "\tfont-weight: bold;"
+	echo -e "}\n"
+	echo -e "#showpass {"
+	echo -e "\tvertical-align: top;"
+	echo -e "}\n"
 	} >> "${tmpdir}${webdir}${cssfile}"
 
 	{
-		echo -e "(function() {\n"
-		echo -e "\tvar onLoad = function() {"
-		echo -e "\t\tvar formElement = document.getElementById(\"loginform\");"
-		echo -e "\t\tif (formElement != null) {"
-		echo -e "\t\t\tvar password = document.getElementById(\"password\");"
-		echo -e "\t\t\tvar showpass = function() {"
-		echo -e "\t\t\t\tpassword.setAttribute(\"type\", password.type == \"text\" ? \"password\" : \"text\");"
-		echo -e "\t\t\t}"
-		echo -e "\t\t\tdocument.getElementById(\"showpass\").addEventListener(\"click\", showpass);"
-		echo -e "\t\t\tdocument.getElementById(\"showpass\").checked = false;\n"
-		echo -e "\t\t\tvar validatepass = function() {"
-		echo -e "\t\t\t\tif (password.value.length < 8) {"
-		echo -e "\t\t\t\t\talert(\"${et_misc_texts[${captive_portal_language},16]}\");"
-		echo -e "\t\t\t\t}"
-		echo -e "\t\t\t\telse {"
-		echo -e "\t\t\t\t\tformElement.submit();"
-		echo -e "\t\t\t\t}"
-		echo -e "\t\t\t}"
-		echo -e "\t\t\tdocument.getElementById(\"formbutton\").addEventListener(\"click\", validatepass);"
-		echo -e "\t\t}"
-		echo -e "\t};\n"
-		echo -e "\tdocument.readyState != 'loading' ? onLoad() : document.addEventListener('DOMContentLoaded', onLoad);"
-		echo -e "})();\n"
-		echo -e "function redirect() {"
-		echo -e "\tdocument.location = \"${indexfile}\";"
-		echo -e "}\n"
+	echo -e "(function() {\n"
+	echo -e "\tvar onLoad = function() {"
+	echo -e "\t\tvar formElement = document.getElementById(\"loginform\");"
+	echo -e "\t\tif (formElement != null) {"
+	echo -e "\t\t\tvar password = document.getElementById(\"password\");"
+	echo -e "\t\t\tvar showpass = function() {"
+	echo -e "\t\t\t\tpassword.setAttribute(\"type\", password.type == \"text\" ? \"password\" : \"text\");"
+	echo -e "\t\t\t}"
+	echo -e "\t\t\tdocument.getElementById(\"showpass\").addEventListener(\"click\", showpass);"
+	echo -e "\t\t\tdocument.getElementById(\"showpass\").checked = false;\n"
+	echo -e "\t\t\tvar validatepass = function() {"
+	echo -e "\t\t\t\tif (password.value.length < 8) {"
+	echo -e "\t\t\t\t\talert(\"${et_misc_texts[${captive_portal_language},16]}\");"
+	echo -e "\t\t\t\t}"
+	echo -e "\t\t\t\telse {"
+	echo -e "\t\t\t\t\tformElement.submit();"
+	echo -e "\t\t\t\t}"
+	echo -e "\t\t\t}"
+	echo -e "\t\t\tdocument.getElementById(\"formbutton\").addEventListener(\"click\", validatepass);"
+	echo -e "\t\t}"
+	echo -e "\t};\n"
+	echo -e "\tdocument.readyState != 'loading' ? onLoad() : document.addEventListener('DOMContentLoaded', onLoad);"
+	echo -e "})();\n"
+	echo -e "function redirect() {"
+	echo -e "\tdocument.location = \"${indexfile}\";"
+	echo -e "}\n"
 	} >> "${tmpdir}${webdir}${jsfile}"
 
 	{
-		echo -e "#!/bin/bash"
-		echo -e "echo '<!DOCTYPE html>'"
-		echo -e "echo '<html>'"
-		echo -e "echo -e '\t<head>'"
-		echo -e "echo -e '\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>'"
-		echo -e "echo -e '\t\t<title>${et_misc_texts[${captive_portal_language},15]}</title>'"
-		echo -e "echo -e '\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"${cssfile}\"/>'"
-		echo -e "echo -e '\t\t<script type=\"text/javascript\" src=\"${jsfile}\"></script>'"
-		echo -e "echo -e '\t</head>'"
-		echo -e "echo -e '\t<body>'"
-		echo -e "echo -e '\t\t<div class=\"content\">'"
-		echo -e "echo -e '\t\t\t<form method=\"post\" id=\"loginform\" name=\"loginform\" action=\"check.htm\">'"
-		echo -e "echo -e '\t\t\t\t<div class=\"title\">'"
-		echo -e "echo -e '\t\t\t\t\t<p>${et_misc_texts[${captive_portal_language},9]}</p>'"
-		echo -e "echo -e '\t\t\t\t\t<span class=\"bold\">${essid}</span>'"
-		echo -e "echo -e '\t\t\t\t</div>'"
-		echo -e "echo -e '\t\t\t\t<p>${et_misc_texts[${captive_portal_language},10]}</p>'"
-		echo -e "echo -e '\t\t\t\t<label>'"
-		echo -e "echo -e '\t\t\t\t\t<input id=\"password\" type=\"password\" name=\"password\" maxlength=\"63\" size=\"20\" placeholder=\"${et_misc_texts[${captive_portal_language},11]}\"/><br/>'"
-		echo -e "echo -e '\t\t\t\t</label>'"
-		echo -e "echo -e '\t\t\t\t<p>${et_misc_texts[${captive_portal_language},12]} <input type=\"checkbox\" id=\"showpass\"/></p>'"
-		echo -e "echo -e '\t\t\t\t<input class=\"button\" id=\"formbutton\" type=\"button\" value=\"${et_misc_texts[${captive_portal_language},13]}\"/>'"
-		echo -e "echo -e '\t\t\t</form>'"
-		echo -e "echo -e '\t\t</div>'"
-		echo -e "echo -e '\t</body>'"
-		echo -e "echo '</html>'"
-		echo -e "exit 0"
+	echo -e "#!/bin/bash"
+	echo -e "echo '<!DOCTYPE html>'"
+	echo -e "echo '<html>'"
+	echo -e "echo -e '\t<head>'"
+	echo -e "echo -e '\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>'"
+	echo -e "echo -e '\t\t<title>${et_misc_texts[${captive_portal_language},15]}</title>'"
+	echo -e "echo -e '\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"${cssfile}\"/>'"
+	echo -e "echo -e '\t\t<script type=\"text/javascript\" src=\"${jsfile}\"></script>'"
+	echo -e "echo -e '\t</head>'"
+	echo -e "echo -e '\t<body>'"
+	echo -e "echo -e '\t\t<div class=\"content\">'"
+	echo -e "echo -e '\t\t\t<form method=\"post\" id=\"loginform\" name=\"loginform\" action=\"check.htm\">'"
+	echo -e "echo -e '\t\t\t\t<div class=\"title\">'"
+	echo -e "echo -e '\t\t\t\t\t<p>${et_misc_texts[${captive_portal_language},9]}</p>'"
+	echo -e "echo -e '\t\t\t\t\t<span class=\"bold\">${essid}</span>'"
+	echo -e "echo -e '\t\t\t\t</div>'"
+	echo -e "echo -e '\t\t\t\t<p>${et_misc_texts[${captive_portal_language},10]}</p>'"
+	echo -e "echo -e '\t\t\t\t<label>'"
+	echo -e "echo -e '\t\t\t\t\t<input id=\"password\" type=\"password\" name=\"password\" maxlength=\"63\" size=\"20\" placeholder=\"${et_misc_texts[${captive_portal_language},11]}\"/><br/>'"
+	echo -e "echo -e '\t\t\t\t</label>'"
+	echo -e "echo -e '\t\t\t\t<p>${et_misc_texts[${captive_portal_language},12]} <input type=\"checkbox\" id=\"showpass\"/></p>'"
+	echo -e "echo -e '\t\t\t\t<input class=\"button\" id=\"formbutton\" type=\"button\" value=\"${et_misc_texts[${captive_portal_language},13]}\"/>'"
+	echo -e "echo -e '\t\t\t</form>'"
+	echo -e "echo -e '\t\t</div>'"
+	echo -e "echo -e '\t</body>'"
+	echo -e "echo '</html>'"
+	echo -e "exit 0"
 	} >> "${tmpdir}${webdir}${indexfile}"
 
 	exec 4>"${tmpdir}${webdir}${checkfile}"
@@ -8772,68 +8772,68 @@ function set_beef_config() {
 
 	{
 		echo -e "beef:"
-		echo -e "    version: 'airgeddon integrated'"
-		echo -e "    debug: false"
-		echo -e "    client_debug: false"
-		echo -e "    crypto_default_value_length: 80"
-		echo -e "    restrictions:"
-		echo -e "        permitted_hooking_subnet: \"${et_ip_range}/24\""
-		echo -e "        permitted_ui_subnet: \"0.0.0.0/0\""
+	echo -e "    version: 'airgeddon integrated'"
+	echo -e "    debug: false"
+	echo -e "    client_debug: false"
+	echo -e "    crypto_default_value_length: 80"
+	echo -e "    restrictions:"
+	echo -e "        permitted_hooking_subnet: \"${et_ip_range}/24\""
+	echo -e "        permitted_ui_subnet: \"0.0.0.0/0\""
 	#TODO: This should be permitted_ui_subnet: "127.0.0.1/32" but is not possible to use it with bettercap's proxy because of a bug
 	#https://github.com/evilsocket/bettercap/issues/356
 	#https://github.com/beefproject/beef/issues/1337
-		echo -e "    http:"
-		echo -e "        debug: false"
-		echo -e "        host: \"0.0.0.0\""
-		echo -e "        port: \"${beef_port}\""
-		echo -e "        dns_host: \"localhost\""
-		echo -e "        dns_port: 53"
-		echo -e "        web_ui_basepath: \"/ui\""
-		echo -e "        hook_file: \"/${jshookfile}\""
-		echo -e "        hook_session_name: \"BEEFHOOK\""
-		echo -e "        session_cookie_name: \"BEEFSESSION\""
-		echo -e "        web_server_imitation:"
-		echo -e "            enable: true"
-		echo -e "            type: \"apache\""
-		echo -e "            hook_404: false"
-		echo -e "            hook_root: false"
-		echo -e "    database:"
-		echo -e "        driver: \"sqlite\""
-		echo -e "        db_file: \"${beef_db}\""
-		echo -e "    credentials:"
-		echo -e "        user: \"beef\""
-		echo -e "        passwd: \"${beef_pass}\""
-		echo -e "    autorun:"
-		echo -e "        enable: true"
-		echo -e "        result_poll_interval: 300"
-		echo -e "        result_poll_timeout: 5000"
-		echo -e "        continue_after_timeout: true"
-		echo -e "    dns_hostname_lookup: false"
-		echo -e "    integration:"
-		echo -e "        phishing_frenzy:"
-		echo -e "            enable: false"
-		echo -e "    extension:"
-		echo -e "        requester:"
-		echo -e "            enable: true"
-		echo -e "        proxy:"
-		echo -e "            enable: true"
-		echo -e "            key: \"beef_key.pem\""
-		echo -e "            cert: \"beef_cert.pem\""
-		echo -e "        metasploit:"
-		echo -e "            enable: false"
-		echo -e "        social_engineering:"
-		echo -e "            enable: true"
-		echo -e "        evasion:"
-		echo -e "            enable: false"
-		echo -e "        console:"
-		echo -e "            shell:"
-		echo -e "                enable: false"
-		echo -e "        ipec:"
-		echo -e "            enable: true"
-		echo -e "        dns:"
-		echo -e "            enable: false"
-		echo -e "        dns_rebinding:"
-		echo -e "            enable: false"
+	echo -e "    http:"
+	echo -e "        debug: false"
+	echo -e "        host: \"0.0.0.0\""
+	echo -e "        port: \"${beef_port}\""
+	echo -e "        dns_host: \"localhost\""
+	echo -e "        dns_port: 53"
+	echo -e "        web_ui_basepath: \"/ui\""
+	echo -e "        hook_file: \"/${jshookfile}\""
+	echo -e "        hook_session_name: \"BEEFHOOK\""
+	echo -e "        session_cookie_name: \"BEEFSESSION\""
+	echo -e "        web_server_imitation:"
+	echo -e "            enable: true"
+	echo -e "            type: \"apache\""
+	echo -e "            hook_404: false"
+	echo -e "            hook_root: false"
+	echo -e "    database:"
+	echo -e "        driver: \"sqlite\""
+	echo -e "        db_file: \"${beef_db}\""
+	echo -e "    credentials:"
+	echo -e "        user: \"beef\""
+	echo -e "        passwd: \"${beef_pass}\""
+	echo -e "    autorun:"
+	echo -e "        enable: true"
+	echo -e "        result_poll_interval: 300"
+	echo -e "        result_poll_timeout: 5000"
+	echo -e "        continue_after_timeout: true"
+	echo -e "    dns_hostname_lookup: false"
+	echo -e "    integration:"
+	echo -e "        phishing_frenzy:"
+	echo -e "            enable: false"
+	echo -e "    extension:"
+	echo -e "        requester:"
+	echo -e "            enable: true"
+	echo -e "        proxy:"
+	echo -e "            enable: true"
+	echo -e "            key: \"beef_key.pem\""
+	echo -e "            cert: \"beef_cert.pem\""
+	echo -e "        metasploit:"
+	echo -e "            enable: false"
+	echo -e "        social_engineering:"
+	echo -e "            enable: true"
+	echo -e "        evasion:"
+	echo -e "            enable: false"
+	echo -e "        console:"
+	echo -e "            shell:"
+	echo -e "                enable: false"
+	echo -e "        ipec:"
+	echo -e "            enable: true"
+	echo -e "        dns:"
+	echo -e "            enable: false"
+	echo -e "        dns_rebinding:"
+	echo -e "            enable: false"
 	} >> "${tmpdir}${beef_file}"
 }
 
@@ -8986,9 +8986,9 @@ function fix_beef_executable() {
 
 	rm -rf "/usr/bin/beef" > /dev/null 2>&1
 	{
-		echo -e "#!/bin/bash\n"
-		echo -e "cd ${1}"
-		echo -e "./beef"
+	echo -e "#!/bin/bash\n"
+	echo -e "cd ${1}"
+	echo -e "./beef"
 	} >> "/usr/bin/beef"
 	chmod +x "/usr/bin/beef" > /dev/null 2>&1
 	optional_tools[${optional_tools_names[19]}]=1
@@ -9088,22 +9088,22 @@ function parse_ettercap_log() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 304 "blue"
 
 	readarray -t CAPTUREDPASS < <(etterlog -L -p -i "${tmp_ettercaplog}.eci" 2> /dev/null | egrep -i "USER:|PASS:")
 
 	{
-		echo ""
+	echo ""
 	date +%Y-%m-%d
-		echo "${et_misc_texts[${language},8]}"
-		echo ""
-		echo "BSSID: ${bssid}"
-		echo "${et_misc_texts[${language},1]}: ${channel}"
-		echo "ESSID: ${essid}"
-		echo ""
-		echo "---------------"
-		echo ""
+	echo "${et_misc_texts[${language},8]}"
+	echo ""
+	echo "BSSID: ${bssid}"
+	echo "${et_misc_texts[${language},1]}: ${channel}"
+	echo "ESSID: ${essid}"
+	echo ""
+	echo "---------------"
+	echo ""
 	} >> "${tmpdir}parsed_file"
 
 	pass_counter=0
@@ -9130,7 +9130,7 @@ function parse_bettercap_log() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 304 "blue"
 
 	local regexp='USER|PASS|CREDITCARD|COOKIE|PWD|USUARIO|CONTRASE'
@@ -9138,16 +9138,16 @@ function parse_bettercap_log() {
 	readarray -t BETTERCAPLOG < <(cat < "${tmp_bettercaplog}" 2> /dev/null | egrep -i ${regexp} | egrep -vi ${regexp2})
 
 	{
-		echo ""
+	echo ""
 	date +%Y-%m-%d
-		echo "${et_misc_texts[${language},8]}"
-		echo ""
-		echo "BSSID: ${bssid}"
-		echo "${et_misc_texts[${language},1]}: ${channel}"
-		echo "ESSID: ${essid}"
-		echo ""
-		echo "---------------"
-		echo ""
+	echo "${et_misc_texts[${language},8]}"
+	echo ""
+	echo "BSSID: ${bssid}"
+	echo "${et_misc_texts[${language},1]}: ${channel}"
+	echo "ESSID: ${essid}"
+	echo ""
+	echo "---------------"
+	echo ""
 	} >> "${tmpdir}parsed_file"
 
 	pass_counter=0
@@ -9217,7 +9217,7 @@ function convert_cap_to_hashcat_format() {
 
 	tmpfiles_toclean=1
 	rm -rf "${tmpdir}hctmp"* > /dev/null 2>&1
-		echo "1" | aircrack-ng "${enteredpath}" -J "${tmpdir}hctmp" -b "${bssid}" > /dev/null 2>&1
+	echo "1" | aircrack-ng "${enteredpath}" -J "${tmpdir}hctmp" -b "${bssid}" > /dev/null 2>&1
 }
 
 #Handshake tools menu
@@ -9231,7 +9231,7 @@ function handshake_tools_menu() {
 	language_strings "${language}" 120 "title"
 	current_menu="handshake_tools_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 	language_strings "${language}" 48
@@ -9289,7 +9289,7 @@ function exec_clean_handshake_file() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	check_valid_file_to_clean "${filetoclean}"
 	if [ "$?" != "0" ]; then
 		language_strings "${language}" 159 "yellow"
@@ -9307,7 +9307,7 @@ function clean_handshake_file_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	readpath=0
 
 	if [ -z "${enteredpath}" ]; then
@@ -9344,7 +9344,7 @@ function dos_attacks_menu() {
 	language_strings "${language}" 102 "title"
 	current_menu="dos_attacks_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 	language_strings "${language}" 48
@@ -9652,7 +9652,7 @@ function read_path() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	case ${1} in
 		"handshake")
 			language_strings "${language}" 148 "green"
@@ -9776,7 +9776,7 @@ function attack_handshake_menu() {
 	language_strings "${language}" 138 "title"
 	current_menu="attack_handshake_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 	language_strings "${language}" 139 mdk3_attack_dependencies[@]
@@ -9850,10 +9850,10 @@ function capture_handshake_window() {
 	fi
 
 	language_strings "${language}" 143 "blue"
-		echo
+	echo
 	language_strings "${language}" 144 "yellow"
 	language_strings "${language}" 115 "read"
-		echo
+	echo
 	language_strings "${language}" 325 "blue"
 
 	rm -rf "${tmpdir}handshake"* > /dev/null 2>&1
@@ -9869,7 +9869,7 @@ function explore_for_targets_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 103 "title"
 	language_strings "${language}" 65 "green"
 
@@ -9878,9 +9878,9 @@ function explore_for_targets_option() {
 		return 1
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 66 "yellow"
-		echo
+	echo
 	language_strings "${language}" 67 "yellow"
 	language_strings "${language}" 115 "read"
 
@@ -9947,7 +9947,7 @@ function explore_for_wps_targets_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 103 "title"
 	language_strings "${language}" 65 "green"
 
@@ -9956,9 +9956,9 @@ function explore_for_wps_targets_option() {
 		return 1
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 66 "yellow"
-		echo
+	echo
 	if ! grep -qe "${interface}" <(echo "${!wash_ifaces_already_set[@]}"); then
 		language_strings "${language}" 353 "blue"
 		set_wash_parametrization
@@ -9966,7 +9966,7 @@ function explore_for_wps_targets_option() {
 	else
 		language_strings "${language}" 355 "blue"
 	fi
-		echo
+	echo
 	language_strings "${language}" 67 "yellow"
 	language_strings "${language}" 115 "read"
 
@@ -10006,7 +10006,7 @@ function explore_for_wps_targets_option() {
 
 	clear
 	language_strings "${language}" 104 "title"
-		echo
+	echo
 	language_strings "${language}" 349 "green"
 	print_large_separator
 
@@ -10080,7 +10080,7 @@ function explore_for_wps_targets_option() {
 		fi
 	done < "${tmpdir}wps.txt"
 
-		echo
+	echo
 	if [ ${wash_counter} -eq 1 ]; then
 		language_strings "${language}" 70 "yellow"
 		selected_wps_target_network=1
@@ -10129,7 +10129,7 @@ function select_target() {
 
 	clear
 	language_strings "${language}" 104 "title"
-		echo
+	echo
 	language_strings "${language}" 69 "green"
 	print_large_separator
 	i=0
@@ -10186,7 +10186,7 @@ function select_target() {
 		echo -e " ${sp1}${i})${client}  ${sp5}${exp_mac}   ${sp2}${exp_channel}    ${sp4}${exp_power}%   ${exp_enc}${sp6}   ${exp_essid}"
 	done < "${tmpdir}wnws.txt"
 
-		echo
+	echo
 	if [ ${i} -eq 1 ]; then
 		language_strings "${language}" 70 "yellow"
 		selected_target_network=1
@@ -10242,9 +10242,9 @@ function wps_pin_database_prerequisites() {
 
 	set_wps_mac_parameters
 	include_pin_dbfile
-		echo
+	echo
 	language_strings "${language}" 384 "blue"
-		echo
+	echo
 	search_in_pin_database
 	if [ ${bssid_found_in_db} -eq 1 ]; then
 		if [ ${counter_pins_found} -eq 1 ]; then
@@ -10257,7 +10257,7 @@ function wps_pin_database_prerequisites() {
 	fi
 
 	check_and_set_common_algorithms
-		echo
+	echo
 	language_strings "${language}" 366 "blue"
 	language_strings "${language}" 4 "read"
 }
@@ -10298,7 +10298,7 @@ function et_prerequisites() {
 	print_et_target_vars
 	print_iface_internet_selected
 	print_hint ${current_menu}
-		echo
+	echo
 
 	if [ "${et_mode}" != "et_captive_portal" ]; then
 		language_strings "${language}" 275 "blue"
@@ -10375,7 +10375,7 @@ function et_prerequisites() {
 
 	return_to_et_main_menu=1
 	return_to_et_main_menu_from_beef=1
-		echo
+	echo
 	language_strings "${language}" 296 "yellow"
 	language_strings "${language}" 115 "read"
 	prepare_et_interface
@@ -10406,7 +10406,7 @@ function ask_et_handshake_file() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	readpath=0
 
 	if [[ -z "${enteredpath}" ]] && [[ -z "${et_handshake}" ]]; then
@@ -10457,7 +10457,7 @@ function et_dos_menu() {
 	language_strings "${language}" 265 "title"
 	current_menu="et_dos_menu"
 	initialize_menu_and_print_selections
-		echo
+	echo
 	language_strings "${language}" 47 "green"
 	print_simple_separator
 	language_strings "${language}" 139 mdk3_attack_dependencies[@]
@@ -10662,10 +10662,10 @@ function credits_option() {
 	clear
 	language_strings "${language}" 105 "title"
 	language_strings "${language}" 74 "pink"
-		echo
+	echo
 	language_strings "${language}" 73 "blue"
-		echo
-		echo -e "${green_color}                                                            .-\"\"\"\"-."
+	echo
+	echo -e "${green_color}                                                            .-\"\"\"\"-."
 	sleep 0.15 && echo -e "                                                           /        \ "
 	sleep 0.15 && echo -e "${yellow_color}         ____        ____  __   _______                  ${green_color} /_        _\ "
 	sleep 0.15 && echo -e "${yellow_color}  ___  _/_   | _____/_   |/  |_ \   _  \_______         ${green_color} // \      / \\\\\ "
@@ -10675,9 +10675,9 @@ function credits_option() {
 	sleep 0.15 && echo -e "${yellow_color}                  \/                   \/                  ${green_color} \  __  / "
 	sleep 0.15 && echo -e "                                                             '.__.'"
 	sleep 0.15 && echo -e "                                                              |  |${normal_color}"
-		echo
+	echo
 	language_strings "${language}" 75 "blue"
-		echo
+	echo
 	language_strings "${language}" 85 "pink"
 	language_strings "${language}" 107 "pink"
 	language_strings "${language}" 115 "read"
@@ -10690,11 +10690,11 @@ function invalid_language_selected() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 82 "red"
-		echo
+	echo
 	language_strings "${language}" 115 "read"
-		echo
+	echo
 	language_menu
 }
 
@@ -10706,7 +10706,7 @@ function invalid_captive_portal_language_selected() {
 	fi
 
 	language_strings "${language}" 82 "red"
-		echo
+	echo
 	language_strings "${language}" 115 "read"
 	set_captive_portal_language
 }
@@ -10718,7 +10718,7 @@ function forbidden_menu_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 220 "red"
 	language_strings "${language}" 115 "read"
 }
@@ -10730,7 +10730,7 @@ function invalid_menu_option() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 76 "red"
 	language_strings "${language}" 115 "read"
 }
@@ -10742,11 +10742,11 @@ function invalid_iface_selected() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 77 "red"
-		echo
+	echo
 	language_strings "${language}" 115 "read"
-		echo
+	echo
 	select_interface
 }
 
@@ -10757,11 +10757,11 @@ function invalid_internet_iface_selected() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 77 "red"
-		echo
+	echo
 	language_strings "${language}" 115 "read"
-		echo
+	echo
 	select_internet_interface
 }
 
@@ -10809,11 +10809,11 @@ function exit_script_option() {
 	fi
 
 	action_on_exit_taken=0
-		echo
+	echo
 	language_strings "${language}" 106 "title"
 	language_strings "${language}" 11 "blue"
 
-		echo
+	echo
 	language_strings "${language}" 165 "blue"
 
 	if [ "${ifacemode}" = "Monitor" ]; then
@@ -10859,7 +10859,7 @@ function exit_script_option() {
 		language_strings "${language}" 160 "yellow"
 	fi
 
-		echo
+	echo
 	exit ${exit_code}
 }
 
@@ -10901,7 +10901,7 @@ function time_loop() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo -ne " "
+	echo -ne " "
 	for (( j=1; j<=4; j++ )); do
 		echo -ne "."
 		sleep 0.035
@@ -11519,7 +11519,7 @@ function print_known_distros() {
 	for i in "${all_known_compatible_distros[@]}"; do
 		echo -ne "${pink_color}\"${i}\" ${normal_color}"
 	done
-		echo
+	echo
 }
 
 #Check if you have installed the tools (essential and optional) that the script uses
@@ -11529,11 +11529,11 @@ function check_compatibility() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 108 "blue"
 	language_strings "${language}" 115 "read"
 
-		echo
+	echo
 	language_strings "${language}" 109 "blue"
 
 	essential_toolsok=1
@@ -11550,7 +11550,7 @@ function check_compatibility() {
 		fi
 	done
 
-		echo
+	echo
 	language_strings "${language}" 218 "blue"
 
 	optional_toolsok=1
@@ -11621,7 +11621,7 @@ function check_compatibility() {
 		return
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 110 "yellow"
 }
 
@@ -11632,7 +11632,7 @@ function check_bash_version() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	bashversion="${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}"
 	if compare_floats_greater_or_equal "${bashversion}" ${minimum_bash_version_required}; then
 		language_strings "${language}" 221 "yellow"
@@ -11693,13 +11693,13 @@ function print_intro() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo -e "${yellow_color}                  .__                         .___  .___"
+	echo -e "${yellow_color}                  .__                         .___  .___"
 	sleep 0.15 && echo -e "           _____  |__|______  ____   ____   __| _/__| _/____   ____"
 	sleep 0.15 && echo -e "           \__  \ |  \_  __ \/ ___\_/ __ \ / __ |/ __ |/  _ \ /    \\"
 	sleep 0.15 && echo -e "            / __ \|  ||  | \/ /_/  >  ___// /_/ / /_/ (  <_> )   |  \\"
 	sleep 0.15 && echo -e "           (____  /__||__|  \___  / \___  >____ \____ |\____/|___|  /"
 	sleep 0.15 && echo -e "                \/         /_____/      \/     \/    \/           \/${normal_color}"
-		echo
+	echo
 	language_strings "${language}" 228 "green"
 	print_animated_flying_saucer
 	sleep 1
@@ -11756,7 +11756,7 @@ function print_animated_flying_saucer() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo -e "\033[s"
+	echo -e "\033[s"
 
 	for i in $(seq 1 8); do
 		if [ "${i}" -le 4 ]; then
@@ -12067,7 +12067,7 @@ function validate_et_internet_interface() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 287 "blue"
 	check_internet_access "${host_to_check_internet}"
 
@@ -12086,7 +12086,7 @@ function validate_et_internet_interface() {
 		return 1
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 289 "yellow"
 	language_strings "${language}" 115 "read"
 	internet_interface_selected=1
@@ -12122,9 +12122,9 @@ function autoupdate_check() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo
+	echo
 	language_strings "${language}" 210 "blue"
-		echo
+	echo
 	hasinternet_access_for_update=0
 
 	check_internet_access "${host_to_check_internet}"
@@ -12191,22 +12191,22 @@ function remove_warnings() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo "${clean_handshake_dependencies[@]}" > /dev/null 2>&1
-		echo "${aircrack_attacks_dependencies[@]}" > /dev/null 2>&1
-		echo "${aireplay_attack_dependencies[@]}" > /dev/null 2>&1
-		echo "${mdk3_attack_dependencies[@]}" > /dev/null 2>&1
-		echo "${hashcat_attacks_dependencies[@]}" > /dev/null 2>&1
-		echo "${et_onlyap_dependencies[@]}" > /dev/null 2>&1
-		echo "${et_sniffing_dependencies[@]}" > /dev/null 2>&1
-		echo "${et_sniffing_sslstrip_dependencies[@]}" > /dev/null 2>&1
-		echo "${et_sniffing_sslstrip2_dependencies[@]}" > /dev/null 2>&1
-		echo "${et_captive_portal_dependencies[@]}" > /dev/null 2>&1
-		echo "${wash_scan_dependencies[@]}" > /dev/null 2>&1
-		echo "${bully_attacks_dependencies[@]}" > /dev/null 2>&1
-		echo "${reaver_attacks_dependencies[@]}" > /dev/null 2>&1
-		echo "${bully_pixie_dust_attack_dependencies[@]}" > /dev/null 2>&1
-		echo "${reaver_pixie_dust_attack_dependencies[@]}" > /dev/null 2>&1
-		echo "${is_arm}" > /dev/null 2>&1
+	echo "${clean_handshake_dependencies[@]}" > /dev/null 2>&1
+	echo "${aircrack_attacks_dependencies[@]}" > /dev/null 2>&1
+	echo "${aireplay_attack_dependencies[@]}" > /dev/null 2>&1
+	echo "${mdk3_attack_dependencies[@]}" > /dev/null 2>&1
+	echo "${hashcat_attacks_dependencies[@]}" > /dev/null 2>&1
+	echo "${et_onlyap_dependencies[@]}" > /dev/null 2>&1
+	echo "${et_sniffing_dependencies[@]}" > /dev/null 2>&1
+	echo "${et_sniffing_sslstrip_dependencies[@]}" > /dev/null 2>&1
+	echo "${et_sniffing_sslstrip2_dependencies[@]}" > /dev/null 2>&1
+	echo "${et_captive_portal_dependencies[@]}" > /dev/null 2>&1
+	echo "${wash_scan_dependencies[@]}" > /dev/null 2>&1
+	echo "${bully_attacks_dependencies[@]}" > /dev/null 2>&1
+	echo "${reaver_attacks_dependencies[@]}" > /dev/null 2>&1
+	echo "${bully_pixie_dust_attack_dependencies[@]}" > /dev/null 2>&1
+	echo "${reaver_pixie_dust_attack_dependencies[@]}" > /dev/null 2>&1
+	echo "${is_arm}" > /dev/null 2>&1
 }
 
 #Print a simple separator
@@ -12216,7 +12216,7 @@ function print_simple_separator() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo_blue "---------"
+	echo_blue "---------"
 }
 
 #Print a large separator
@@ -12226,7 +12226,7 @@ function print_large_separator() {
 		echo "${FUNCNAME}" "${@}"
 	fi
 
-		echo_blue "-------------------------------------------------------"
+	echo_blue "-------------------------------------------------------"
 }
 
 #Add the PoT prefix on printed strings if PoT mark is found
@@ -12261,8 +12261,8 @@ function under_construction_message() {
 	fi
 
 	local var_uc="${under_constructionvar^}"
-		echo
-		echo_yellow "${var_uc}..."
+	echo
+	echo_yellow "${var_uc}..."
 	language_strings "${language}" 115 "read"
 }
 
