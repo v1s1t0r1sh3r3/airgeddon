@@ -8771,7 +8771,7 @@ function set_beef_config() {
 	fi
 
 	{
-		echo -e "beef:"
+	echo -e "beef:"
 	echo -e "    version: 'airgeddon integrated'"
 	echo -e "    debug: false"
 	echo -e "    client_debug: false"
