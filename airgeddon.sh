@@ -258,9 +258,9 @@ normal_color="\e[1;0m"
 #Set different language text strings
 function language_strings() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+		echo "${FUNCNAME}" "${@}"
+	fi
 
 	declare -A unknown_chipset
 	unknown_chipset["ENGLISH"]="Unknown"
