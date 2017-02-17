@@ -259,7 +259,7 @@ normal_color="\e[1;0m"
 function language_strings() {
 
 	if [ ${debug_mode} -eq 2 ]; then
-		echo "${FUNCNAME}" "${@}"
+	  echo "${FUNCNAME}" "${@}"
 	fi
 
 	declare -A unknown_chipset
@@ -3939,9 +3939,9 @@ function language_strings() {
 #Set the message to show again after an interrupt ([Ctrl+C] or [Ctrl+Z]) without exiting
 function interrupt_checkpoint() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -z "${last_buffered_type1}" ]; then
 		last_buffered_message1=${1}
@@ -3961,9 +3961,9 @@ function interrupt_checkpoint() {
 #Add the text on a menu when you miss an optional tool
 function special_text_missed_optional_tool() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	declare -a required_tools=("${!3}")
 
@@ -3990,9 +3990,9 @@ function special_text_missed_optional_tool() {
 #Generate the chars in front of and behind a text for titles and separators
 function generate_dynamic_line() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local type=${2}
 	if [ "${type}" = "title" ]; then
@@ -4035,9 +4035,9 @@ function generate_dynamic_line() {
 #Wrapper to check managed mode on an interface
 function check_to_set_managed() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	check_interface_mode
 	case "${ifacemode}" in
@@ -4060,9 +4060,9 @@ function check_to_set_managed() {
 #Wrapper to check monitor mode on an interface
 function check_to_set_monitor() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	check_interface_mode
 	case "${ifacemode}" in
@@ -4085,9 +4085,9 @@ function check_to_set_monitor() {
 #Check for monitor mode on an interface
 function check_monitor_enabled() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	mode=$(iwconfig "${interface}" 2> /dev/null | grep Mode: | awk '{print $4}' | cut -d ':' -f 2)
 
@@ -4103,9 +4103,9 @@ function check_monitor_enabled() {
 #Check if an interface is a wifi card or not
 function check_interface_wifi() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	execute_iwconfig_fix
 	return $?
@@ -4114,9 +4114,9 @@ function check_interface_wifi() {
 #Execute the iwconfig fix to know if an interface is a wifi card or not
 function execute_iwconfig_fix() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	iwconfig_fix
 	iwcmd="iwconfig ${interface} ${iwcmdfix} > /dev/null 2> /dev/null"
@@ -4128,9 +4128,9 @@ function execute_iwconfig_fix() {
 #Create a list of interfaces associated to its macs
 function renew_ifaces_and_macs_list() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	readarray -t IFACES_AND_MACS < <(ip link | egrep "^[0-9]+" | cut -d ':' -f 2 | awk '{print $1}' | grep lo -v | grep "${interface}" -v)
 	declare -gA ifaces_and_macs
@@ -4150,9 +4150,9 @@ function renew_ifaces_and_macs_list() {
 #Check the interface coherence between interface names and macs
 function check_interface_coherence() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	renew_ifaces_and_macs_list
 	interface_auto_change=0
@@ -4184,9 +4184,9 @@ function check_interface_coherence() {
 #Prepare the vars to be used on wps pin database attacks
 function set_wps_mac_parameters() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	six_wpsbssid_first_digits=${wps_bssid:0:8}
 	six_wpsbssid_first_digits_clean=${six_wpsbssid_first_digits//:}
@@ -4199,9 +4199,9 @@ function set_wps_mac_parameters() {
 #Calculate pin based on Zhao Chunsheng algorithm (computepin), step 1
 function calculate_computepin_algorithm_step1() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	hex_to_dec=$(printf '%d\n' 0x"${six_wpsbssid_last_digits_clean}") 2> /dev/null
 	computepin_pin=$((hex_to_dec % 10000000))
@@ -4210,9 +4210,9 @@ function calculate_computepin_algorithm_step1() {
 #Calculate pin based on Zhao Chunsheng algorithm (computepin), step 2
 function calculate_computepin_algorithm_step2() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	computepin_pin=$(printf '%08d\n' $((10#${computepin_pin} * 10 + checksum_digit)))
 }
@@ -4220,9 +4220,9 @@ function calculate_computepin_algorithm_step2() {
 #Calculate pin based on Stefan Viehböck algorithm (easybox)
 function calculate_easybox_algorithm() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	hex_to_dec=($(printf "%04d" "0x${four_wpsbssid_last_digits_clean}" | sed 's/.*\(....\)/\1/;s/./& /g'))
 	[[ ${four_wpsbssid_last_digits_clean} =~ ${four_wpsbssid_last_digits_clean//?/(.)} ]] && hexi=($(printf '%s\n' "${BASH_REMATCH[*]:1}"))
@@ -4246,9 +4246,9 @@ function calculate_easybox_algorithm() {
 #Calculate the last digit on pin following the checksum rule
 function pin_checksum_rule() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	current_calculated_pin=$((10#${1} * 10))
 
@@ -4269,9 +4269,9 @@ function pin_checksum_rule() {
 #Manage the calls to check common wps pin algorithms
 function check_and_set_common_algorithms() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 388 "blue"
@@ -4297,9 +4297,9 @@ function check_and_set_common_algorithms() {
 #Integrate calculated pins from algorithms into pins array
 function integrate_algorithms_pins() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	some_calculated_pin_included=0
 	for pin in "${calculated_pins[@]}"; do
@@ -4327,9 +4327,9 @@ function integrate_algorithms_pins() {
 #Include the code of the pin database file
 function include_pin_dbfile() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	dbfile_to_include="source \"${scriptfolder}${known_pins_dbfile}\""
 	eval "${dbfile_to_include}"
@@ -4338,9 +4338,9 @@ function include_pin_dbfile() {
 #Search for target wps bssid mac in pin database and set the vars to be used
 function search_in_pin_database() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	bssid_found_in_db=0
 	counter_pins_found=0
@@ -4361,9 +4361,9 @@ function search_in_pin_database() {
 #Prepare monitor mode avoiding the use of airmon-ng or airmon-zc generating two interfaces from one
 function prepare_et_monitor() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	disable_rfkill
 
@@ -4379,9 +4379,9 @@ function prepare_et_monitor() {
 #Assure the mode of the interface before the Evil Twin process
 function prepare_et_interface() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	et_initial_state=${ifacemode}
 
@@ -4403,9 +4403,9 @@ function prepare_et_interface() {
 #Restore the state of the interfaces after Evil Twin process
 function restore_et_interface() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 299 "blue"
@@ -4432,9 +4432,9 @@ function restore_et_interface() {
 #Unblock if possible the interface if blocked
 function disable_rfkill() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if hash rfkill 2> /dev/null; then
 		rfkill unblock all > /dev/null 2>&1
@@ -4444,9 +4444,9 @@ function disable_rfkill() {
 #Put the interface on managed mode and manage the possible name change
 function managed_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	check_to_set_managed
 
@@ -4480,9 +4480,9 @@ function managed_option() {
 #Put the interface on monitor mode and manage the possible name change
 function monitor_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	check_to_set_monitor
 
@@ -4531,9 +4531,9 @@ function monitor_option() {
 #Check the interface mode
 function check_interface_mode() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	execute_iwconfig_fix
 	if [ "$?" != "0" ]; then
@@ -4564,9 +4564,9 @@ function check_interface_mode() {
 #Language change menu
 function language_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 87 "title"
@@ -4659,9 +4659,9 @@ function language_menu() {
 #Read the chipset for an interface
 function set_chipset() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	chipset=""
 	sedrule1="s/^....//"
@@ -4709,9 +4709,9 @@ function set_chipset() {
 #Internet interface selection menu
 function select_internet_interface() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ "${return_to_et_main_menu}" -eq 1 ]; then
 		return 1
@@ -4804,9 +4804,9 @@ function select_internet_interface() {
 #Interface selection menu
 function select_interface() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 88 "title"
@@ -4853,9 +4853,9 @@ function select_interface() {
 #Read the user input on yes/no questions
 function read_yesno() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" "${1}" "green"
@@ -4865,9 +4865,9 @@ function read_yesno() {
 #Validate the input on yes/no questions
 function ask_yesno() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	yesno=""
 	while [[ ! ${yesno} =~ ^[YyNn]$ ]]; do
@@ -4885,9 +4885,9 @@ function ask_yesno() {
 #Read the user input on channel questions
 function read_channel() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 25 "green"
@@ -4901,9 +4901,9 @@ function read_channel() {
 #Validate the input on channel questions
 function ask_channel() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local regexp="^([1-9]|1[0-4])$"
 
@@ -4925,9 +4925,9 @@ function ask_channel() {
 #Read the user input on bssid questions
 function read_bssid() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 27 "green"
@@ -4941,9 +4941,9 @@ function read_bssid() {
 #Validate the input on bssid questions
 function ask_bssid() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local regexp="^([a-fA-F0-9]{2}:){5}[a-zA-Z0-9]{2}$"
 
@@ -4965,9 +4965,9 @@ function ask_bssid() {
 #Read the user input on essid questions
 function read_essid() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 29 "green"
@@ -4977,9 +4977,9 @@ function read_essid() {
 #Validate the input on essid questions
 function ask_essid() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -z "${essid}" ]; then
 		while [[ -z "${essid}" ]]; do
@@ -4998,9 +4998,9 @@ function ask_essid() {
 #Read the user input on custom pin questions
 function read_custom_pin() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 363 "green"
@@ -5010,9 +5010,9 @@ function read_custom_pin() {
 #Validate the input on custom pin questions
 function ask_custom_pin() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local regexp="^[0-9]{8}$"
 	custom_pin=""
@@ -5027,9 +5027,9 @@ function ask_custom_pin() {
 #Read the user input on timeout questions
 function read_timeout() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	case ${1} in
@@ -5046,9 +5046,9 @@ function read_timeout() {
 #Validate the user input for timeouts
 function ask_wps_timeout() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	case ${1} in
 		"standard")
@@ -5091,9 +5091,9 @@ function ask_wps_timeout() {
 #Execute wps custom pin bully attack
 function exec_wps_custom_pin_bully_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 32 "green"
@@ -5111,9 +5111,9 @@ function exec_wps_custom_pin_bully_attack() {
 #Execute wps custom pin reaver attack
 function exec_wps_custom_pin_reaver_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 32 "green"
@@ -5131,9 +5131,9 @@ function exec_wps_custom_pin_reaver_attack() {
 #Execute bully pixie dust attack
 function exec_bully_pixiewps_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 32 "green"
@@ -5151,9 +5151,9 @@ function exec_bully_pixiewps_attack() {
 #Execute reaver pixie dust attack
 function exec_reaver_pixiewps_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 32 "green"
@@ -5171,9 +5171,9 @@ function exec_reaver_pixiewps_attack() {
 #Execute wps bruteforce pin bully attack
 function exec_wps_bruteforce_pin_bully_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 32 "green"
@@ -5191,9 +5191,9 @@ function exec_wps_bruteforce_pin_bully_attack() {
 #Execute wps bruteforce pin reaver attack
 function exec_wps_bruteforce_pin_reaver_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 32 "green"
@@ -5211,9 +5211,9 @@ function exec_wps_bruteforce_pin_reaver_attack() {
 #Execute wps pin database bully attack
 function exec_wps_pin_database_bully_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	wps_pin_database_prerequisites
 
@@ -5226,9 +5226,9 @@ function exec_wps_pin_database_bully_attack() {
 #Execute wps pin database reaver attack
 function exec_wps_pin_database_reaver_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	wps_pin_database_prerequisites
 
@@ -5241,9 +5241,9 @@ function exec_wps_pin_database_reaver_attack() {
 #Execute mdk3 deauth DoS attack
 function exec_mdk3deauth() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 89 "title"
@@ -5263,9 +5263,9 @@ function exec_mdk3deauth() {
 #Execute aireplay DoS attack
 function exec_aireplaydeauth() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 90 "title"
@@ -5283,9 +5283,9 @@ function exec_aireplaydeauth() {
 #Execute WDS confusion DoS attack
 function exec_wdsconfusion() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 91 "title"
@@ -5301,9 +5301,9 @@ function exec_wdsconfusion() {
 #Execute Beacon flood DoS attack
 function exec_beaconflood() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 92 "title"
@@ -5319,9 +5319,9 @@ function exec_beaconflood() {
 #Execute Auth DoS attack
 function exec_authdos() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 93 "title"
@@ -5337,9 +5337,9 @@ function exec_authdos() {
 #Execute Michael Shutdown DoS attack
 function exec_michaelshutdown() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 94 "title"
@@ -5355,9 +5355,9 @@ function exec_michaelshutdown() {
 #Validate Mdk3 parameters
 function mdk3_deauth_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 95 "title"
@@ -5379,9 +5379,9 @@ function mdk3_deauth_option() {
 #Validate Aireplay parameters
 function aireplay_deauth_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 96 "title"
@@ -5403,9 +5403,9 @@ function aireplay_deauth_option() {
 #Validate WDS confusion parameters
 function wds_confusion_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 97 "title"
@@ -5427,9 +5427,9 @@ function wds_confusion_option() {
 #Validate Beacon flood parameters
 function beacon_flood_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 98 "title"
@@ -5451,9 +5451,9 @@ function beacon_flood_option() {
 #Validate Auth DoS parameters
 function auth_dos_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 99 "title"
@@ -5474,9 +5474,9 @@ function auth_dos_option() {
 #Validate Michael Shutdown parameters
 function michael_shutdown_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 100 "title"
@@ -5497,9 +5497,9 @@ function michael_shutdown_option() {
 #Validate wps parameters for custom pin, pixie dust, bruteforce and pin database attacks
 function wps_attacks_parameters() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	check_monitor_enabled
 	if [ "$?" != "0" ]; then
@@ -5531,9 +5531,9 @@ function wps_attacks_parameters() {
 #Print selected interface
 function print_iface_selected() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -z "${interface}" ]; then
 		language_strings "${language}" 41 "red"
@@ -5549,9 +5549,9 @@ function print_iface_selected() {
 #Print selected internet interface
 function print_iface_internet_selected() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [[ "${et_mode}" != "et_captive_portal" ]] || [[ ${captive_portal_mode} = "internet" ]]; then
 		if [ -z "${internet_interface}" ]; then
@@ -5565,9 +5565,9 @@ function print_iface_internet_selected() {
 #Print selected target parameters (bssid, channel, essid and type of encryption)
 function print_all_target_vars() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${bssid}" ]; then
 		language_strings "${language}" 43 "blue"
@@ -5590,9 +5590,9 @@ function print_all_target_vars() {
 #Print selected target parameters on evil twin menu (bssid, channel and essid)
 function print_all_target_vars_et() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${bssid}" ]; then
 		language_strings "${language}" 43 "blue"
@@ -5620,9 +5620,9 @@ function print_all_target_vars_et() {
 #Print selected target parameters on evil twin submenus (bssid, channel, essid, DoS type and Handshake file)
 function print_et_target_vars() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${bssid}" ]; then
 		language_strings "${language}" 43 "blue"
@@ -5670,9 +5670,9 @@ function print_et_target_vars() {
 #Print selected target parameters on wps attacks menu (bssid, channel and essid)
 function print_all_target_vars_wps() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${wps_bssid}" ]; then
 		language_strings "${language}" 335 "blue"
@@ -5706,9 +5706,9 @@ function print_all_target_vars_wps() {
 #Print selected target parameters on decrypt menu (bssid, Handshake file, dictionary file and rules file)
 function print_decrypt_vars() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${bssid}" ]; then
 		language_strings "${language}" 43 "blue"
@@ -5734,9 +5734,9 @@ function print_decrypt_vars() {
 #Create the dependencies arrays
 function initialize_menu_options_dependencies() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clean_handshake_dependencies=(${optional_tools_names[0]})
 	aircrack_attacks_dependencies=(${optional_tools_names[1]})
@@ -5758,9 +5758,9 @@ function initialize_menu_options_dependencies() {
 #Set possible changes for some commands that can be found in different ways depending of the O.S.
 function set_possible_aliases() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	for item in "${!possible_alias_names[@]}"; do
 		if ! hash "${item}" 2> /dev/null || [[ "${item}" = "beef" ]]; then
@@ -5778,9 +5778,9 @@ function set_possible_aliases() {
 #Initialize optional_tools values
 function initialize_optional_tools_values() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	declare -gA optional_tools=()
 
@@ -5792,9 +5792,9 @@ function initialize_optional_tools_values() {
 #Set some vars depending of the menu and invoke the printing of target vars
 function initialize_menu_and_print_selections() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	forbidden_options=()
 
@@ -5859,9 +5859,9 @@ function initialize_menu_and_print_selections() {
 #Clean temporary files
 function clean_tmpfiles() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	rm -rf "${tmpdir}bl.txt" > /dev/null 2>&1
 	rm -rf "${tmpdir}handshake"* > /dev/null 2>&1
@@ -5893,9 +5893,9 @@ function clean_tmpfiles() {
 #Manage cleaning firewall rules and restore orginal routing state
 function clean_routing_rules() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${original_routing_state}" ]; then
 		echo "${original_routing_state}" > /proc/sys/net/ipv4/ip_forward
@@ -5907,9 +5907,9 @@ function clean_routing_rules() {
 #Clean iptables rules
 function clean_iptables() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	iptables -F
 	iptables -t nat -F
@@ -5920,9 +5920,9 @@ function clean_iptables() {
 #Create an array from parameters
 function store_array() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local values=("${@:3}")
 	for i in "${!values[@]}"; do
@@ -5933,9 +5933,9 @@ function store_array() {
 #Check if something (first parameter) is inside an array (second parameter)
 contains_element() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local e
 	for e in "${@:2}"; do
@@ -5947,9 +5947,9 @@ contains_element() {
 #Print hints from the different hint pools depending of the menu
 function print_hint() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	declare -A hints
 
@@ -6041,9 +6041,9 @@ function print_hint() {
 #airgeddon main menu
 function main_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 101 "title"
@@ -6113,9 +6113,9 @@ function main_menu() {
 #Evil Twin attacks menu
 function evil_twin_attacks_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 253 "title"
@@ -6242,9 +6242,9 @@ function evil_twin_attacks_menu() {
 #beef pre attack menu
 function beef_pre_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ ${return_to_et_main_menu_from_beef} -eq 1 ]; then
 		return
@@ -6319,9 +6319,9 @@ function beef_pre_menu() {
 #WPS attacks menu
 function wps_attacks_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 334 "title"
@@ -6548,9 +6548,9 @@ function wps_attacks_menu() {
 #Offline decryption attacks menu
 function decrypt_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 170 "title"
@@ -6631,9 +6631,9 @@ function decrypt_menu() {
 #Read the user input on rules file questions
 function ask_rules() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	validpath=1
 	while [[ "${validpath}" != "0" ]]; do
@@ -6645,9 +6645,9 @@ function ask_rules() {
 #Read the user input on dictionary file questions
 function ask_dictionary() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	validpath=1
 	while [[ "${validpath}" != "0" ]]; do
@@ -6659,9 +6659,9 @@ function ask_dictionary() {
 #Read the user input on Handshake file questions
 function ask_capture_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	validpath=1
 	while [[ "${validpath}" != "0" ]]; do
@@ -6673,9 +6673,9 @@ function ask_capture_file() {
 #Manage the questions on Handshake file questions
 function manage_asking_for_captured_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${enteredpath}" ]; then
 		echo
@@ -6692,9 +6692,9 @@ function manage_asking_for_captured_file() {
 #Manage the questions on dictionary file questions
 function manage_asking_for_dictionary_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${DICTIONARY}" ]; then
 		echo
@@ -6711,9 +6711,9 @@ function manage_asking_for_dictionary_file() {
 #Manage the questions on rules file questions
 function manage_asking_for_rule_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -n "${RULES}" ]; then
 		echo
@@ -6730,9 +6730,9 @@ function manage_asking_for_rule_file() {
 #Validate the file to be cleaned
 function check_valid_file_to_clean() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	nets_from_file=$(echo "1" | aircrack-ng "${1}" 2> /dev/null | egrep "WPA|WEP" | awk '{ saved = $1; $1 = ""; print substr($0, 2) }')
 
@@ -6767,9 +6767,9 @@ function check_valid_file_to_clean() {
 #Check if a bssid is present on a capture file to know if there is a Handshake with that bssid
 function check_bssid_in_captured_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	nets_from_file=$(echo "1" | aircrack-ng "${1}" 2> /dev/null | egrep "WPA \([1-9][0-9]? handshake" | awk '{ saved = $1; $1 = ""; print substr($0, 2) }')
 
@@ -6809,9 +6809,9 @@ function check_bssid_in_captured_file() {
 #Set the target vars to a bssid selecting them from a capture file which has a Handshake
 function select_wpa_bssid_target_from_captured_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	nets_from_file=$(echo "1" | aircrack-ng "${1}" 2> /dev/null | egrep "WPA \([1-9][0-9]? handshake" | awk '{ saved = $1; $1 = ""; print substr($0, 2) }')
 
@@ -6891,9 +6891,9 @@ function select_wpa_bssid_target_from_captured_file() {
 #Validate and ask for the different parameters used in an aircrack dictionary based attack
 function aircrack_dictionary_attack_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	manage_asking_for_captured_file
 
@@ -6913,9 +6913,9 @@ function aircrack_dictionary_attack_option() {
 #Validate and ask for the different parameters used in an aircrack bruteforce based attack
 function aircrack_bruteforce_attack_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	manage_asking_for_captured_file
 
@@ -6942,9 +6942,9 @@ function aircrack_bruteforce_attack_option() {
 #Validate and ask for the different parameters used in a hashcat dictionary based attack
 function hashcat_dictionary_attack_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	manage_asking_for_captured_file
 
@@ -6965,9 +6965,9 @@ function hashcat_dictionary_attack_option() {
 #Validate and ask for the different parameters used in a hashcat bruteforce based attack
 function hashcat_bruteforce_attack_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	manage_asking_for_captured_file
 
@@ -6995,9 +6995,9 @@ function hashcat_bruteforce_attack_option() {
 #Validate and ask for the different parameters used in a hashcat rule based attack
 function hashcat_rulebased_attack_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	manage_asking_for_captured_file
 
@@ -7020,9 +7020,9 @@ function hashcat_rulebased_attack_option() {
 #Check if the password was decrypted using hashcat and manage to save it on a file
 function manage_hashcat_pot() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local regexp="All hashes have been recovered"
 	if [ -n "${hashcat_fix}" ]; then
@@ -7060,9 +7060,9 @@ function manage_hashcat_pot() {
 #Check if the passwords were captured using ettercap and manage to save them on a file
 function manage_ettercap_log() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	ettercap_log=0
 	ask_yesno 302
@@ -7087,9 +7087,9 @@ function manage_ettercap_log() {
 #Check if the passwords were captured using bettercap and manage to save them on a file
 function manage_bettercap_log() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	bettercap_log=0
 	ask_yesno 302
@@ -7114,9 +7114,9 @@ function manage_bettercap_log() {
 #Check if the passwords were captured using the captive portal Evil Twin attack and manage to save them on a file
 function manage_captive_portal_log() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	default_et_captive_portal_logpath=$(env | grep ^HOME | awk -F = '{print $2}')
 	lastcharetcaptiveportallogpath=${default_et_captive_portal_logpath: -1}
@@ -7134,9 +7134,9 @@ function manage_captive_portal_log() {
 #Captive portal language menu
 function set_captive_portal_language() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 293 "title"
@@ -7188,9 +7188,9 @@ function set_captive_portal_language() {
 #Read and validate the minlength var
 function set_minlength() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	minlength=0
 	while [[ ! ${minlength} =~ ^[8-9]$|^[1-5][0-9]$|^6[0-3]$ ]]; do
@@ -7203,9 +7203,9 @@ function set_minlength() {
 #Read and validate the maxlength var
 function set_maxlength() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	maxlength=0
 	while [[ ! ${maxlength} =~ ^[8-9]$|^[1-5][0-9]$|^6[0-3]$ ]]; do
@@ -7218,9 +7218,9 @@ function set_maxlength() {
 #Manage the minlength and maxlength vars on bruteforce attacks
 function set_minlength_and_maxlength() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_minlength
 	maxlength=0
@@ -7232,9 +7232,9 @@ function set_minlength_and_maxlength() {
 #Charset selection menu
 function set_charset() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 238 "title"
@@ -7327,9 +7327,9 @@ function set_charset() {
 #Set a var to show the chosen charset
 function set_show_charset() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	showcharset=""
 
@@ -7363,9 +7363,9 @@ function set_show_charset() {
 #Execute aircrack+crunch bruteforce attack
 function exec_aircrack_bruteforce_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	crunch "${minlength}" "${maxlength}" "${charset}" | aircrack-ng -a 2 -b "${bssid}" -w - "${enteredpath}"
 	language_strings "${language}" 115 "read"
@@ -7374,9 +7374,9 @@ function exec_aircrack_bruteforce_attack() {
 #Execute aircrack dictionary attack
 function exec_aircrack_dictionary_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	aircrack-ng -a 2 -b "${bssid}" -w "${DICTIONARY}" "${enteredpath}"
 	language_strings "${language}" 115 "read"
@@ -7385,9 +7385,9 @@ function exec_aircrack_dictionary_attack() {
 #Execute hashcat dictionary attack
 function exec_hashcat_dictionary_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	convert_cap_to_hashcat_format
 	hashcat_cmd="hashcat -m 2500 -a 0 \"${tmpdir}hctmp.hccap\" \"${DICTIONARY}\" --potfile-disable -o \"${tmpdir}hctmp.pot\" ${hashcat_fix} | tee /dev/fd/5"
@@ -7399,9 +7399,9 @@ function exec_hashcat_dictionary_attack() {
 #Execute hashcat bruteforce attack
 function exec_hashcat_bruteforce_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	convert_cap_to_hashcat_format
 	hashcat_cmd="hashcat -m 2500 -a 3 \"${tmpdir}hctmp.hccap\" \"${charset}\" --potfile-disable -o \"${tmpdir}hctmp.pot\" ${hashcat_fix} | tee /dev/fd/5"
@@ -7413,9 +7413,9 @@ function exec_hashcat_bruteforce_attack() {
 #Execute hashcat rule based attack
 function exec_hashcat_rulebased_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	convert_cap_to_hashcat_format
 	hashcat_cmd="hashcat -m 2500 -a 0 \"${tmpdir}hctmp.hccap\" \"${DICTIONARY}\" -r \"${RULES}\" --potfile-disable -o \"${tmpdir}hctmp.pot\" ${hashcat_fix} | tee /dev/fd/5"
@@ -7427,9 +7427,9 @@ function exec_hashcat_rulebased_attack() {
 #Execute Evil Twin only Access Point attack
 function exec_et_onlyap_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_hostapd_config
 	launch_fake_ap
@@ -7452,9 +7452,9 @@ function exec_et_onlyap_attack() {
 #Execute Evil Twin with sniffing attack
 function exec_et_sniffing_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_hostapd_config
 	launch_fake_ap
@@ -7481,9 +7481,9 @@ function exec_et_sniffing_attack() {
 #Execute Evil Twin with sniffing+sslstrip attack
 function exec_et_sniffing_sslstrip_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_hostapd_config
 	launch_fake_ap
@@ -7511,9 +7511,9 @@ function exec_et_sniffing_sslstrip_attack() {
 #Execute Evil Twin with sniffing+bettercap-sslstrip2/beef attack
 function exec_et_sniffing_sslstrip2_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_hostapd_config
 	launch_fake_ap
@@ -7551,9 +7551,9 @@ function exec_et_sniffing_sslstrip2_attack() {
 #Execute captive portal Evil Twin attack
 function exec_et_captive_portal_attack() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_hostapd_config
 	launch_fake_ap
@@ -7583,9 +7583,9 @@ function exec_et_captive_portal_attack() {
 #Create configuration file for hostapd
 function set_hostapd_config() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	tmpfiles_toclean=1
 	rm -rf "${tmpdir}${hostapd_file}" > /dev/null 2>&1
@@ -7605,9 +7605,9 @@ function set_hostapd_config() {
 #Launch hostapd fake Access Point
 function launch_fake_ap() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	killall hostapd > /dev/null 2>&1
 	${airmon} check kill > /dev/null 2>&1
@@ -7633,9 +7633,9 @@ function launch_fake_ap() {
 #Create configuration file for dhcpd
 function set_dhcp_config() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	route | grep ${ip_range} > /dev/null
 	if [ "$?" != "0" ]; then
@@ -7718,9 +7718,9 @@ function set_dhcp_config() {
 #Set routing state and firewall rules for Evil Twin attacks
 function set_std_internet_routing_rules() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	routing_toclean=1
 	original_routing_state=$(cat /proc/sys/net/ipv4/ip_forward)
@@ -7766,9 +7766,9 @@ function set_std_internet_routing_rules() {
 #Launch dhcpd server
 function launch_dhcp_server() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	killall dhcpd > /dev/null 2>&1
 
@@ -7792,9 +7792,9 @@ function launch_dhcp_server() {
 #Execute DoS for Evil Twin attacks
 function exec_et_deauth() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	prepare_et_monitor
 
@@ -7835,9 +7835,9 @@ function exec_et_deauth() {
 #Create here-doc bash script used for wps pin attacks
 function set_wps_attack_script() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	tmpfiles_toclean=1
 	rm -rf "${tmpdir}${wps_attack_script_file}" > /dev/null 2>&1
@@ -8198,9 +8198,9 @@ function set_wps_attack_script() {
 #Create here-doc bash script used for control windows on Evil Twin attacks
 function set_control_script() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	rm -rf "${tmpdir}${control_file}" > /dev/null 2>&1
 
@@ -8423,9 +8423,9 @@ function set_control_script() {
 #Launch dnsspoof dns black hole for captive portal Evil Twin attack
 function launch_dns_blackhole() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	recalculate_windows_sizes
 	xterm -hold -bg black -fg green -geometry "${g4_middleright_window}" -T "DNS" -e "${optional_tools_names[12]} -i ${interface}" > /dev/null 2>&1 &
@@ -8435,9 +8435,9 @@ function launch_dns_blackhole() {
 #Launch control window for Evil Twin attacks
 function launch_control_window() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	recalculate_windows_sizes
 	case ${et_mode} in
@@ -8468,9 +8468,9 @@ function launch_control_window() {
 #Create configuration file for lighttpd
 function set_webserver_config() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	rm -rf "${tmpdir}${webserver_file}" > /dev/null 2>&1
 
@@ -8495,9 +8495,9 @@ function set_webserver_config() {
 #Create captive portal files. Cgi bash scripts, css and js file
 function set_captive_portal_page() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	rm -rf -R "${tmpdir}${webdir}" > /dev/null 2>&1
 	mkdir "${tmpdir}${webdir}" > /dev/null 2>&1
@@ -8703,9 +8703,9 @@ function set_captive_portal_page() {
 #Launch lighttpd webserver for captive portal Evil Twin attack
 function launch_webserver() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	killall lighttpd > /dev/null 2>&1
 	recalculate_windows_sizes
@@ -8721,9 +8721,9 @@ function launch_webserver() {
 #Launch sslstrip for sslstrip sniffing Evil Twin attack
 function launch_sslstrip() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	rm -rf "${tmpdir}${sslstrip_file}" > /dev/null 2>&1
 	recalculate_windows_sizes
@@ -8734,9 +8734,9 @@ function launch_sslstrip() {
 #Launch ettercap sniffer
 function launch_ettercap_sniffing() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	recalculate_windows_sizes
 	case ${et_mode} in
@@ -8759,9 +8759,9 @@ function launch_ettercap_sniffing() {
 #Create configuration file for beef
 function set_beef_config() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	tmpfiles_toclean=1
 	rm -rf "${tmpdir}${beef_file}" > /dev/null 2>&1
@@ -8840,9 +8840,9 @@ function set_beef_config() {
 #Kill beef process
 function kill_beef() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	killall "${optional_tools_names[19]}" > /dev/null 2>&1
 	if [ "$?" != "0" ]; then
@@ -8858,9 +8858,9 @@ function kill_beef() {
 #Detects if your beef is Flexible Brainfuck interpreter instead of BeEF
 function detect_fake_beef() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	readarray -t BEEF_OUTPUT < <(timeout -s SIGTERM 0.5 beef -h 2> /dev/null)
 
@@ -8875,9 +8875,9 @@ function detect_fake_beef() {
 #Search for beef path
 function search_for_beef() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ "${beef_found}" -eq 0 ]; then
 		for item in "${possible_beef_known_locations[@]}"; do
@@ -8893,9 +8893,9 @@ function search_for_beef() {
 #Prepare system to work with beef
 function prepare_beef_start() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	valid_possible_beef_path=0
 	if [[ ${beef_found} -eq 0 ]] && [[ ${optional_tools[${optional_tools_names[19]}]} -eq 0 ]]; then
@@ -8939,9 +8939,9 @@ function prepare_beef_start() {
 #Set beef path manually
 function manual_beef_set() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	while [[ "${valid_possible_beef_path}" != "1" ]]; do
 		echo
@@ -8980,9 +8980,9 @@ function manual_beef_set() {
 #Fix for not found beef executable
 function fix_beef_executable() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	rm -rf "/usr/bin/beef" > /dev/null 2>&1
 	{
@@ -8999,9 +8999,9 @@ function fix_beef_executable() {
 #Rewrite airgeddon script in a polymorphic way adding custom beef location to array to get persistence
 function rewrite_script_with_custom_beef() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_script_folder_and_name
 
@@ -9022,9 +9022,9 @@ function rewrite_script_with_custom_beef() {
 #Start beef process as a service
 function start_beef_service() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	service "${optional_tools_names[19]}" restart > /dev/null 2>&1
 	if [ "$?" != "0" ]; then
@@ -9035,9 +9035,9 @@ function start_beef_service() {
 #Launch beef browser exploitation framework
 function launch_beef() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	kill_beef
 
@@ -9060,9 +9060,9 @@ function launch_beef() {
 #Launch bettercap sniffer
 function launch_bettercap_sniffing() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	recalculate_windows_sizes
 	sniffing_scr_window_position=${g4_bottomright_window}
@@ -9084,9 +9084,9 @@ function launch_bettercap_sniffing() {
 #Parse ettercap log searching for captured passwords
 function parse_ettercap_log() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 304 "blue"
@@ -9126,9 +9126,9 @@ function parse_ettercap_log() {
 #Parse bettercap log searching for captured passwords
 function parse_bettercap_log() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 304 "blue"
@@ -9186,9 +9186,9 @@ function parse_bettercap_log() {
 #Write on a file the id of the captive portal Evil Twin attack processes
 function write_et_processes() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	for item in "${et_processes[@]}"; do
 		echo "${item}" >> "${tmpdir}${webdir}${processesfile}"
@@ -9198,9 +9198,9 @@ function write_et_processes() {
 #Kill the Evil Twin processes
 function kill_et_windows() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	for item in "${et_processes[@]}"; do
 		kill "${item}" &> /dev/null
@@ -9211,9 +9211,9 @@ function kill_et_windows() {
 #Convert capture file to hashcat format
 function convert_cap_to_hashcat_format() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	tmpfiles_toclean=1
 	rm -rf "${tmpdir}hctmp"* > /dev/null 2>&1
@@ -9223,9 +9223,9 @@ function convert_cap_to_hashcat_format() {
 #Handshake tools menu
 function handshake_tools_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 120 "title"
@@ -9285,9 +9285,9 @@ function handshake_tools_menu() {
 #Execute the cleaning of a Handshake file
 function exec_clean_handshake_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	check_valid_file_to_clean "${filetoclean}"
@@ -9303,9 +9303,9 @@ function exec_clean_handshake_file() {
 #Validate and ask for the parameters used to clean a Handshake file
 function clean_handshake_file_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	readpath=0
@@ -9336,9 +9336,9 @@ function clean_handshake_file_option() {
 #DoS attacks menu
 function dos_attacks_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 102 "title"
@@ -9439,9 +9439,9 @@ function dos_attacks_menu() {
 #Capture Handshake on Evil Twin attack
 function capture_handshake_evil_twin() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [[ ${enc} != "WPA" ]] && [[ ${enc} != "WPA2" ]]; then
 		echo
@@ -9511,9 +9511,9 @@ function capture_handshake_evil_twin() {
 #Capture Handshake on Handshake tools
 function capture_handshake() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [[ -z ${bssid} ]] || [[ -z ${essid} ]] || [[ -z ${channel} ]] || [[ "${essid}" = "(Hidden Network)" ]]; then
 		echo
@@ -9542,9 +9542,9 @@ function capture_handshake() {
 #Check if file exists
 function check_file_exists() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [[ ! -f "${1}" || -z "${1}" ]]; then
 		language_strings "${language}" 161 "red"
@@ -9556,9 +9556,9 @@ function check_file_exists() {
 #Validate path
 function validate_path() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	dirname=${1%/*}
 
@@ -9617,9 +9617,9 @@ function validate_path() {
 #Check for write permissions on a given path
 function check_write_permissions() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -w "${1}" ]; then
 		return 0
@@ -9630,9 +9630,9 @@ function check_write_permissions() {
 #Create a var with the name passed to the function and reading the value from the user input
 function read_and_clean_path() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	settings="$(shopt -p extglob)"
 	shopt -s extglob
@@ -9648,9 +9648,9 @@ function read_and_clean_path() {
 #Read and validate a path
 function read_path() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	case ${1} in
@@ -9736,9 +9736,9 @@ function read_path() {
 #Launch the DoS selection menu before capture a Handshake and process the captured file
 function attack_handshake_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ "${1}" = "handshake" ]; then
 		ask_yesno 145
@@ -9845,9 +9845,9 @@ function attack_handshake_menu() {
 #Launch the Handshake capture window
 function capture_handshake_window() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	language_strings "${language}" 143 "blue"
 	echo
@@ -9865,9 +9865,9 @@ function capture_handshake_window() {
 #Manage target exploration and parse the output files
 function explore_for_targets_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 103 "title"
@@ -9943,9 +9943,9 @@ function explore_for_targets_option() {
 #Manage target exploration only for Access Points with WPS activated. Parse output files and print menu with results
 function explore_for_wps_targets_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 103 "title"
@@ -10123,9 +10123,9 @@ function explore_for_wps_targets_option() {
 #Create a menu to select target from the parsed data
 function select_target() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 104 "title"
@@ -10215,9 +10215,9 @@ function select_target() {
 #Perform a test to determine if fcs parameter is needed on wash scanning
 function set_wash_parametrization() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	fcs=""
 	declare -gA wash_ifaces_already_set
@@ -10236,9 +10236,9 @@ function set_wash_parametrization() {
 #Manage and validate the prerequisites for wps pin database attacks
 function wps_pin_database_prerequisites() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_wps_mac_parameters
 	include_pin_dbfile
@@ -10265,9 +10265,9 @@ function wps_pin_database_prerequisites() {
 #Manage and validate the prerequisites for Evil Twin attacks
 function et_prerequisites() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ ${retry_handshake_capture} -eq 1 ]; then
 		return
@@ -10402,9 +10402,9 @@ function et_prerequisites() {
 #Manage the Handshake file requirement for captive portal Evil Twin attack
 function ask_et_handshake_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	readpath=0
@@ -10445,9 +10445,9 @@ function ask_et_handshake_file() {
 #DoS Evil Twin attacks menu
 function et_dos_menu() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ ${return_to_et_main_menu} -eq 1 ]; then
 		return
@@ -10625,9 +10625,9 @@ function et_dos_menu() {
 #Selected internet interface detection
 function detect_internet_interface() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ ${internet_interface_selected} -eq 1 ]; then
 		return 0
@@ -10655,9 +10655,9 @@ function detect_internet_interface() {
 #Show about and credits
 function credits_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	language_strings "${language}" 105 "title"
@@ -10686,9 +10686,9 @@ function credits_option() {
 #Show message for invalid selected language
 function invalid_language_selected() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 82 "red"
@@ -10701,9 +10701,9 @@ function invalid_language_selected() {
 #Show message for captive portal invalid selected language
 function invalid_captive_portal_language_selected() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	language_strings "${language}" 82 "red"
 	echo
@@ -10714,9 +10714,9 @@ function invalid_captive_portal_language_selected() {
 #Show message for forbidden selected option
 function forbidden_menu_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 220 "red"
@@ -10726,9 +10726,9 @@ function forbidden_menu_option() {
 #Show message for invalid selected option
 function invalid_menu_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 76 "red"
@@ -10738,9 +10738,9 @@ function invalid_menu_option() {
 #Show message for invalid selected interface
 function invalid_iface_selected() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 77 "red"
@@ -10753,9 +10753,9 @@ function invalid_iface_selected() {
 #Show message for invalid selected internet interface
 function invalid_internet_iface_selected() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 77 "red"
@@ -10768,9 +10768,9 @@ function invalid_internet_iface_selected() {
 #Manage behavior of captured traps
 function capture_traps() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	case "${1}" in
 		INT|SIGTSTP)
@@ -10804,9 +10804,9 @@ function capture_traps() {
 #Exit the script managing possible pending tasks
 function exit_script_option() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	action_on_exit_taken=0
 	echo
@@ -10866,9 +10866,9 @@ function exit_script_option() {
 #Exit the script managing possible pending tasks but not showing anything
 function hardcore_exit() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	exit_code=2
 	if [ "${ifacemode}" = "Monitor" ]; then
@@ -10897,9 +10897,9 @@ function hardcore_exit() {
 #Generate a small time loop printing some dots
 function time_loop() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo -ne " "
 	for (( j=1; j<=4; j++ )); do
@@ -10911,9 +10911,9 @@ function time_loop() {
 #Determine which version of airmon to use
 function airmon_fix() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	airmon="airmon-ng"
 
@@ -10925,9 +10925,9 @@ function airmon_fix() {
 #Prepare the fix for iwconfig command depending of the wireless tools version
 function iwconfig_fix() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	iwversion=$(iwconfig --version | grep version | awk '{print $4}')
 	iwcmdfix=""
@@ -10939,9 +10939,9 @@ function iwconfig_fix() {
 #Set hashcat parameters based on version
 function set_hashcat_parameters() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	hashcat_fix=""
 	hashcat_charset_fix_needed=0
@@ -10954,9 +10954,9 @@ function set_hashcat_parameters() {
 #Determine hashcat version
 function get_hashcat_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	hashcat_version=$(hashcat -V 2> /dev/null)
 	hashcat_version=${hashcat_version#"v"}
@@ -10965,9 +10965,9 @@ function get_hashcat_version() {
 #Determine bettercap version
 function get_bettercap_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	bettercap_version=$(bettercap -v 2> /dev/null | egrep "^bettercap [0-9]" | awk '{print $2}')
 }
@@ -10975,9 +10975,9 @@ function get_bettercap_version() {
 #Determine bully version
 function get_bully_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	bully_version=$(bully -V 2> /dev/null)
 	bully_version=${bully_version#"v"}
@@ -10986,9 +10986,9 @@ function get_bully_version() {
 #Determine reaver version
 function get_reaver_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	reaver_version=$(reaver -h 2>&1 > /dev/null | egrep "^Reaver v[0-9]" | awk '{print $2}')
 	if [ -z "${reaver_version}" ]; then
@@ -11000,9 +11000,9 @@ function get_reaver_version() {
 #Set verbosity for bully based on version
 function set_bully_verbosity() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if compare_floats_greater_or_equal "${bully_version}" "${minimum_bully_verbosity4_version}"; then
 		bully_verbosity="4"
@@ -11014,9 +11014,9 @@ function set_bully_verbosity() {
 #Validate if bully version is able to perform integrated pixiewps attack
 function validate_bully_pixiewps_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if compare_floats_greater_or_equal "${bully_version}" "${minimum_bully_pixiewps_version}"; then
 		return 0
@@ -11027,9 +11027,9 @@ function validate_bully_pixiewps_version() {
 #Validate if reaver version is able to perform integrated pixiewps attack
 function validate_reaver_pixiewps_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if compare_floats_greater_or_equal "${reaver_version}" "${minimum_reaver_pixiewps_version}"; then
 		return 0
@@ -11040,9 +11040,9 @@ function validate_reaver_pixiewps_version() {
 #Set the script folder var if necessary
 function set_script_folder_and_name() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -z "${scriptfolder}" ]; then
 		scriptfolder=${0}
@@ -11060,9 +11060,9 @@ function set_script_folder_and_name() {
 #Check if pins database file exist and try to download the new one if proceed
 function check_pins_database_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ -f "${scriptfolder}${known_pins_dbfile}" ]; then
 		language_strings "${language}" 376 "yellow"
@@ -11130,9 +11130,9 @@ function check_pins_database_file() {
 #Download the pins database file
 function download_pins_database_file() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	remote_pindb_file=$(timeout -s SIGTERM 15 curl -L ${urlscript_pins_dbfile} 2> /dev/null)
 
@@ -11147,9 +11147,9 @@ function download_pins_database_file() {
 #Ask for try to download pin db file again and set the var to skip it
 function ask_for_pin_dbfile_download_retry() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	ask_yesno 380
 	if [ ${yesno} = "n" ]; then
@@ -11160,9 +11160,9 @@ function ask_for_pin_dbfile_download_retry() {
 #Get the checksum for local pin database file
 function get_local_pin_dbfile_checksum() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local_pin_dbfile_checksum=$(md5sum "${1}" | awk '{print $1}')
 }
@@ -11170,9 +11170,9 @@ function get_local_pin_dbfile_checksum() {
 #Get the checksum for remote pin database file
 function get_remote_pin_dbfile_checksum() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	remote_pin_dbfile_checksum=$(timeout -s SIGTERM 15 curl -L ${urlscript_pins_dbfile_checksum} 2> /dev/null | head -n 1)
 
@@ -11185,9 +11185,9 @@ function get_remote_pin_dbfile_checksum() {
 #Check for possible non Linux operating systems
 function non_linux_os_check() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	case "${OSTYPE}" in
 		solaris*)
@@ -11205,9 +11205,9 @@ function non_linux_os_check() {
 #First phase of Linux distro detection based on uname output
 function detect_distro_phase1() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	for i in "${known_compatible_distros[@]}"; do
 		uname -a | grep "${i}" -i > /dev/null
@@ -11221,9 +11221,9 @@ function detect_distro_phase1() {
 #Second phase of Linux distro detection based on architecture and version file
 function detect_distro_phase2() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ "${distro}" = "Unknown Linux" ]; then
 		if [ -f ${osversionfile_dir}"centos-release" ]; then
@@ -11270,9 +11270,9 @@ function detect_distro_phase2() {
 #Detect if arm architecture is present on system
 function detect_arm_architecture() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	distro_already_known=0
 	uname -m | grep -i "arm" > /dev/null
@@ -11297,9 +11297,9 @@ function detect_arm_architecture() {
 #Set some useful vars based on Linux distro
 function special_distro_features() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	case ${distro} in
 		"Wifislax")
@@ -11420,9 +11420,9 @@ function special_distro_features() {
 #Determine if NetworkManager must be killed on your system. Only needed for previous versions of 1.0.12
 function check_if_kill_needed() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	nm_min_main_version="1"
 	nm_min_subversion="0"
@@ -11459,9 +11459,9 @@ function check_if_kill_needed() {
 #Do some checks for some general configuration
 function general_checkings() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	compatible=0
 	distro="Unknown Linux"
@@ -11493,9 +11493,9 @@ function general_checkings() {
 #Check if the user is root
 function check_root_permissions() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	user=$(whoami)
 
@@ -11507,9 +11507,9 @@ function check_root_permissions() {
 #Print Linux known distros
 function print_known_distros() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	all_known_compatible_distros=("${known_compatible_distros[@]}" "${known_arm_compatible_distros[@]}")
 	IFS=$'\n'
@@ -11525,9 +11525,9 @@ function print_known_distros() {
 #Check if you have installed the tools (essential and optional) that the script uses
 function check_compatibility() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 108 "blue"
@@ -11628,9 +11628,9 @@ function check_compatibility() {
 #Check for the minimum bash version requirement
 function check_bash_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	bashversion="${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}"
@@ -11646,9 +11646,9 @@ function check_bash_version() {
 #Check if you have installed the tools required to update the script
 function check_update_tools() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ ${auto_update} -eq 1 ]; then
 		if [ ${update_toolsok} -eq 1 ]; then
@@ -11664,9 +11664,9 @@ function check_update_tools() {
 #Check if window size is enough for intro
 function check_window_size_for_intro() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	window_width=$(tput cols)
 	window_height=$(tput lines)
@@ -11689,9 +11689,9 @@ function check_window_size_for_intro() {
 #Print the script intro
 function print_intro() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo -e "${yellow_color}                  .__                         .___  .___"
 	sleep 0.15 && echo -e "           _____  |__|______  ____   ____   __| _/__| _/____   ____"
@@ -11708,9 +11708,9 @@ function print_intro() {
 #Generate the frames of the animated ascii art flying saucer
 function flying_saucer() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	case ${1} in
 		1)
@@ -11752,9 +11752,9 @@ function flying_saucer() {
 #Print animated ascii art flying saucer
 function print_animated_flying_saucer() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo -e "\033[s"
 
@@ -11772,9 +11772,9 @@ function print_animated_flying_saucer() {
 #Initialize script settings
 function initialize_script_settings() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	exit_code=0
 	check_kill_needed=0
@@ -11798,9 +11798,9 @@ function initialize_script_settings() {
 #Detect screen resolution if possible
 function detect_screen_resolution() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	resolution_detected=0
 	if hash xdpyinfo 2> /dev/null; then
@@ -11821,9 +11821,9 @@ function detect_screen_resolution() {
 #Set windows sizes and positions
 function set_windows_sizes() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	set_xsizes
 	set_ysizes
@@ -11854,9 +11854,9 @@ function set_windows_sizes() {
 #Set sizes for x axis
 function set_xsizes() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	xtotal=$(awk -v n1="${resolution_x}" "BEGIN{print n1 / ${xratio}}")
 
@@ -11877,9 +11877,9 @@ function set_xsizes() {
 #Set sizes for y axis
 function set_ysizes() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	ytotal=$(awk -v n1="${resolution_y}" "BEGIN{print n1 / ${yratio}}")
 	ytotaltmp=$(printf "%.0f" "${ytotal}" 2> /dev/null)
@@ -11899,9 +11899,9 @@ function set_ysizes() {
 #Set positions for y axis
 function set_ypositions() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	middle_position=$((resolution_y / 3 + ywindow_edge_pixels))
 }
@@ -11909,9 +11909,9 @@ function set_ypositions() {
 #Recalculate windows sizes and positions
 function recalculate_windows_sizes() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	detect_screen_resolution
 	set_windows_sizes
@@ -11920,9 +11920,9 @@ function recalculate_windows_sizes() {
 #Script starting point
 function welcome() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	clear
 	current_menu="pre_main_menu"
@@ -11993,9 +11993,9 @@ function welcome() {
 #Avoid the problem of using airmon-zc without ethtool or lspci installed
 function airmonzc_security_check() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [ "${airmon}" = "airmon-zc" ]; then
 		if ! hash ethtool 2> /dev/null; then
@@ -12019,9 +12019,9 @@ function airmonzc_security_check() {
 #Compare if first float argument is greater than float second argument
 function compare_floats_greater_than() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	awk -v n1="${1}" -v n2="${2}" 'BEGIN{if (n1>n2) exit 0; exit 1}'
 }
@@ -12029,9 +12029,9 @@ function compare_floats_greater_than() {
 #Compare if first float argument is greater or equal than float second argument
 function compare_floats_greater_or_equal() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	awk -v n1="${1}" -v n2="${2}" 'BEGIN{if (n1>=n2) exit 0; exit 1}'
 }
@@ -12039,9 +12039,9 @@ function compare_floats_greater_or_equal() {
 #Update and relaunch the script
 function download_last_version() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	rewrite_script_with_custom_beef "search"
 	timeout -s SIGTERM 15 curl -L ${urlscript_directlink} -s -o "${0}"
@@ -12063,9 +12063,9 @@ function download_last_version() {
 #Validate if the selected internet interface has internet access
 function validate_et_internet_interface() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 287 "blue"
@@ -12096,9 +12096,9 @@ function validate_et_internet_interface() {
 #Check for active internet connection
 function check_internet_access() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	ping -c 1 ${host_to_check_internet} -W 1 > /dev/null 2>&1
 	return $?
@@ -12107,9 +12107,9 @@ function check_internet_access() {
 #Check for default route on an interface
 function check_default_route() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	route | grep "${1}" | grep "default" > /dev/null
 	return $?
@@ -12118,9 +12118,9 @@ function check_default_route() {
 #Update the script if your version is lower than the cloud version
 function autoupdate_check() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo
 	language_strings "${language}" 210 "blue"
@@ -12156,9 +12156,9 @@ function autoupdate_check() {
 #Check if you can launch captive portal Evil Twin attack
 function check_et_without_internet_compatibility() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if ! hash "${optional_tools_names[12]}" 2> /dev/null; then
 		return 1
@@ -12169,9 +12169,9 @@ function check_et_without_internet_compatibility() {
 #Change script language automatically if OS language is supported by the script and different from current language
 function autodetect_language() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	[[ $(locale | grep LANG) =~ ^(.*)=\"?([a-zA-Z]+)_(.*)$ ]] && lang="${BASH_REMATCH[2]}"
 
@@ -12187,9 +12187,9 @@ function autodetect_language() {
 #Clean some known and controlled warnings for shellcheck tool
 function remove_warnings() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo "${clean_handshake_dependencies[@]}" > /dev/null 2>&1
 	echo "${aircrack_attacks_dependencies[@]}" > /dev/null 2>&1
@@ -12212,9 +12212,9 @@ function remove_warnings() {
 #Print a simple separator
 function print_simple_separator() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo_blue "---------"
 }
@@ -12222,9 +12222,9 @@ function print_simple_separator() {
 #Print a large separator
 function print_large_separator() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	echo_blue "-------------------------------------------------------"
 }
@@ -12232,9 +12232,9 @@ function print_large_separator() {
 #Add the PoT prefix on printed strings if PoT mark is found
 function check_pending_of_translation() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	if [[ "${1}" =~ ^${escaped_pending_of_translation}([[:space:]])(.*)$ ]]; then
 		text="${cyan_color}${pending_of_translation} ${2}${BASH_REMATCH[2]}"
@@ -12256,9 +12256,9 @@ function check_pending_of_translation() {
 #Print under construction message used on some menu entries
 function under_construction_message() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	local var_uc="${under_constructionvar^}"
 	echo
@@ -12269,9 +12269,9 @@ function under_construction_message() {
 #Canalize the echo functions
 function last_echo() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	check_pending_of_translation "${1}" "${2}"
 	if [ "$?" != "0" ]; then
@@ -12284,9 +12284,9 @@ function last_echo() {
 #Print green messages
 function echo_green() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${green_color}"
 }
@@ -12294,9 +12294,9 @@ function echo_green() {
 #Print blue messages
 function echo_blue() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${blue_color}"
 }
@@ -12304,9 +12304,9 @@ function echo_blue() {
 #Print yellow messages
 function echo_yellow() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${yellow_color}"
 }
@@ -12314,9 +12314,9 @@ function echo_yellow() {
 #Print red messages
 function echo_red() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${red_color}"
 }
@@ -12324,9 +12324,9 @@ function echo_red() {
 #Print red messages using a slimmer thickness
 function echo_red_slim() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${red_color_slim}"
 }
@@ -12334,9 +12334,9 @@ function echo_red_slim() {
 #Print black messages with background for titles
 function echo_green_title() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${green_color_title}"
 }
@@ -12344,9 +12344,9 @@ function echo_green_title() {
 #Print pink messages
 function echo_pink() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${pink_color}"
 }
@@ -12354,9 +12354,9 @@ function echo_pink() {
 #Print cyan messages
 function echo_cyan() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${cyan_color}"
 }
@@ -12364,9 +12364,9 @@ function echo_cyan() {
 #Print brown messages
 function echo_brown() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${brown_color}"
 }
@@ -12374,9 +12374,9 @@ function echo_brown() {
 #Print white messages
 function echo_white() {
 
-  if [ ${debug_mode} -eq 2 ]; then
-    echo "${FUNCNAME}" "${@}"
-  fi
+	if [ ${debug_mode} -eq 2 ]; then
+	  echo "${FUNCNAME}" "${@}"
+	fi
 
 	last_echo "${1}" "${white_color}"
 }
