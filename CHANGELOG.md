@@ -1,3 +1,11 @@
+### 7.21
+ - Italian language translation added (Thank you to "salu90")
+ - Tested compatibility with Parrot 3.7 and Fedora 26
+ - Improved check for root permissions, now mandatory
+ - Fixed bug for some menu inputs using special chars. Now sanitized
+ - Code improvements, removed new shellcheck warnings
+ - Fixed bug launching BeEF Evil Twin attack twice
+
 ### 7.2
  - Improved chipset detection
  - New language and options menu

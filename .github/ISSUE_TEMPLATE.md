@@ -1,6 +1,6 @@
 <!--- Please, answer the questions to provide maximum of info -->
-<!--- Answer in English only -->
-<!--- If additional info is required and requested by airgeddon's staff, you have 10 days to respond otherwise the issue will be closed -->
+<!--- Write in English only -->
+<!--- If additional info is required and requested by airgeddon's staff, you have 7 days to respond, otherwise the issue will be closed -->
 
 #### What is your airgeddon version?
 

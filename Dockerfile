@@ -128,6 +128,7 @@ RUN \
 #Clean files
 RUN rm -rf /opt/airgeddon/imgs > /dev/null 2>&1 && \
 	rm -rf /opt/airgeddon/.github > /dev/null 2>&1 && \
+	rm -rf /opt/airgeddon/.editorconfig > /dev/null 2>&1 && \
 	rm -rf /opt/airgeddon/CONTRIBUTING.md > /dev/null 2>&1 && \
 	rm -rf /opt/airgeddon/pindb_checksum.txt > /dev/null 2>&1 && \
 	rm -rf /opt/airgeddon/Dockerfile > /dev/null 2>&1 && \
@@ -139,5 +140,5 @@ RUN rm -rf /opt/airgeddon/imgs > /dev/null 2>&1 && \
 #Expose BeEF control panel port
 EXPOSE 3000
 
-#Entrypoint
+#Start command (launching airgeddon)
 CMD ["/bin/bash", "-c", "/opt/airgeddon/airgeddon.sh"]

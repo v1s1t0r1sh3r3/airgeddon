@@ -4,7 +4,7 @@ Hi there! We are thrilled that you would like to contribute to this project. You
 
 When contributing to this repository, please first discuss the change you wish to make via issue,
 email, or any other method with the owners of this repository before making a change.
-If an issue is opened and more info is needed, `airgeddon` staff will request it. If there is no answer in 10 days, the issue will be closed.
+If an issue is opened and more info is needed, `airgeddon` staff will request it. If there is no answer in 7 days, the issue will be closed.
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 

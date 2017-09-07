@@ -2,8 +2,8 @@
 #Title........: airgeddon.sh
 #Description..: This is a multi-use bash script for Linux systems to audit wireless networks.
 #Author.......: v1s1t0r
-#Date.........: 20170717
-#Version......: 7.2
+#Date.........: 20170905
+#Version......: 7.21
 #Usage........: bash airgeddon.sh
 #Bash Version.: 4.2 or later
 
@@ -30,6 +30,7 @@ declare -A lang_association=(
 								["pt"]="PORTUGUESE"
 								["ru"]="RUSSIAN"
 								["gr"]="GREEK"
+								["it"]="ITALIAN"
 							)
 
 #Tools vars
@@ -109,8 +110,8 @@ declare -A possible_alias_names=(
 								)
 
 #General vars
-airgeddon_version="7.2"
-language_strings_expected_version="7.2-1"
+airgeddon_version="7.21"
+language_strings_expected_version="7.21-1"
 standardhandshake_filename="handshake-01.cap"
 tmpdir="/tmp/"
 osversionfile_dir="/etc/"
@@ -272,7 +273,7 @@ declare main_hints=(128 134 163 437 438 442 445)
 declare dos_hints=(129 131 133)
 declare handshake_hints=(127 130 132 136)
 declare handshake_attack_hints=(142)
-declare decrypt_hints=(171 178 179 208 244)
+declare decrypt_hints=(171 178 179 208 244 163)
 declare select_interface_hints=(246)
 declare language_hints=(250 438)
 declare option_hints=(445 250 448 477)
@@ -339,12 +340,10 @@ function check_language_strings() {
 		echo
 		echo_blue "${language_strings_try_to_download[${language}]}"
 		read -p "${language_strings_key_to_continue[${language}]}" -r
-		check_repository_access
 
-		if [ "$?" = "0" ]; then
+		if check_repository_access; then
 
-			download_language_strings_file
-			if [ "$?" = "0" ]; then
+			if download_language_strings_file; then
 				echo
 				echo_yellow "${language_strings_successfully_downloaded[${language}]}"
 				read -p "${language_strings_key_to_continue[${language}]}" -r
@@ -409,6 +408,7 @@ function language_strings_handling_messages() {
 	language_strings_no_file["PORTUGUESE"]="Erro. O arquivo de tradução não foi encontrado"
 	language_strings_no_file["RUSSIAN"]="Ошибка. Не найден языковой файл"
 	language_strings_no_file["GREEK"]="Σφάλμα. Το αρχείο γλωσσών δεν βρέθηκε"
+	language_strings_no_file["ITALIAN"]="Errore. Non si trova il file delle traduzioni"
 
 	declare -gA language_strings_file_mismatch
 	language_strings_file_mismatch["ENGLISH"]="Error. The language strings file found mismatches expected version"
@@ -418,6 +418,7 @@ function language_strings_handling_messages() {
 	language_strings_file_mismatch["PORTUGUESE"]="Erro. O a versão do arquivos de tradução encontrado é a incompatível"
 	language_strings_file_mismatch["RUSSIAN"]="Ошибка. Языковой файл не соответствует ожидаемой версии"
 	language_strings_file_mismatch["GREEK"]="Σφάλμα. Το αρχείο γλωσσών που έχει βρεθεί δεν αντιστοιχεί με την προαπαιτούμενη έκδοση"
+	language_strings_file_mismatch["ITALIAN"]="Errore. Il file delle traduzioni trovato non è la versione prevista"
 
 	declare -gA language_strings_try_to_download
 	language_strings_try_to_download["ENGLISH"]="airgeddon will try to download the language strings file..."
@@ -427,6 +428,7 @@ function language_strings_handling_messages() {
 	language_strings_try_to_download["PORTUGUESE"]="O airgeddon tentará baixar o arquivo de tradução..."
 	language_strings_try_to_download["RUSSIAN"]="airgeddon попытается загрузить языковой файл..."
 	language_strings_try_to_download["GREEK"]="Το airgeddon θα προσπαθήσει να κατεβάσει το αρχείο γλωσσών..."
+	language_strings_try_to_download["ITALIAN"]="airgeddon cercherá di scaricare il file delle traduzioni..."
 
 	declare -gA language_strings_successfully_downloaded
 	language_strings_successfully_downloaded["ENGLISH"]="Language strings file was successfully downloaded"
@@ -436,6 +438,7 @@ function language_strings_handling_messages() {
 	language_strings_successfully_downloaded["PORTUGUESE"]="O arquivo de tradução foi baixado com sucesso"
 	language_strings_successfully_downloaded["RUSSIAN"]="Языковой файл был успешно загружен"
 	language_strings_successfully_downloaded["GREEK"]="Το αρχείο γλωσσών κατέβηκε με επιτυχία"
+	language_strings_successfully_downloaded["ITALIAN"]="Il file delle traduzioni è stato scaricato con successo"
 
 	declare -gA language_strings_failed_downloading
 	language_strings_failed_downloading["ENGLISH"]="The language string file can't be downloaded. Check your internet connection or download it manually from ${normal_color}${urlgithub}"
@@ -445,6 +448,7 @@ function language_strings_handling_messages() {
 	language_strings_failed_downloading["PORTUGUESE"]="Não foi possível baixar o arquivos de tradução. Verifique a sua conexão com a internet ou baixe manualmente em ${normal_color}${urlgithub}"
 	language_strings_failed_downloading["RUSSIAN"]="Языковой файл не может быть загружен. Проверьте подключение к Интернету или загрузите его вручную с ${normal_color}${urlgithub}"
 	language_strings_failed_downloading["GREEK"]="Το αρχείο γλωσσών δεν μπορεί να κατέβει. Ελέγξτε τη σύνδεση σας με το διαδίκτυο ή κατεβάστε το χειροκίνητα ${normal_color}${urlgithub}"
+	language_strings_failed_downloading["ITALIAN"]="Impossibile scaricare il file delle traduzioni. Controlla la tua connessione a internet o scaricalo manualmente ${normal_color}${urlgithub}"
 
 	declare -gA language_strings_first_time
 	language_strings_first_time["ENGLISH"]="If you are seeing this message after an automatic update, don't be scared! It's probably because airgeddon has different file structure since version 6.1. It will be automatically fixed"
@@ -454,6 +458,7 @@ function language_strings_handling_messages() {
 	language_strings_first_time["PORTUGUESE"]="Se você está vendo esta mensagem depois de uma atualização automática, não tenha medo! A partir da versão 6.1 da estrutura de arquivos do airgeddon mudou. Isso será corrigido automaticamente"
 	language_strings_first_time["RUSSIAN"]="Если вы видите это сообщение после автоматического обновления, не переживайте! Вероятно, это объясняется тем, что, начиная с версии 6.1, airgeddon имеет другую структуру файлов. Проблема будет разрешена автоматически"
 	language_strings_first_time["GREEK"]="Εάν βλέπετε αυτό το μήνυμα μετά από κάποια αυτόματη ενημέρωση, μην τρομάξετε! Πιθανόν είναι λόγω της διαφορετικής δομής του airgeddon μετά από την έκδοση 6.1. Θα επιδιορθωθεί αυτόματα"
+	language_strings_first_time["ITALIAN"]="Se stai vedendo questo messaggio dopo un aggiornamento automatico, niente panico! probabilmente è perché a partire dalla versione 6.1 é cambiata la struttura dei file di airgeddon. Sarà riparato automaticamente"
 
 	declare -gA language_strings_exiting
 	language_strings_exiting["ENGLISH"]="Exiting airgeddon script v${airgeddon_version} - See you soon! :)"
@@ -463,6 +468,7 @@ function language_strings_handling_messages() {
 	language_strings_exiting["PORTUGUESE"]="Saindo do script airgeddon v${airgeddon_version} - Até breve! :)"
 	language_strings_exiting["RUSSIAN"]="Выход из скрипта airgeddon v${airgeddon_version} - До встречи! :)"
 	language_strings_exiting["GREEK"]="Κλείσιμο του airgeddon v${airgeddon_version} - Αντίο :)"
+	language_strings_exiting["ITALIAN"]="Uscendo dallo script airgeddon v${airgeddon_version} - A presto! :)"
 
 	declare -gA language_strings_key_to_continue
 	language_strings_key_to_continue["ENGLISH"]="Press [Enter] key to continue..."
@@ -472,6 +478,7 @@ function language_strings_handling_messages() {
 	language_strings_key_to_continue["PORTUGUESE"]="Pressione a tecla [Enter] para continuar..."
 	language_strings_key_to_continue["RUSSIAN"]="Нажмите клавишу [Enter] для продолжения..."
 	language_strings_key_to_continue["GREEK"]="Πατήστε το κουμπί [Enter] για να συνεχίσετε..."
+	language_strings_key_to_continue["ITALIAN"]="Premere il tasto [Enter] per continuare..."
 }
 
 #Toggle language auto-detection feature
@@ -481,15 +488,13 @@ function auto_change_language_toggle() {
 
 	if [ "${auto_change_language}" -eq 1 ]; then
 		sed -ri 's:(auto_change_language)=(1):\1=0:' "${scriptfolder}${scriptname}" 2> /dev/null
-		grep -E "auto_[c]hange_language=0" "${scriptfolder}${scriptname}" > /dev/null
-		if [ "$?" != "0" ]; then
+		if ! grep -E "auto_[c]hange_language=0" "${scriptfolder}${scriptname}" > /dev/null; then
 			return 1
 		fi
 		auto_change_language=$((auto_change_language-1))
 	else
 		sed -ri 's:(auto_change_language)=(0):\1=1:' "${scriptfolder}${scriptname}" 2> /dev/null
-		grep -E "auto_[c]hange_language=1" "${scriptfolder}${scriptname}" > /dev/null
-		if [ "$?" != "0" ]; then
+		if ! grep -E "auto_[c]hange_language=1" "${scriptfolder}${scriptname}" > /dev/null; then
 			return 1
 		fi
 		auto_change_language=$((auto_change_language+1))
@@ -504,15 +509,13 @@ function allow_colorization_toggle() {
 
 	if [ "${allow_colorization}" -eq 1 ]; then
 		sed -ri 's:(allow_colorization)=(1):\1=0:' "${scriptfolder}${scriptname}" 2> /dev/null
-		grep -E "allow_[c]olorization=0" "${scriptfolder}${scriptname}" > /dev/null
-		if [ "$?" != "0" ]; then
+		if ! grep -E "allow_[c]olorization=0" "${scriptfolder}${scriptname}" > /dev/null; then
 			return 1
 		fi
 		allow_colorization=$((allow_colorization-1))
 	else
 		sed -ri 's:(allow_colorization)=(0):\1=1:' "${scriptfolder}${scriptname}" 2> /dev/null
-		grep -E "allow_[c]olorization=1" "${scriptfolder}${scriptname}" > /dev/null
-		if [ "$?" != "0" ]; then
+		if ! grep -E "allow_[c]olorization=1" "${scriptfolder}${scriptname}" > /dev/null; then
 			return 1
 		fi
 		allow_colorization=$((allow_colorization+1))
@@ -528,15 +531,13 @@ function auto_update_toggle() {
 
 	if [ "${auto_update}" -eq 1 ]; then
 		sed -ri 's:(auto_update)=(1):\1=0:' "${scriptfolder}${scriptname}" 2> /dev/null
-		grep -E "auto_[u]pdate=0" "${scriptfolder}${scriptname}" > /dev/null
-		if [ "$?" != "0" ]; then
+		if ! grep -E "auto_[u]pdate=0" "${scriptfolder}${scriptname}" > /dev/null; then
 			return 1
 		fi
 		auto_update=$((auto_update-1))
 	else
 		sed -ri 's:(auto_update)=(0):\1=1:' "${scriptfolder}${scriptname}" 2> /dev/null
-		grep -E "auto_[u]pdate=1" "${scriptfolder}${scriptname}" > /dev/null
-		if [ "$?" != "0" ]; then
+		if ! grep -E "auto_[u]pdate=1" "${scriptfolder}${scriptname}" > /dev/null; then
 			return 1
 		fi
 		auto_update=$((auto_update+1))
@@ -559,8 +560,7 @@ function set_permanent_language() {
 	debug_print
 
 	sed -ri "s:^([l]anguage)=\"[a-zA-Z]+\":\1=\"${language}\":" "${scriptfolder}${scriptname}" 2> /dev/null
-	grep -E "^[l]anguage=\"${language}\"" "${scriptfolder}${scriptname}" > /dev/null
-	if [ "$?" != "0" ]; then
+	if ! grep -E "^[l]anguage=\"${language}\"" "${scriptfolder}${scriptname}" > /dev/null; then
 		return 1
 	fi
 	return 0
@@ -940,8 +940,7 @@ function check_and_set_common_algorithms() {
 	easybox_pin=$(printf '%08d\n' $((current_calculated_pin + checksum_digit)))
 	calculated_pins+=("${easybox_pin}")
 
-	integrate_algorithms_pins
-	if [ "$?" = "0" ]; then
+	if integrate_algorithms_pins; then
 		echo
 		language_strings "${language}" 389 "yellow"
 	fi
@@ -1024,8 +1023,7 @@ function prepare_et_interface() {
 		ifacemode="Managed"
 		[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 		if [ "${interface}" != "${new_interface}" ]; then
-			check_interface_coherence
-			if [ "$?" = "0" ]; then
+			if check_interface_coherence; then
 				interface=${new_interface}
 			fi
 			echo
@@ -1086,9 +1084,7 @@ function managed_option() {
 
 	debug_print
 
-	check_to_set_managed
-
-	if [ "$?" != "0" ]; then
+	if ! check_to_set_managed; then
 		return
 	fi
 
@@ -1102,8 +1098,7 @@ function managed_option() {
 	[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
 	if [ "${interface}" != "${new_interface}" ]; then
-		check_interface_coherence
-		if [ "$?" = "0" ]; then
+		if check_interface_coherence; then
 			interface=${new_interface}
 		fi
 		echo
@@ -1120,9 +1115,7 @@ function monitor_option() {
 
 	debug_print
 
-	check_to_set_monitor
-
-	if [ "$?" != "0" ]; then
+	if ! check_to_set_monitor; then
 		return
 	fi
 
@@ -1131,9 +1124,8 @@ function monitor_option() {
 	language_strings "${language}" 18 "blue"
 
 	ifconfig "${interface}" up
-	iwconfig "${interface}" rate 1M > /dev/null 2>&1
 
-	if [ "$?" != "0" ]; then
+	if ! iwconfig "${interface}" rate 1M > /dev/null 2>&1; then
 		echo
 		language_strings "${language}" 20 "red"
 		language_strings "${language}" 115 "read"
@@ -1161,8 +1153,7 @@ function monitor_option() {
 	[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
 	if [ "${interface}" != "${new_interface}" ]; then
-		check_interface_coherence
-		if [ "$?" = "0" ]; then
+		if check_interface_coherence; then
 			interface=${new_interface}
 		fi
 		echo
@@ -1179,8 +1170,7 @@ function check_interface_mode() {
 
 	debug_print
 
-	execute_iwconfig_fix
-	if [ "$?" != "0" ]; then
+	if ! execute_iwconfig_fix; then
 		ifacemode="(Non wifi card)"
 		return 0
 	fi
@@ -1248,8 +1238,7 @@ function option_menu() {
 			if [ "${auto_update}" -eq 1 ]; then
 				ask_yesno 457 "no"
 				if [ "${yesno}" = "y" ]; then
-					auto_update_toggle
-					if [ "$?" = "0" ]; then
+					if auto_update_toggle; then
 						echo
 						language_strings "${language}" 461 "blue"
 					else
@@ -1262,8 +1251,7 @@ function option_menu() {
 				language_strings "${language}" 459 "yellow"
 				ask_yesno 458 "no"
 				if [ "${yesno}" = "y" ]; then
-					auto_update_toggle
-					if [ "$?" = "0" ]; then
+					if auto_update_toggle; then
 						echo
 						language_strings "${language}" 460 "blue"
 					else
@@ -1283,8 +1271,7 @@ function option_menu() {
 			if [ "${allow_colorization}" -eq 1 ]; then
 				ask_yesno 462 "yes"
 				if [ "${yesno}" = "y" ]; then
-					allow_colorization_toggle
-					if [ "$?" = "0" ]; then
+					if allow_colorization_toggle; then
 						echo
 						language_strings "${language}" 466 "blue"
 					else
@@ -1296,8 +1283,7 @@ function option_menu() {
 			else
 				ask_yesno 463 "yes"
 				if [ "${yesno}" = "y" ]; then
-					allow_colorization_toggle
-					if [ "$?" = "0" ]; then
+					if allow_colorization_toggle; then
 						echo
 						language_strings "${language}" 465 "blue"
 					else
@@ -1312,8 +1298,7 @@ function option_menu() {
 			if [ "${auto_change_language}" -eq 1 ]; then
 				ask_yesno 469 "no"
 				if [ "${yesno}" = "y" ]; then
-					auto_change_language_toggle
-					if [ "$?" = "0" ]; then
+					if auto_change_language_toggle; then
 						echo
 						language_strings "${language}" 473 "blue"
 					else
@@ -1327,8 +1312,7 @@ function option_menu() {
 				language_strings "${language}" 471 "yellow"
 				ask_yesno 470 "no"
 				if [ "${yesno}" = "y" ]; then
-					auto_change_language_toggle
-					if [ "$?" = "0" ]; then
+					if auto_change_language_toggle; then
 						echo
 						language_strings "${language}" 472 "blue"
 					else
@@ -1355,8 +1339,7 @@ function option_menu() {
 						auto_change_language_toggle
 					fi
 
-					set_permanent_language
-					if [ "$?" = "0" ]; then
+					if set_permanent_language; then
 						echo
 						language_strings "${language}" 481 "blue"
 					else
@@ -1397,6 +1380,7 @@ function language_menu() {
 	language_strings "${language}" 249
 	language_strings "${language}" 308
 	language_strings "${language}" 320
+	language_strings "${language}" 482
 	print_simple_separator
 	language_strings "${language}" 446
 	print_hint ${current_menu}
@@ -1468,6 +1452,15 @@ function language_menu() {
 			language_strings "${language}" 115 "read"
 		;;
 		8)
+			if [ "${language}" = "ITALIAN" ]; then
+				language_strings "${language}" 251 "red"
+			else
+				language="ITALIAN"
+				language_strings "${language}" 483 "yellow"
+			fi
+			language_strings "${language}" 115 "read"
+		;;
+		9)
 			return
 		;;
 		*)
@@ -1599,9 +1592,7 @@ function select_internet_interface() {
 	print_hint ${current_menu}
 
 	read -r inet_iface
-	if [ -z "${inet_iface}" ]; then
-		invalid_internet_iface_selected
-	elif [[ ${inet_iface} -lt 1 ]] || [[ ${inet_iface} -gt ${option_counter_back} ]]; then
+	if [[ ! ${inet_iface} =~ ^[[:digit:]]+$ ]] || (( inet_iface < 1 || inet_iface > option_counter_back )); then
 		invalid_internet_iface_selected
 	elif [ "${inet_iface}" -eq ${option_counter_back} ]; then
 		return_to_et_main_menu=1
@@ -1650,9 +1641,7 @@ function select_interface() {
 	print_hint ${current_menu}
 
 	read -r iface
-	if [ -z "${iface}" ]; then
-		invalid_iface_selected
-	elif [[ ${iface} -lt 1 ]] || [[ ${iface} -gt ${option_counter} ]]; then
+	if [[ ! ${iface} =~ ^[[:digit:]]+$ ]] || (( iface < 1 || iface > option_counter )); then
 		invalid_iface_selected
 	else
 		option_counter2=0
@@ -2017,7 +2006,7 @@ function set_wep_key_script() {
 	exec 8>"${tmpdir}${wep_key_handler}"
 
 	cat >&8 <<-EOF
-		#!/bin/bash
+		#!/usr/bin/env bash
 		wep_key_found=0
 
 		#Check if the wep password was captured and manage to save it on a file
@@ -2122,7 +2111,7 @@ function set_wep_key_script() {
 	EOF
 
 	cat >&8 <<-EOF
-			wep_key_cmd="echo -e '\t${yellow_color}${wep_texts[${language},5]} ${white_color}// ${blue_color}BSSID: ${normal_color}${bssid} ${yellow_color}// ${blue_color}${wep_texts[${language},6]}: ${normal_color}${channel} ${yellow_color}// ${blue_color}ESSID: ${normal_color}${essid}'"
+			wep_key_cmd="echo -e '\t${yellow_color}${wep_texts[${language},5]} ${white_color}// ${blue_color}BSSID: ${normal_color}${bssid} ${yellow_color}// ${blue_color}${wep_texts[${language},2]}: ${normal_color}${channel} ${yellow_color}// ${blue_color}ESSID: ${normal_color}${essid}'"
 			wep_key_cmd+="&& echo"
 			wep_key_cmd+="&& echo -e '\t${blue_color}${wep_texts[${language},4]}${normal_color}'"
 			wep_key_cmd+="&& echo"
@@ -2145,9 +2134,9 @@ function set_wep_key_script() {
 	cat >&8 <<-EOF
 			wep_key_cmd+="&& echo"
 			wep_key_cmd+="&& echo"
-			wep_key_cmd+="&& echo -e '\t${pink_color}${wep_texts[${language},7]}: [${normal_color}${weppotenteredpath}${pink_color}]${normal_color}'"
+			wep_key_cmd+="&& echo -e '\t${pink_color}${wep_texts[${language},6]}: [${normal_color}${weppotenteredpath}${pink_color}]${normal_color}'"
 			wep_key_cmd+="&& echo"
-			wep_key_cmd+="&& echo -e '\t${yellow_color}${wep_texts[${language},8]}'"
+			wep_key_cmd+="&& echo -e '\t${yellow_color}${wep_texts[${language},7]}'"
 
 			window_position="${g5_topright_window}"
 			sleep 0.5
@@ -2176,7 +2165,7 @@ function set_wep_script() {
 	exec 6>"${tmpdir}${wep_attack_file}"
 
 	cat >&6 <<-EOF
-		#!/bin/bash
+		#!/usr/bin/env bash
 		#shellcheck disable=SC1037
 		#shellcheck disable=SC2164
 		#shellcheck disable=SC2140
@@ -2698,16 +2687,14 @@ function mdk3_deauth_option() {
 	language_strings "${language}" 95 "title"
 	language_strings "${language}" 35 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return
 	fi
 
 	echo
 	language_strings "${language}" 34 "yellow"
 
-	ask_bssid
-	if [ "$?" != "0" ]; then
+	if ! ask_bssid; then
 		return
 	fi
 	ask_channel
@@ -2723,16 +2710,14 @@ function aireplay_deauth_option() {
 	language_strings "${language}" 96 "title"
 	language_strings "${language}" 36 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return
 	fi
 
 	echo
 	language_strings "${language}" 34 "yellow"
 
-	ask_bssid
-	if [ "$?" != "0" ]; then
+	if ! ask_bssid; then
 		return
 	fi
 	ask_channel
@@ -2748,16 +2733,14 @@ function wds_confusion_option() {
 	language_strings "${language}" 97 "title"
 	language_strings "${language}" 37 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return
 	fi
 
 	echo
 	language_strings "${language}" 34 "yellow"
 
-	ask_essid "verify"
-	if [ "$?" != "0" ]; then
+	if ! ask_essid "verify"; then
 		return
 	fi
 	ask_channel
@@ -2773,16 +2756,14 @@ function beacon_flood_option() {
 	language_strings "${language}" 98 "title"
 	language_strings "${language}" 38 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return
 	fi
 
 	echo
 	language_strings "${language}" 34 "yellow"
 
-	ask_essid "verify"
-	if [ "$?" != "0" ]; then
+	if ! ask_essid "verify"; then
 		return
 	fi
 	ask_channel
@@ -2798,16 +2779,14 @@ function auth_dos_option() {
 	language_strings "${language}" 99 "title"
 	language_strings "${language}" 39 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return
 	fi
 
 	echo
 	language_strings "${language}" 34 "yellow"
 
-	ask_bssid
-	if [ "$?" != "0" ]; then
+	if ! ask_bssid; then
 		return
 	fi
 	exec_authdos
@@ -2822,16 +2801,14 @@ function michael_shutdown_option() {
 	language_strings "${language}" 100 "title"
 	language_strings "${language}" 40 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return
 	fi
 
 	echo
 	language_strings "${language}" 34 "yellow"
 
-	ask_bssid
-	if [ "$?" != "0" ]; then
+	if ! ask_bssid; then
 		return
 	fi
 	exec_michaelshutdown
@@ -2846,20 +2823,16 @@ function wep_option() {
 		echo
 		language_strings "${language}" 125 "yellow"
 		language_strings "${language}" 115 "read"
-		explore_for_targets_option
+		if ! explore_for_targets_option; then
+			return 1
+		fi
 	fi
 
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return 1
 	fi
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
-		return 1
-	fi
-
-	validate_network_encryption_type "WEP"
-	if [ "$?" != "0" ]; then
+	if ! validate_network_encryption_type "WEP"; then
 		return 1
 	fi
 
@@ -2878,16 +2851,14 @@ function wps_attacks_parameters() {
 
 	debug_print
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return 1
 	fi
 
 	echo
 	language_strings "${language}" 34 "yellow"
 
-	ask_bssid "wps"
-	if [ "$?" != "0" ]; then
+	if ! ask_bssid "wps"; then
 		return 1
 	fi
 	ask_channel "wps"
@@ -3304,8 +3275,7 @@ function save_iptables() {
 
 	debug_print
 
-	iptables-save > "${tmpdir}ag.iptables" 2> /dev/null
-	if [ "$?" = "0" ]; then
+	if iptables-save > "${tmpdir}ag.iptables" 2> /dev/null; then
 		iptables_saved=1
 	fi
 }
@@ -3575,12 +3545,10 @@ function evil_twin_attacks_menu() {
 			explore_for_targets_option
 		;;
 		5)
-			contains_element "${et_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${et_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				check_interface_wifi
-				if [ "$?" = "0" ]; then
+				if check_interface_wifi; then
 					et_mode="et_onlyap"
 					et_dos_menu
 				else
@@ -3591,12 +3559,10 @@ function evil_twin_attacks_menu() {
 			fi
 		;;
 		6)
-			contains_element "${et_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${et_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				check_interface_wifi
-				if [ "$?" = "0" ]; then
+				if check_interface_wifi; then
 					et_mode="et_sniffing"
 					et_dos_menu
 				else
@@ -3607,12 +3573,10 @@ function evil_twin_attacks_menu() {
 			fi
 		;;
 		7)
-			contains_element "${et_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${et_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				check_interface_wifi
-				if [ "$?" = "0" ]; then
+				if check_interface_wifi; then
 					et_mode="et_sniffing_sslstrip"
 					et_dos_menu
 				else
@@ -3626,19 +3590,16 @@ function evil_twin_attacks_menu() {
 			beef_pre_menu
 		;;
 		9)
-			contains_element "${et_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${et_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				check_interface_wifi
-				if [ "$?" = "0" ]; then
+				if check_interface_wifi; then
 					et_mode="et_captive_portal"
 					echo
 					language_strings "${language}" 316 "yellow"
 					language_strings "${language}" 115 "read"
 
-					explore_for_targets_option
-					if [ "$?" = "0" ]; then
+					if explore_for_targets_option; then
 						et_dos_menu
 					fi
 				else
@@ -3698,12 +3659,10 @@ function beef_pre_menu() {
 	read -r beef_option
 	case ${beef_option} in
 		1)
-			contains_element "${beef_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${beef_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				check_interface_wifi
-				if [ "$?" = "0" ]; then
+				if check_interface_wifi; then
 					et_mode="et_sniffing_sslstrip2"
 					get_bettercap_version
 					et_dos_menu
@@ -3775,54 +3734,46 @@ function wps_attacks_menu() {
 			managed_option
 		;;
 		4)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				explore_for_wps_targets_option
 			fi
 		;;
 		5)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="custompin_bully"
 				get_bully_version
 				set_bully_verbosity
-				wps_attacks_parameters
-				if [ "$?" = "0" ]; then
+				if wps_attacks_parameters; then
 					exec_wps_custom_pin_bully_attack
 				fi
 			fi
 		;;
 		6)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="custompin_reaver"
-				wps_attacks_parameters
-				if [ "$?" = "0" ]; then
+				if wps_attacks_parameters; then
 					exec_wps_custom_pin_reaver_attack
 				fi
 			fi
 		;;
 		7)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="pixiedust_bully"
 				get_bully_version
 				set_bully_verbosity
-				validate_bully_pixiewps_version
-				if [ "$?" = "0" ]; then
+				if validate_bully_pixiewps_version; then
 					echo
 					language_strings "${language}" 368 "yellow"
 					language_strings "${language}" 115 "read"
-					wps_attacks_parameters
-					if [ "$?" = "0" ]; then
+					if wps_attacks_parameters; then
 						exec_bully_pixiewps_attack
 					fi
 				else
@@ -3833,19 +3784,16 @@ function wps_attacks_menu() {
 			fi
 		;;
 		8)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="pixiedust_reaver"
 				get_reaver_version
-				validate_reaver_pixiewps_version
-				if [ "$?" = "0" ]; then
+				if validate_reaver_pixiewps_version; then
 					echo
 					language_strings "${language}" 370 "yellow"
 					language_strings "${language}" 115 "read"
-					wps_attacks_parameters
-					if [ "$?" = "0" ]; then
+					if wps_attacks_parameters; then
 						exec_reaver_pixiewps_attack
 					fi
 				else
@@ -3856,35 +3804,30 @@ function wps_attacks_menu() {
 			fi
 		;;
 		9)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="bruteforce_bully"
 				get_bully_version
 				set_bully_verbosity
-				wps_attacks_parameters
-				if [ "$?" = "0" ]; then
+				if wps_attacks_parameters; then
 					exec_wps_bruteforce_pin_bully_attack
 				fi
 			fi
 		;;
 		10)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="bruteforce_reaver"
 				get_reaver_version
-				wps_attacks_parameters
-				if [ "$?" = "0" ]; then
+				if wps_attacks_parameters; then
 					exec_wps_bruteforce_pin_reaver_attack
 				fi
 			fi
 		;;
 		11)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="pindb_bully"
@@ -3893,8 +3836,7 @@ function wps_attacks_menu() {
 
 				db_error=0
 				if [[ ${pin_dbfile_checked} -eq 0 ]] || [[ ! -f "${scriptfolder}${known_pins_dbfile}" ]]; then
-					check_pins_database_file
-					if [ "$?" = "0" ]; then
+					if check_pins_database_file; then
 						echo
 						language_strings "${language}" 373 "blue"
 					else
@@ -3909,16 +3851,14 @@ function wps_attacks_menu() {
 				language_strings "${language}" 115 "read"
 
 				if [ "${db_error}" -eq 0 ]; then
-					wps_attacks_parameters
-					if [ "$?" = "0" ]; then
+					if wps_attacks_parameters; then
 						exec_wps_pin_database_bully_attack
 					fi
 				fi
 			fi
 		;;
 		12)
-			contains_element "${wps_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wps_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wps_attack="pindb_reaver"
@@ -3926,8 +3866,7 @@ function wps_attacks_menu() {
 
 				db_error=0
 				if [[ ${pin_dbfile_checked} -eq 0 ]] || [[ ! -f "${scriptfolder}${known_pins_dbfile}" ]]; then
-					check_pins_database_file
-					if [ "$?" = "0" ]; then
+					if check_pins_database_file; then
 						echo
 						language_strings "${language}" 373 "blue"
 					else
@@ -3941,8 +3880,7 @@ function wps_attacks_menu() {
 				fi
 				language_strings "${language}" 115 "read"
 				if [ "${db_error}" -eq 0 ]; then
-					wps_attacks_parameters
-					if [ "$?" = "0" ]; then
+					if wps_attacks_parameters; then
 						exec_wps_pin_database_reaver_attack
 					fi
 				fi
@@ -3996,8 +3934,7 @@ function wep_attacks_menu() {
 			explore_for_targets_option
 		;;
 		5)
-			contains_element "${wep_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${wep_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wep_option
@@ -4039,24 +3976,21 @@ function decrypt_menu() {
 	read -r decrypt_option
 	case ${decrypt_option} in
 		1)
-			contains_element "${decrypt_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${decrypt_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				aircrack_dictionary_attack_option
 			fi
 		;;
 		2)
-			contains_element "${decrypt_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${decrypt_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				aircrack_bruteforce_attack_option
 			fi
 		;;
 		3)
-			contains_element "${decrypt_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${decrypt_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				get_hashcat_version
@@ -4065,8 +3999,7 @@ function decrypt_menu() {
 			fi
 		;;
 		4)
-			contains_element "${decrypt_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${decrypt_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				get_hashcat_version
@@ -4075,8 +4008,7 @@ function decrypt_menu() {
 			fi
 		;;
 		5)
-			contains_element "${decrypt_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${decrypt_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				get_hashcat_version
@@ -4209,8 +4141,7 @@ function check_valid_file_to_clean() {
 		return 1
 	fi
 
-	echo "1" | aircrack-ng "${1}" 2> /dev/null | grep -E "1 handshake" > /dev/null
-	if [ "$?" != "0" ]; then
+	if ! echo "1" | aircrack-ng "${1}" 2> /dev/null | grep -E "1 handshake" > /dev/null; then
 		return 1
 	fi
 
@@ -4317,7 +4248,7 @@ function select_wpa_bssid_target_from_captured_file() {
 		print_hint ${current_menu}
 
 		target_network_on_file=0
-		while [[ ${target_network_on_file} -lt 1 || ${target_network_on_file} -gt ${option_counter} ]]; do
+		while [[ ! ${target_network_on_file} =~ ^[[:digit:]]+$ ]] || (( target_network_on_file < 1 || target_network_on_file > option_counter )); do
 			echo
 			language_strings "${language}" 3 "green"
 			read -r target_network_on_file
@@ -4344,8 +4275,7 @@ function aircrack_dictionary_attack_option() {
 
 	manage_asking_for_captured_file
 
-	select_wpa_bssid_target_from_captured_file "${enteredpath}"
-	if [ "$?" != "0" ]; then
+	if ! select_wpa_bssid_target_from_captured_file "${enteredpath}"; then
 		return
 	fi
 
@@ -4365,15 +4295,14 @@ function aircrack_bruteforce_attack_option() {
 
 	manage_asking_for_captured_file
 
-	select_wpa_bssid_target_from_captured_file "${enteredpath}"
-	if [ "$?" != "0" ]; then
+	if ! select_wpa_bssid_target_from_captured_file "${enteredpath}"; then
 		return
 	fi
 
 	set_minlength_and_maxlength
 
 	charset_option=0
-	while [[ ${charset_option} -lt 1 || ${charset_option} -gt 11 ]]; do
+	while [[ ! ${charset_option} =~ ^[[:digit:]]+$ ]] || (( charset_option < 1 || charset_option > 11 )); do
 		set_charset "aircrack"
 	done
 
@@ -4393,13 +4322,11 @@ function hashcat_dictionary_attack_option() {
 
 	manage_asking_for_captured_file
 
-	select_wpa_bssid_target_from_captured_file "${enteredpath}"
-	if [ "$?" != "0" ]; then
+	if ! select_wpa_bssid_target_from_captured_file "${enteredpath}"; then
 		return
 	fi
 
-	convert_cap_to_hashcat_format
-	if [ "$?" != "0" ]; then
+	if ! convert_cap_to_hashcat_format; then
 		return
 	fi
 
@@ -4419,20 +4346,18 @@ function hashcat_bruteforce_attack_option() {
 
 	manage_asking_for_captured_file
 
-	select_wpa_bssid_target_from_captured_file "${enteredpath}"
-	if [ "$?" != "0" ]; then
+	if ! select_wpa_bssid_target_from_captured_file "${enteredpath}"; then
 		return
 	fi
 
-	convert_cap_to_hashcat_format
-	if [ "$?" != "0" ]; then
+	if ! convert_cap_to_hashcat_format; then
 		return
 	fi
 
 	set_minlength_and_maxlength
 
 	charset_option=0
-	while [[ ${charset_option} -lt 1 || ${charset_option} -gt 5 ]]; do
+	while [[ ! ${charset_option} =~ ^[[:digit:]]+$ ]] || (( charset_option < 1 || charset_option > 5 )); do
 		set_charset "hashcat"
 	done
 
@@ -4452,13 +4377,11 @@ function hashcat_rulebased_attack_option() {
 
 	manage_asking_for_captured_file
 
-	select_wpa_bssid_target_from_captured_file "${enteredpath}"
-	if [ "$?" != "0" ]; then
+	if ! select_wpa_bssid_target_from_captured_file "${enteredpath}"; then
 		return
 	fi
 
-	convert_cap_to_hashcat_format
-	if [ "$?" != "0" ]; then
+	if ! convert_cap_to_hashcat_format; then
 		return
 	fi
 
@@ -5147,8 +5070,7 @@ function set_dhcp_config() {
 
 	debug_print
 
-	route | grep ${ip_range} > /dev/null
-	if [ "$?" != "0" ]; then
+	if ! route | grep ${ip_range} > /dev/null; then
 		et_ip_range=${ip_range}
 		et_ip_router=${router_ip}
 		et_broadcast_ip=${broadcast_ip}
@@ -5208,8 +5130,7 @@ function set_dhcp_config() {
 
 	dhcp_path="${tmpdir}${dhcpd_file}"
 	if hash apparmor_status 2> /dev/null; then
-		apparmor_status | grep dhcpd > /dev/null
-		if [ "$?" = "0" ]; then
+		if apparmor_status 2> /dev/null | grep dhcpd > /dev/null; then
 			if [ -d /etc/dhcpd ]; then
 				cp "${tmpdir}${dhcpd_file}" /etc/dhcpd/ 2> /dev/null
 				dhcp_path="/etc/dhcpd/${dhcpd_file}"
@@ -5420,7 +5341,7 @@ function set_wps_attack_script() {
 	attack_cmd2=" | tee ${tmpdir}${wps_out_file}"
 
 	cat >&7 <<-EOF
-		#!/bin/bash
+		#!/usr/bin/env bash
 		script_wps_attack_tool="${wps_attack_tool}"
 		script_wps_attack_mode="${wps_attack_mode}"
 		attack_pin_counter=1
@@ -5748,7 +5669,7 @@ function set_control_script() {
 	exec 7>"${tmpdir}${control_file}"
 
 	cat >&7 <<-EOF
-		#!/bin/bash
+		#!/usr/bin/env bash
 		et_heredoc_mode=${et_mode}
 	EOF
 
@@ -6114,7 +6035,7 @@ function set_captive_portal_page() {
 	} >> "${tmpdir}${webdir}${jsfile}"
 
 	{
-	echo -e "#!/bin/bash"
+	echo -e "#!/usr/bin/env bash"
 	echo -e "echo '<!DOCTYPE html>'"
 	echo -e "echo '<html>'"
 	echo -e "echo -e '\t<head>'"
@@ -6146,7 +6067,7 @@ function set_captive_portal_page() {
 	exec 4>"${tmpdir}${webdir}${checkfile}"
 
 	cat >&4 <<-EOF
-		#!/bin/bash
+		#!/usr/bin/env bash
 		echo '<!DOCTYPE html>'
 		echo '<html>'
 		echo -e '\t<head>'
@@ -6298,8 +6219,11 @@ function set_beef_config() {
 	tmpfiles_toclean=1
 	rm -rf "${tmpdir}${beef_file}" > /dev/null 2>&1
 
+	beef_db_path=""
 	if [ -d "${beef_path}db" ]; then
-		beef_db="db/${beef_db}"
+		beef_db_path="db/${beef_db}"
+	else
+		beef_db_path="${beef_db}"
 	fi
 
 	{
@@ -6331,7 +6255,7 @@ function set_beef_config() {
 	echo -e "            hook_root: false"
 	echo -e "    database:"
 	echo -e "        driver: \"sqlite\""
-	echo -e "        db_file: \"${beef_db}\""
+	echo -e "        db_file: \"${beef_db_path}\""
 	echo -e "    credentials:"
 	echo -e "        user: \"beef\""
 	echo -e "        passwd: \"${beef_pass}\""
@@ -6374,11 +6298,9 @@ function kill_beef() {
 
 	debug_print
 
-	killall "${optional_tools_names[19]}" > /dev/null 2>&1
-	if [ "$?" != "0" ]; then
+	if ! killall "${optional_tools_names[19]}" > /dev/null 2>&1; then
 		beef_pid=$(ps uax | pgrep -f "${optional_tools_names[19]}")
-		kill "${beef_pid}" &> /dev/null
-		if [ "$?" != "0" ]; then
+		if ! kill "${beef_pid}" &> /dev/null; then
 			beef_pid=$(ps uax | pgrep -f "beef")
 			kill "${beef_pid}" &> /dev/null
 		fi
@@ -6481,8 +6403,7 @@ function manual_beef_set() {
 			else
 				if [ -d "${manually_entered_beef_path}" ]; then
 					if [ -f "${manually_entered_beef_path}beef" ]; then
-						head "${manually_entered_beef_path}beef" -n 1 2> /dev/null| grep ruby > /dev/null
-						if [ "$?" = "0" ]; then
+						if head "${manually_entered_beef_path}beef" -n 1 2> /dev/null | grep ruby > /dev/null; then
 							possible_beef_known_locations+=(${manually_entered_beef_path})
 							valid_possible_beef_path=1
 						else
@@ -6506,7 +6427,7 @@ function fix_beef_executable() {
 
 	rm -rf "/usr/bin/beef" > /dev/null 2>&1
 	{
-	echo -e "#!/bin/bash\n"
+	echo -e "#!/usr/bin/env bash\n"
 	echo -e "cd ${1}"
 	echo -e "./beef"
 	} >> "/usr/bin/beef"
@@ -6539,8 +6460,7 @@ function start_beef_service() {
 
 	debug_print
 
-	service "${optional_tools_names[19]}" restart > /dev/null 2>&1
-	if [ "$?" != "0" ]; then
+	if ! service "${optional_tools_names[19]}" restart > /dev/null 2>&1; then
 		systemctl restart "${optional_tools_names[19]}.service" > /dev/null 2>&1
 	fi
 }
@@ -6793,8 +6713,7 @@ function handshake_tools_menu() {
 			capture_handshake
 		;;
 		6)
-			contains_element "${handshake_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${handshake_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				clean_handshake_file_option
@@ -6817,8 +6736,7 @@ function exec_clean_handshake_file() {
 	debug_print
 
 	echo
-	check_valid_file_to_clean "${filetoclean}"
-	if [ "$?" != "0" ]; then
+	if ! check_valid_file_to_clean "${filetoclean}"; then
 		language_strings "${language}" 159 "yellow"
 	else
 		wpaclean "${filetoclean}" "${filetoclean}" > /dev/null 2>&1
@@ -6901,48 +6819,42 @@ function dos_attacks_menu() {
 			explore_for_targets_option
 		;;
 		5)
-			contains_element "${dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				mdk3_deauth_option
 			fi
 		;;
 		6)
-			contains_element "${dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				aireplay_deauth_option
 			fi
 		;;
 		7)
-			contains_element "${dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				wds_confusion_option
 			fi
 		;;
 		8)
-			contains_element "${dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				beacon_flood_option
 			fi
 		;;
 		9)
-			contains_element "${dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				auth_dos_option
 			fi
 		;;
 		10)
-			contains_element "${dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				michael_shutdown_option
@@ -6964,8 +6876,7 @@ function capture_handshake_evil_twin() {
 
 	debug_print
 
-	validate_network_encryption_type "WPA"
-	if [ "$?" != "0" ]; then
+	if ! validate_network_encryption_type "WPA"; then
 		return 1
 	fi
 
@@ -7036,20 +6947,16 @@ function capture_handshake() {
 		echo
 		language_strings "${language}" 125 "yellow"
 		language_strings "${language}" 115 "read"
-		explore_for_targets_option
+		if ! explore_for_targets_option; then
+			return 1
+		fi
 	fi
 
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return 1
 	fi
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
-		return 1
-	fi
-
-	validate_network_encryption_type "WPA"
-	if [ "$?" != "0" ]; then
+	if ! validate_network_encryption_type "WPA"; then
 		return 1
 	fi
 
@@ -7083,8 +6990,7 @@ function validate_path() {
 		return 1
 	fi
 
-	check_write_permissions "${dirname}"
-	if [ "$?" != "0" ]; then
+	if ! check_write_permissions "${dirname}"; then
 		language_strings "${language}" 157 "red"
 		return 1
 	fi
@@ -7321,8 +7227,7 @@ function attack_handshake_menu() {
 	read -r attack_handshake_option
 	case ${attack_handshake_option} in
 		1)
-			contains_element "${attack_handshake_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${attack_handshake_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 				attack_handshake_menu "new"
 			else
@@ -7335,8 +7240,7 @@ function attack_handshake_menu() {
 			fi
 		;;
 		2)
-			contains_element "${attack_handshake_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${attack_handshake_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 				attack_handshake_menu "new"
 			else
@@ -7348,8 +7252,7 @@ function attack_handshake_menu() {
 			fi
 		;;
 		3)
-			contains_element "${attack_handshake_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${attack_handshake_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 				attack_handshake_menu "new"
 			else
@@ -7401,8 +7304,7 @@ function explore_for_targets_option() {
 	language_strings "${language}" 103 "title"
 	language_strings "${language}" 65 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return 1
 	fi
 
@@ -7477,8 +7379,7 @@ function explore_for_wps_targets_option() {
 	language_strings "${language}" 103 "title"
 	language_strings "${language}" 65 "green"
 
-	check_monitor_enabled
-	if [ "$?" != "0" ]; then
+	if ! check_monitor_enabled; then
 		return 1
 	fi
 
@@ -7619,9 +7520,9 @@ function explore_for_wps_targets_option() {
 		read -r selected_wps_target_network
 	fi
 
-	while [[ ${selected_wps_target_network} -lt 1 ]] || [[ ${selected_wps_target_network} -gt ${wash_counter} ]] || [[ ${wps_lockeds[${selected_wps_target_network}]} = "Yes" ]]; do
+	while [[ ! ${selected_wps_target_network} =~ ^[[:digit:]]+$ ]] || (( selected_wps_target_network < 1 || selected_wps_target_network > wash_counter )) || [[ ${wps_lockeds[${selected_wps_target_network}]} = "Yes" ]]; do
 
-		if [[ ${selected_wps_target_network} -ge 1 ]] && [[ ${selected_wps_target_network} -le ${wash_counter} ]]; then
+		if [[ ${selected_wps_target_network} =~ ^[[:digit:]]+$ ]] && (( selected_wps_target_network >= 1 && selected_wps_target_network <= wash_counter )); then
 			if [ "${wps_lockeds[${selected_wps_target_network}]}" = "Yes" ]; then
 				ask_yesno 350 "no"
 				if [ "${yesno}" = "y" ]; then
@@ -7726,7 +7627,7 @@ function select_target() {
 		read -r selected_target_network
 	fi
 
-	while [[ ${selected_target_network} -lt 1 ]] || [[ ${selected_target_network} -gt ${i} ]]; do
+	while [[ ! ${selected_target_network} =~ ^[[:digit:]]+$ ]] || (( selected_target_network < 1 || selected_target_network > i )); do
 		echo
 		language_strings "${language}" 72 "red"
 		echo
@@ -7872,8 +7773,7 @@ function et_prerequisites() {
 		retrying_handshake_capture=0
 		internet_interface_selected=0
 
-		check_bssid_in_captured_file "${et_handshake}"
-		if [ "$?" != "0" ]; then
+		if ! check_bssid_in_captured_file "${et_handshake}"; then
 			return_to_et_main_menu=1
 			return
 		fi
@@ -7887,8 +7787,7 @@ function et_prerequisites() {
 		echo
 		language_strings "${language}" 31 "blue"
 	else
-		ask_bssid
-		if [ "$?" != "0" ]; then
+		if ! ask_bssid; then
 			return_to_et_main_menu=1
 			return
 		fi
@@ -8007,8 +7906,8 @@ function et_dos_menu() {
 	read -r et_dos_option
 	case ${et_dos_option} in
 		1)
-			contains_element "${et_dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+
+			if contains_element "${et_dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				et_dos_attack="Mdk3"
@@ -8017,8 +7916,7 @@ function et_dos_menu() {
 						language_strings "${language}" 330 "blue"
 						ask_yesno 326 "no"
 						if [ "${yesno}" = "n" ]; then
-							check_et_without_internet_compatibility
-							if [ "$?" = "0" ]; then
+							if check_et_without_internet_compatibility; then
 								captive_portal_mode="dnsblackhole"
 								internet_interface_selected=1
 								echo
@@ -8033,8 +7931,7 @@ function et_dos_menu() {
 								return
 							fi
 						else
-							detect_internet_interface
-							if [ "$?" = "0" ]; then
+							if detect_internet_interface; then
 								et_prerequisites
 							else
 								return
@@ -8044,8 +7941,7 @@ function et_dos_menu() {
 						et_prerequisites
 					fi
 				else
-					detect_internet_interface
-					if [ "$?" = "0" ]; then
+					if detect_internet_interface; then
 						et_prerequisites
 					else
 						return
@@ -8054,8 +7950,7 @@ function et_dos_menu() {
 			fi
 		;;
 		2)
-			contains_element "${et_dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${et_dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				et_dos_attack="Aireplay"
@@ -8064,8 +7959,7 @@ function et_dos_menu() {
 						language_strings "${language}" 330 "blue"
 						ask_yesno 326 "no"
 						if [ "${yesno}" = "n" ]; then
-							check_et_without_internet_compatibility
-							if [ "$?" = "0" ]; then
+							if check_et_without_internet_compatibility; then
 								captive_portal_mode="dnsblackhole"
 								internet_interface_selected=1
 								echo
@@ -8080,8 +7974,7 @@ function et_dos_menu() {
 								return
 							fi
 						else
-							detect_internet_interface
-							if [ "$?" = "0" ]; then
+							if detect_internet_interface; then
 								et_prerequisites
 							else
 								return
@@ -8091,8 +7984,7 @@ function et_dos_menu() {
 						et_prerequisites
 					fi
 				else
-					detect_internet_interface
-					if [ "$?" = "0" ]; then
+					if detect_internet_interface; then
 						et_prerequisites
 					else
 						return
@@ -8101,8 +7993,7 @@ function et_dos_menu() {
 			fi
 		;;
 		3)
-			contains_element "${et_dos_option}" "${forbidden_options[@]}"
-			if [ "$?" = "0" ]; then
+			if contains_element "${et_dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
 				et_dos_attack="Wds Confusion"
@@ -8111,8 +8002,7 @@ function et_dos_menu() {
 						language_strings "${language}" 330 "blue"
 						ask_yesno 326 "no"
 						if [ "${yesno}" = "n" ]; then
-							check_et_without_internet_compatibility
-							if [ "$?" = "0" ]; then
+							if check_et_without_internet_compatibility; then
 								captive_portal_mode="dnsblackhole"
 								internet_interface_selected=1
 								echo
@@ -8127,8 +8017,7 @@ function et_dos_menu() {
 								return
 							fi
 						else
-							detect_internet_interface
-							if [ "$?" = "0" ]; then
+							if detect_internet_interface; then
 								et_prerequisites
 							else
 								return
@@ -8138,8 +8027,7 @@ function et_dos_menu() {
 						et_prerequisites
 					fi
 				else
-					detect_internet_interface
-					if [ "$?" = "0" ]; then
+					if detect_internet_interface; then
 						et_prerequisites
 					else
 						return
@@ -8173,14 +8061,14 @@ function detect_internet_interface() {
 		language_strings "${language}" 285 "blue"
 		ask_yesno 284 "yes"
 		if [ "${yesno}" = "n" ]; then
-			select_internet_interface
+			if ! select_internet_interface; then
+				return 1
+			fi
 		fi
 	else
-		select_internet_interface
-	fi
-
-	if [ "$?" != "0" ]; then
-		return 1
+		if ! select_internet_interface; then
+			return 1
+		fi
 	fi
 
 	validate_et_internet_interface
@@ -8593,11 +8481,9 @@ function check_pins_database_file() {
 		language_strings "${language}" 376 "yellow"
 		echo
 		language_strings "${language}" 287 "blue"
-		check_repository_access
-		if [ "$?" = "0" ]; then
+		if check_repository_access; then
 			get_local_pin_dbfile_checksum "${scriptfolder}${known_pins_dbfile}"
-			get_remote_pin_dbfile_checksum
-			if [ "$?" != "0" ]; then
+			if ! get_remote_pin_dbfile_checksum; then
 				echo
 				language_strings "${language}" 381 "yellow"
 			else
@@ -8605,8 +8491,7 @@ function check_pins_database_file() {
 				if [ "${local_pin_dbfile_checksum}" != "${remote_pin_dbfile_checksum}" ]; then
 					language_strings "${language}" 383 "yellow"
 					echo
-					download_pins_database_file
-					if [ "$?" = "0" ]; then
+					if download_pins_database_file; then
 						language_strings "${language}" 377 "yellow"
 						pin_dbfile_checked=1
 					else
@@ -8628,15 +8513,13 @@ function check_pins_database_file() {
 		echo
 		if hash curl 2> /dev/null; then
 			language_strings "${language}" 287 "blue"
-			check_repository_access
-			if [ "$?" != "0" ]; then
+			if ! check_repository_access; then
 				echo
 				language_strings "${language}" 375 "yellow"
 				return 1
 			else
 				echo
-				download_pins_database_file
-				if [ "$?" = "0" ]; then
+				if download_pins_database_file; then
 					language_strings "${language}" 377 "yellow"
 					pin_dbfile_checked=1
 					return 0
@@ -8746,8 +8629,7 @@ function detect_distro_phase1() {
 	debug_print
 
 	for i in "${known_compatible_distros[@]}"; do
-		uname -a | grep "${i}" -i > /dev/null
-		if [ "$?" = "0" ]; then
+		if uname -a | grep "${i}" -i > /dev/null; then
 			distro="${i^}"
 			break
 		fi
@@ -8807,9 +8689,8 @@ function detect_arm_architecture() {
 	debug_print
 
 	distro_already_known=0
-	uname -m | grep -i "arm" > /dev/null
 
-	if [[ "$?" = "0" ]] && [[ "${distro}" != "Unknown Linux" ]]; then
+	if uname -m | grep -i "arm" > /dev/null && "${distro}" != "Unknown Linux"; then
 
 		for item in "${known_arm_compatible_distros[@]}"; do
 			if [ "${distro}" = "${item}" ]; then
@@ -9015,8 +8896,6 @@ function general_checkings() {
 		return
 	fi
 
-	check_root_permissions
-
 	language_strings "${language}" 115 "read"
 	exit_code=1
 	exit_script_option
@@ -9029,8 +8908,12 @@ function check_root_permissions() {
 
 	user=$(whoami)
 
-	if [ "${user}" != "root" ]; then
-		language_strings "${language}" 223 "yellow"
+	if [ "${user}" = "root" ]; then
+		language_strings "${language}" 484 "yellow"
+	else
+		language_strings "${language}" 223 "red"
+		exit_code=1
+		exit_script_option
 	fi
 }
 
@@ -9327,8 +9210,7 @@ function check_xwindow_system() {
 	debug_print
 
 	if hash xset 2> /dev/null; then
-		xset -q > /dev/null 2>&1
-		if [ "$?" != "0" ]; then
+		if ! xset -q > /dev/null 2>&1; then
 			xterm_ok=0
 		fi
 	fi
@@ -9341,8 +9223,7 @@ function detect_screen_resolution() {
 
 	resolution_detected=0
 	if hash xdpyinfo 2> /dev/null; then
-		resolution=$(xdpyinfo 2> /dev/null | grep -A 3 "screen #0" | grep "dimensions" | tr -s " " | cut -d " " -f 3 | grep "x")
-		if [ "$?" = "0" ]; then
+		if resolution=$(xdpyinfo 2> /dev/null | grep -A 3 "screen #0" | grep "dimensions" | tr -s " " | cut -d " " -f 3 | grep "x"); then
 			resolution_detected=1
 		fi
 	fi
@@ -9402,8 +9283,7 @@ function set_xsizes() {
 
 	xtotal=$(awk -v n1="${resolution_x}" "BEGIN{print n1 / ${xratio}}")
 
-	xtotaltmp=$(printf "%.0f" "${xtotal}" 2> /dev/null)
-	if [ "$?" != "0" ]; then
+	if ! xtotaltmp=$(printf "%.0f" "${xtotal}" 2> /dev/null); then
 		dec_char=","
 		xtotal="${xtotal/./${dec_char}}"
 		xtotal=$(printf "%.0f" "${xtotal}" 2> /dev/null)
@@ -9422,8 +9302,7 @@ function set_ysizes() {
 	debug_print
 
 	ytotal=$(awk -v n1="${resolution_y}" "BEGIN{print n1 / ${yratio}}")
-	ytotaltmp=$(printf "%.0f" "${ytotal}" 2> /dev/null)
-	if [ "$?" != "0" ]; then
+	if ! ytotaltmp=$(printf "%.0f" "${ytotal}" 2> /dev/null); then
 		dec_char=","
 		ytotal="${ytotal/./${dec_char}}"
 		ytotal=$(printf "%.0f" "${ytotal}" 2> /dev/null)
@@ -9510,8 +9389,7 @@ function welcome() {
 		language_strings "${language}" 86 "title"
 		language_strings "${language}" 6 "blue"
 		echo
-		check_window_size_for_intro
-		if [ "$?" = "0" ]; then
+		if check_window_size_for_intro; then
 			print_intro
 		else
 			language_strings "${language}" 228 "green"
@@ -9531,6 +9409,8 @@ function welcome() {
 		fi
 
 		check_bash_version
+		echo
+		check_root_permissions
 
 		echo
 		if [[ ${resolution_detected} -eq 1 ]] && [[ "${xterm_ok}" -eq 1 ]]; then
@@ -9616,20 +9496,17 @@ function download_last_version() {
 
 	local script_file_downloaded=0
 
-	download_language_strings_file
-	if [ "$?" = "0" ]; then
+	if download_language_strings_file; then
 
 		get_current_permanent_language
-		timeout -s SIGTERM 15 curl -L ${urlscript_directlink} -s -o "${0}"
 
-		if [ "$?" = "0" ]; then
+		if timeout -s SIGTERM 15 curl -L ${urlscript_directlink} -s -o "${0}"; then
 			script_file_downloaded=1
 		else
 			http_proxy_detect
 			if [ "${http_proxy_set}" -eq 1 ]; then
 
-				timeout -s SIGTERM 15 curl --proxy "${http_proxy}" -L ${urlscript_directlink} -s -o "${0}"
-				if [ "$?" = "0" ]; then
+				if timeout -s SIGTERM 15 curl --proxy "${http_proxy}" -L ${urlscript_directlink} -s -o "${0}"; then
 					script_file_downloaded=1
 				fi
 			fi
@@ -9669,17 +9546,15 @@ function validate_et_internet_interface() {
 
 	echo
 	language_strings "${language}" 287 "blue"
-	check_internet_access
 
-	if [ "$?" != "0" ]; then
+	if ! check_internet_access; then
 		echo
 		language_strings "${language}" 288 "red"
 		language_strings "${language}" 115 "read"
 		return 1
 	fi
 
-	check_default_route "${internet_interface}"
-	if [ "$?" != "0" ]; then
+	if ! check_default_route "${internet_interface}"; then
 		echo
 		language_strings "${language}" 290 "red"
 		language_strings "${language}" 115 "read"
@@ -9699,8 +9574,8 @@ function check_repository_access() {
 	debug_print
 
 	if hash curl 2> /dev/null; then
-		check_url_curl "https://${repository_hostname}"
-		if [ "$?" = "0" ]; then
+
+		if check_url_curl "https://${repository_hostname}"; then
 			return 0
 		fi
 	fi
@@ -9713,22 +9588,19 @@ function check_internet_access() {
 	debug_print
 
 	for item in "${ips_to_check_internet[@]}"; do
-		ping -c 1 "${item}" -W 1 > /dev/null 2>&1
-		if [ "$?" = "0" ]; then
+		if ping -c 1 "${item}" -W 1 > /dev/null 2>&1; then
 			return 0
 		fi
 	done
 
 	if hash curl 2> /dev/null; then
-		check_url_curl "https://${repository_hostname}"
-		if [ "$?" = "0" ]; then
+		if check_url_curl "https://${repository_hostname}"; then
 			return 0
 		fi
 	fi
 
 	if hash wget 2> /dev/null; then
-		check_url_wget "https://${repository_hostname}"
-		if [ "$?" = "0" ]; then
+		if check_url_wget "https://${repository_hostname}"; then
 			return 0
 		fi
 	fi
@@ -9741,8 +9613,7 @@ function check_url_curl() {
 
 	debug_print
 
-	timeout -s SIGTERM 15 curl -s "${1}" > /dev/null 2>&1
-	if [ "$?" = "0" ]; then
+	if timeout -s SIGTERM 15 curl -s "${1}" > /dev/null 2>&1; then
 		return 0
 	fi
 
@@ -9759,8 +9630,7 @@ function check_url_wget() {
 
 	debug_print
 
-	timeout -s SIGTERM 15 wget -q --spider "${1}" > /dev/null 2>&1
-	if [ "$?" = "0" ]; then
+	if timeout -s SIGTERM 15 wget -q --spider "${1}" > /dev/null 2>&1; then
 		return 0
 	fi
 
@@ -9804,8 +9674,7 @@ function autoupdate_check() {
 	language_strings "${language}" 210 "blue"
 	echo
 
-	check_repository_access
-	if [ "$?" = "0" ]; then
+	if check_repository_access; then
 		local version_checked=0
 		airgeddon_last_version=$(timeout -s SIGTERM 15 curl -L ${urlscript_directlink} 2> /dev/null | grep "airgeddon_version=" | head -n 1 | cut -d "\"" -f 2)
 
@@ -9946,8 +9815,7 @@ function last_echo() {
 
 	debug_print
 
-	check_pending_of_translation "${1}" "${2}"
-	if [ "$?" != "0" ]; then
+	if ! check_pending_of_translation "${1}" "${2}"; then
 		echo -e "${2}${text}${normal_color}"
 	else
 		echo -e "${2}$*${normal_color}"
