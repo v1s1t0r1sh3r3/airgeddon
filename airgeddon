@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-#Title........: airgeddon.sh
+#Title........: airgeddon
 #Description..: This is a multi-use bash script for Linux systems to audit wireless networks.
 #Author.......: v1s1t0r
-#Date.........: 20170916
-#Version......: 7.21
-#Usage........: bash airgeddon.sh
+#Date.........: 20171001
+#Version......: 7.22
+#Usage........: ./airgeddon
 #Bash Version.: 4.2 or later
 
 #Enabled with extra-verbose mode 2 / Enabled 1 / Disabled 0 - Debug mode for faster development skipping intro and initial checks - Default value 0
@@ -169,7 +169,7 @@ repository_hostname="github.com"
 github_user="v1s1t0r1sh3r3"
 github_repository="airgeddon"
 branch="master"
-script_filename="airgeddon.sh"
+script_filename="airgeddon"
 urlgithub="https://${repository_hostname}/${github_user}/${github_repository}"
 urlscript_directlink="https://raw.githubusercontent.com/${github_user}/${github_repository}/${branch}/${script_filename}"
 urlscript_pins_dbfile="https://raw.githubusercontent.com/${github_user}/${github_repository}/${branch}/${known_pins_dbfile}"
