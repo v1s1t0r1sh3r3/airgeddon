@@ -38,6 +38,7 @@ function language_strings() {
 	unknown_chipset["ITALIAN"]="Sconosciuto"
 	unknown_chipset["POLISH"]="Nieznany"
 	unknown_chipset["GERMAN"]="Unbekannt"
+	unknown_chipset["JAPANESE"]="未知の"
 	unknown_chipsetvar="${unknown_chipset[${language}]}"
 
 	declare -A hintprefix
@@ -51,6 +52,7 @@ function language_strings() {
 	hintprefix["ITALIAN"]="Consiglio"
 	hintprefix["POLISH"]="Wskazówka"
 	hintprefix["GERMAN"]="Rat"
+	hintprefix["JAPANESE"]="ヒント"
 	hintvar="*${hintprefix[${language}]}*"
 	escaped_hintvar="\*${hintprefix[${language}]}\*"
 
@@ -65,6 +67,7 @@ function language_strings() {
 	optionaltool_needed["ITALIAN"]="Opzione bloccata, richiede: "
 	optionaltool_needed["POLISH"]="Opcja zablokowana, wymaga: "
 	optionaltool_needed["GERMAN"]="Option gesperrt, folgendes ist erfordert: "
+	optionaltool_needed["JAPANESE"]="ロックされたオプション、それが必要です："
 
 	declare -A under_construction
 	under_construction["ENGLISH"]="under construction"
@@ -77,6 +80,7 @@ function language_strings() {
 	under_construction["ITALIAN"]="in costruzione"
 	under_construction["POLISH"]="w budowie"
 	under_construction["GERMAN"]="im Aufbau"
+	under_construction["JAPANESE"]="工事中"
 	under_constructionvar="${under_construction[${language}]}"
 
 	declare -gA possible_package_names_text
@@ -89,6 +93,7 @@ function language_strings() {
 	possible_package_names_text["GREEK"]="Πιθανό όνομα πακέτου"
 	possible_package_names_text["ITALIAN"]="Possibile nome del pacchetto"
 	possible_package_names_text["POLISH"]="Możliwa nazwa pakietu"
+	possible_package_names_text["JAPANESE"]="可能なパッケージ名"
 	possible_package_names_text["GERMAN"]="Möglicher Paketname"
 
 	declare -gA et_misc_texts
@@ -102,6 +107,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",0]="Info Evil Twin AP"
 	et_misc_texts["POLISH",0]="Informacja Evil Twin AP"
 	et_misc_texts["GERMAN",0]="Information über Evil Twin AP"
+	et_misc_texts["JAPANESE,0"]="イービルツインAP（アクセスポイント）情報"
 
 	et_misc_texts["ENGLISH",1]="Channel"
 	et_misc_texts["SPANISH",1]="Canal"
@@ -113,6 +119,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",1]="Canale"
 	et_misc_texts["POLISH",1]="Kanał"
 	et_misc_texts["GERMAN",1]="Kanal"
+	et_misc_texts["JAPANESE",1]="チャネル"
 
 	et_misc_texts["ENGLISH",2]="Online time"
 	et_misc_texts["SPANISH",2]="Tiempo online"
@@ -124,6 +131,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",2]="Tempo online"
 	et_misc_texts["POLISH",2]="Czas online"
 	et_misc_texts["GERMAN",2]="Zeit online"
+	et_misc_texts["JAPANESE",2]="オンライン時間"
 
 	et_misc_texts["ENGLISH",3]="DHCP ips given to possible connected clients"
 	et_misc_texts["SPANISH",3]="Ips entregadas por DHCP a posibles clientes conectados"
@@ -135,6 +143,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",3]="Ips forniti dal DHCP a possibili clienti collegati"
 	et_misc_texts["POLISH",3]="Adresy IP przydzielane przez DHCP do połączonych potencjalnych klientów"
 	et_misc_texts["GERMAN",3]="Ips durch DHCP an mögliche verbundene Clients geliefert"
+	et_misc_texts["JAPANESE",3]="可能な接続クライアントに与えられたDHCP ips"
 
 	et_misc_texts["ENGLISH",4]="With this attack you have to use an external sniffer to try to obtain client passwords connected to the network"
 	et_misc_texts["SPANISH",4]="Con este ataque has de usar un sniffer externo para intentar obtener contraseñas de los clientes conectados a la red"
@@ -146,6 +155,8 @@ function language_strings() {
 	et_misc_texts["ITALIAN",4]="Con questo attacco è necessario utilizzare uno sniffer esterno per cercare di ottenere le password dei clienti connessi alla rete"
 	et_misc_texts["POLISH",4]="W tym ataku musisz użyć zewnętrznego sniffera, aby spróbować uzyskać hasła od klientów podłączonych do sieci"
 	et_misc_texts["GERMAN",4]="Mit diesem Angriff ist ein externer Sniffer erforderlich um Passwörter von am Netzwerk verbundene clients zu stehlen"
+	et_misc_texts["JAPANESE",4]="この攻撃では、外部スニファを使用してネットワークに接続されたクライアントパスワードを取得する必要があります"
+
 
 	et_misc_texts["ENGLISH",5]="With this attack, watch the sniffer's screen to see if a password appears"
 	et_misc_texts["SPANISH",5]="Con este ataque, estate atento a la pantalla del sniffer para ver si aparece alguna contraseña"
@@ -157,6 +168,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",5]="Con questo attacco, presta attenzione alla schermata dello sniffer per vedere se compare una password"
 	et_misc_texts["POLISH",5]="Podczas tego ataku obserwuj ekran sniffera, aby zobaczyć, czy pojawia się hasło"
 	et_misc_texts["GERMAN",5]="Schau mit diesem Angriff ans Bildschirm ob ein Passwort erscheint"
+	et_misc_texts["JAPANESE",5]="この攻撃で、スニファの画面を見てパスワードが表示されているかどうかを確認します"
 
 	et_misc_texts["ENGLISH",6]="With this attack, we'll wait for a network client to provide us with the password for the wifi network in our captive portal"
 	et_misc_texts["SPANISH",6]="Con este ataque, esperaremos a que un cliente de la red nos provea de la contraseña de la red wifi en nuestro portal cautivo"
@@ -168,6 +180,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",6]="Con questo attacco, aspettaremo che un cliente della rete ci fornisca la password per la rete wireless attraverso il nostro captive portal"
 	et_misc_texts["POLISH",6]="W tym ataku poczekamy na klienta sieci aż poda nam hasło do sieci wifi na naszej stronie captive portal"
 	et_misc_texts["GERMAN",6]="Mit diesem Angriff warten wir bis ein client im Netzwerk uns das Passwort des WLANs in unserer Vorschaltseite übergibt"
+	et_misc_texts["JAPANESE",6]="この攻撃では、ネットワーククライアントがキャプティブポータルのWi-Fiネットワークのパスワードを私たちに提供するのを待ちます"
 
 	et_misc_texts["ENGLISH",7]="No clients connected yet"
 	et_misc_texts["SPANISH",7]="No hay clientes conectados aún"
@@ -179,6 +192,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",7]="Non ci sono ancora clienti collegati"
 	et_misc_texts["POLISH",7]="Nie ma jeszcze żadnych podłączonych klientów"
 	et_misc_texts["GERMAN",7]="Keine clients bisher verbunden"
+	et_misc_texts["JAPANESE",7]="まだ接続されていないクライアント"
 
 	et_misc_texts["ENGLISH",8]="airgeddon. Evil Twin attack captured passwords"
 	et_misc_texts["SPANISH",8]="airgeddon. Contraseñas capturadas en ataque Evil Twin"
@@ -190,6 +204,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",8]="airgeddon. Password catturate con l'attacco Evil Twin"
 	et_misc_texts["POLISH",8]="airgeddon. Hasła przechwycone podczas ataku Evil Twin"
 	et_misc_texts["GERMAN",8]="airgeddon. Passwörter im Evil Twin-Angriff erfassen"
+	et_misc_texts["JAPANESE",8]="airigeddon。 イービルツイン攻撃がパスワードを取得 "
 
 	et_misc_texts["ENGLISH",9]="Wireless network, ESSID:"
 	et_misc_texts["SPANISH",9]="Red inalámbrica, ESSID:"
@@ -201,6 +216,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",9]="Rete wireless, ESSID:"
 	et_misc_texts["POLISH",9]="Sieć bezprzewodowa, ESSID:"
 	et_misc_texts["GERMAN",9]="WLAN, ESSID:"
+	et_misc_texts["JAPANESE",9]="ワイヤレスネットワーク、ESSID："
 
 	et_misc_texts["ENGLISH",10]="Enter your wireless network password to get internet access"
 	et_misc_texts["SPANISH",10]="Introduzca su contraseña de acceso a la red inalámbrica para poder acceder a internet"
@@ -212,6 +228,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",10]="Introdurre la password della rete wireless per poter accedere a internet"
 	et_misc_texts["POLISH",10]="Wprowadź hasło do sieci bezprzewodowej, aby uzyskać dostęp do internetu"
 	et_misc_texts["GERMAN",10]="Schreiben Sie ihr WLAN-Passwort für Internetzugang"
+	et_misc_texts["JAPANESE",10]="ワイヤレスネットワークパスワードを入力してインターネットにアクセスする"
 
 	et_misc_texts["ENGLISH",11]="Password"
 	et_misc_texts["SPANISH",11]="Contraseña"
@@ -223,6 +240,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",11]="Password"
 	et_misc_texts["POLISH",11]="Hasło"
 	et_misc_texts["GERMAN",11]="Passwort"
+	et_misc_texts["JAPANESE",11]="パスワド"
 
 	et_misc_texts["ENGLISH",12]="Show password"
 	et_misc_texts["SPANISH",12]="Mostrar contraseña"
@@ -234,6 +252,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",12]="Mostrare password"
 	et_misc_texts["POLISH",12]="Pokaż hasło"
 	et_misc_texts["GERMAN",12]="Passwort zeigen"
+	et_misc_texts["JAPANESE",12]="ショーのパスワード"
 
 	et_misc_texts["ENGLISH",13]="Submit"
 	et_misc_texts["SPANISH",13]="Enviar"
@@ -245,6 +264,8 @@ function language_strings() {
 	et_misc_texts["ITALIAN",13]="Inviare"
 	et_misc_texts["POLISH",13]="Wyślij"
 	et_misc_texts["GERMAN",13]="Schicken"
+	et_misc_texts["JAPANESE",13]="差し出す"　	
+
 
 	et_misc_texts["ENGLISH",14]="An unexpected error occurred, redirecting to the main screen"
 	et_misc_texts["SPANISH",14]="Ha ocurrido un error inesperado, redirigiendo a la pantalla principal"
@@ -256,6 +277,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",14]="Si è verificato un errore imprevisto, reindirizzando alla schermata principale"
 	et_misc_texts["POLISH",14]="Wystąpił nieoczekiwany błąd, zostaniesz przekierowany do ekranu głównego"
 	et_misc_texts["GERMAN",14]="Ein Fehler ist aufgetreten, Sie werden zur Homepage weitergeleitet"
+	et_misc_texts["JAPANESE",14]="予期しないエラーが発生し、メイン画面にリダイレクトされました"
 
 	et_misc_texts["ENGLISH",15]="Internet Portal"
 	et_misc_texts["SPANISH",15]="Portal de Internet"
@@ -267,6 +289,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",15]="Portale Internet"
 	et_misc_texts["POLISH",15]="Portal internetowy"
 	et_misc_texts["GERMAN",15]="Internet Portal"
+	et_misc_texts["JAPANESE",15]="インターネットポータル"
 
 	et_misc_texts["ENGLISH",16]="The password must be at least 8 characters"
 	et_misc_texts["SPANISH",16]="La contraseña debe tener al menos 8 caracteres"
@@ -278,6 +301,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",16]="La password deve essere di almeno 8 caratteri"
 	et_misc_texts["POLISH",16]="Hasło musi mieć długość co najmniej 8 znaków"
 	et_misc_texts["GERMAN",16]="Das Passwort muss mindestens 8 Zeichen lang sein"
+	et_misc_texts["JAPANESE",16]="パスワードは8文字以上でなければなりません"
 
 	et_misc_texts["ENGLISH",17]="The password is incorrect, redirecting to the main screen"
 	et_misc_texts["SPANISH",17]="La contraseña introducida es incorrecta, redirigiendo a la pantalla principal"
@@ -322,6 +346,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",20]="Tentativi"
 	et_misc_texts["POLISH",20]="Próby"
 	et_misc_texts["GERMAN",20]="Versuche"
+	et_misc_texts["JAPAENSE",20]="未遂"
 
 	et_misc_texts["ENGLISH",21]="last password:"
 	et_misc_texts["SPANISH",21]="última contraseña:"
@@ -333,6 +358,7 @@ function language_strings() {
 	et_misc_texts["ITALIAN",21]="ultima password:"
 	et_misc_texts["POLISH",21]="ostatnie hasło:"
 	et_misc_texts["GERMAN",21]="letzte Passwort:"
+	et_misc_texts["JAPANESE",21]="letzte Passwort:"
 
 	et_misc_texts["ENGLISH",22]="Captured passwords on failed attemps"
 	et_misc_texts["SPANISH",22]="Contraseñas capturadas en intentos fallidos"
