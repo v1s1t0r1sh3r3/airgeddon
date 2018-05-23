@@ -8228,7 +8228,7 @@ function attack_handshake_menu() {
 		ask_yesno 145
 		handshake_captured=${yesno}
 		kill "${processidcapture}" &> /dev/null
-		if [ "${handshake_captured}" = "y" ]; then
+		if grep -q handshake "handcheck.txt"; then
 
 			handshakepath="${default_save_path}"
 			lastcharhandshakepath=${handshakepath: -1}
@@ -8337,7 +8337,7 @@ function capture_handshake_window() {
 
 	rm -rf "${tmpdir}handshake"* > /dev/null 2>&1
 	recalculate_windows_sizes
-	xterm +j -sb -rightbar -geometry "${g1_topright_window}" -T "Capturing Handshake" -e airodump-ng -c "${channel}" -d "${bssid}" -w "${tmpdir}handshake" "${interface}" > /dev/null 2>&1 &
+	xterm +j -sb -rightbar -geometry "${g1_topright_window}" -T "Capturing Handshake" -e airodump-ng -c "${channel}" -d "${bssid}" -w "${tmpdir}handshake" "${interface}" 2> handcheck.txt 2>&1 &
 	processidcapture=$!
 }
 
