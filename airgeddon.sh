@@ -10626,7 +10626,9 @@ function check_xwindow_system() {
 
 	if hash xset 2> /dev/null; then
 		if ! xset -q > /dev/null 2>&1; then
-			if [ "${is_docker}" -eq 0 ]; then
+			if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
+			    xterm_ok=1 # Experimental wayland protocol support
+			elif [ "${is_docker}" -eq 0 ]; then
 				xterm_ok=0
 			fi
 		fi
