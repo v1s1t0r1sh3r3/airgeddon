@@ -805,7 +805,7 @@ function check_monitor_enabled() {
 
 	debug_print
 
-	mode=$(iwconfig "${1}" 2> /dev/null | grep Mode: | awk '{print $4}' | cut -d ':' -f 2)
+	mode=$(iwconfig "${1}" 2> /dev/null | grep Mode: | awk '{print $1}' | cut -d ':' -f 2)
 
 	current_iface_on_messages="${1}"
 
