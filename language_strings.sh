@@ -123,7 +123,7 @@ function language_strings() {
 	reboot_required["RUSSIAN"]="${red_color_slim} (требуется перезагрузка)${normal_color}"
 	reboot_required["GREEK"]="${red_color_slim} (απαιτείται επανεκκίνηση)${normal_color}"
 	reboot_required["ITALIAN"]="${red_color_slim} (riavvio richiesto)${normal_color}"
-	reboot_required["POLISH"]="${pending_of_translation} ${red_color_slim} (wymagane ponowne uruchomienie)${normal_color}"
+	reboot_required["POLISH"]="${red_color_slim} (wymagane ponowne uruchomienie)${normal_color}"
 	reboot_required["GERMAN"]="${red_color_slim} (Neustart erforderlich)${normal_color}"
 	reboot_required["TURKISH"]="${red_color_slim} (yeniden başlatma gerekli)${normal_color}"
 
@@ -1898,7 +1898,7 @@ function language_strings() {
 	arr["RUSSIAN",85]="Для связи с нами вы можете использовать электронную почту, IRC, Discord, и прочее. Больше информации здесь: ${normal_color}${urlgithub_wiki}/Contact"
 	arr["GREEK",85]="Επικοινωνήστε μαζί μας μέσω mail, IRC, Discord, κλπ. Περισσότερες πληροφορίες εδώ: ${normal_color}${urlgithub_wiki}/Contact"
 	arr["ITALIAN",85]="Contattaci via e-mail, IRC, Discord, ecc. Maggiori informazioni qui: ${normal_color}${urlgithub_wiki}/Contact"
-	arr["POLISH",85]="${pending_of_translation} Skontaktować się z nami za pośrednictwem poczty, IRC, Discord itp Więcej informacji tutaj: ${normal_color}${urlgithub_wiki}/Contact"
+	arr["POLISH",85]="Skontaktuj się z nami za pośrednictwem poczty, IRC, Discord, itp. Więcej informacji tutaj: ${normal_color}${urlgithub_wiki}/Contact"
 	arr["GERMAN",85]="Kontaktieren Sie uns per E-Mail, IRC, Discord, etc. Mehr Infos hier: ${normal_color}${urlgithub_wiki}/Contact"
 	arr["TURKISH",85]="E-posta, IRC, Discord, vb. ile ile bize ulaşın. Daha fazla bilgi için: ${normal_color}${urlgithub_wiki}/Contact"
 
@@ -3722,7 +3722,7 @@ function language_strings() {
 	arr["RUSSIAN",237]="Возникла проблема с файлами или указанным путём. Убедитесь, что файлы ca.pem, server.pem и server.key существуют по указанному пути. Атака не может быть выполнена"
 	arr["GREEK",237]="Υπάρχει κάποιο πρόβλημα με τα αρχεία ή τη διαδρομή που έχετε εισάγει. Βεβαιωθείτε ότι τα αρχεία ca.pem, server.pem και server.key υπάρχουν στην υποδεικνυόμενη διαδρομή. Η επίθεση δεν μπορεί να εκτελεστεί"
 	arr["ITALIAN",237]="C'è un problema con i files o il percorso immessi. Assicurati che i file ca.pem, server.pem e server.key esistano nel percorso indicato. L'attacco non può essere eseguito"
-	arr["POLISH",237]="${pending_of_translation} Wystąpił problem z wprowadzonymi plikami lub ścieżką. upewnij się, że pliki ca.pem, server.pem i server.key istnieją we wskazanej ścieżce. nie można wykonać ataku"
+	arr["POLISH",237]="$Wystąpił problem z plikami lub wprowadzoną ścieżką. Upewnij się, że pliki ca.pem, server.pem i server.key istnieją we wskazanej lokalizacji. Nie można wykonać ataku"
 	arr["GERMAN",237]="Es gibt ein Problem mit den Dateien oder dem eingegebenen Pfad. Stellen Sie sicher, dass die Dateien ca.pem, server.pem und server.key im angegebenen Pfad vorhanden sind. Der Angriff kann nicht ausgeführt werden"
 	arr["TURKISH",237]="Dosyalarda veya girilen yolda bir sorun var. ca.pem, server.pem ve server.key dosyalarının belirtilen yolda bulunduğundan emin olun. Saldırı gerçekleştirilemez"
 
@@ -8270,7 +8270,7 @@ function language_strings() {
 	arr["RUSSIAN",616]="10. Изменить метод управления окнами на tmux"
 	arr["GREEK",616]="10. Αλλάξτε τη μέθοδο διαχείρισης παραθύρων σε tmux"
 	arr["ITALIAN",616]="10. Cambiare il metodo di gestione delle finestre a tmux"
-	arr["POLISH",616]="${pending_of_translation} 10. Zmień metodę zarządzania oknami na tmux"
+	arr["POLISH",616]="10. Zmień metodę zarządzania oknami na tmux"
 	arr["GERMAN",616]="10. Ändern Sie die Fensterverwaltung zu tmux"
 	arr["TURKISH",616]="10. Pencere yönetimi yöntemini tmux olarak değiştirin"
 
@@ -8282,7 +8282,7 @@ function language_strings() {
 	arr["RUSSIAN",617]="10. Изменить метод управления окнами на xterm"
 	arr["GREEK",617]="10. Αλλάξτε τη μέθοδο διαχείρισης παραθύρων σε xterm"
 	arr["ITALIAN",617]="10. Cambiare il metodo di gestione delle finestre a xterm"
-	arr["POLISH",617]="${pending_of_translation} 10. Zmień metodę zarządzania oknami na xterm"
+	arr["POLISH",617]="10. Zmień metodę zarządzania oknami na xterm"
 	arr["GERMAN",617]="10. Ändern Sie die Fensterverwaltung zu xterm"
 	arr["TURKISH",617]="10. Pencere yönetimi yöntemini xterm olarak değiştirin"
 
@@ -8294,7 +8294,7 @@ function language_strings() {
 	arr["RUSSIAN",618]="Текущее управление окнами: ${pink_color}xterm${normal_color}${reboot_required_text}"
 	arr["GREEK",618]="Τρέχουσα διαχείριση παραθύρων: ${pink_color}xterm${normal_color}${reboot_required_text}"
 	arr["ITALIAN",618]="Gestione delle finestre attuale: ${pink_color}xterm${normal_color}${reboot_required_text}"
-	arr["POLISH",618]="${pending_of_translation} Bieżące zarządzanie oknami: ${pink_color}xterm${normal_color}${reboot_required_text}"
+	arr["POLISH",618]="Bieżące zarządzanie oknami: ${pink_color}xterm${normal_color}${reboot_required_text}"
 	arr["GERMAN",618]="Aktuelle Fensterverwaltung: ${pink_color}xterm${normal_color}${reboot_required_text}"
 	arr["TURKISH",618]="Mevcut pencere yönetimi: ${pink_color}xterm${normal_color}${reboot_required_text}"
 
@@ -8306,7 +8306,7 @@ function language_strings() {
 	arr["RUSSIAN",619]="Текущее управление окнами: ${pink_color}tmux${normal_color}${reboot_required_text}"
 	arr["GREEK",619]="Τρέχουσα διαχείριση παραθύρων: ${pink_color}tmux${normal_color}${reboot_required_text}"
 	arr["ITALIAN",619]="Gestione delle finestre attuale: ${pink_color}tmux${normal_color}${reboot_required_text}"
-	arr["POLISH",619]="${pending_of_translation} Bieżące zarządzanie oknami: ${pink_color}tmux${normal_color}${reboot_required_text}"
+	arr["POLISH",619]="Bieżące zarządzanie oknami: ${pink_color}tmux${normal_color}${reboot_required_text}"
 	arr["GERMAN",619]="Aktuelle Fensterverwaltung: ${pink_color}tmux${normal_color}${reboot_required_text}"
 	arr["TURKISH",619]="Mevcut pencere yönetimi: ${pink_color}tmux${normal_color}${reboot_required_text}"
 
@@ -8318,7 +8318,7 @@ function language_strings() {
 	arr["RUSSIAN",620]="Эта опция изменила параметр в файле конфигурации. Перезапустите данный скрипт для того, чтобы изменения вступили в силу"
 	arr["GREEK",620]="Η επιλογή στο configuration file τροποποιήθηκε. Επανεκκινήστε το script για να τεθούν οι αλλαγές σε ισχύ"
 	arr["ITALIAN",620]="É stata cambiata l'opzione nel file di configurazione. Riavviare lo script affinché le modifiche abbiano effetto"
-	arr["POLISH",620]="${pending_of_translation} To zmieniło opcję w pliku konfiguracyjnym. Ponownie uruchom skrypt, aby zmiany odniosły skutek"
+	arr["POLISH",620]="Ta opcja wywołała zmianę w pliku konfiguracyjnym. Ponownie uruchom skrypt, aby zmiany odniosły skutek"
 	arr["GERMAN",620]="Es änderte sich die Option in der Konfigurationsdatei. Starten Sie das Skript neu, damit die Änderungen wirksam werden"
 	arr["TURKISH",620]="Yapılandırma dosyasında bu seçenek değiştirildi. Değişikliklerin etkili olması için script'i yeniden başlatın"
 
@@ -8330,7 +8330,7 @@ function language_strings() {
 	arr["RUSSIAN",621]="Невозможно запустить airgeddon в текущей сессии tmux. Этот сеанс будет отправлен в фоновый режим, и будет создан новый сеанс tmux для запуска airgeddon"
 	arr["GREEK",621]="Δεν είναι δυνατό να εκτελέσετε airgeddon στην τρέχουσα συνεδρία tmux. Αυτή η συνεδρία θα στείλει στο παρασκήνιο και θα δημιουργηθεί μια νέα συνεδρία tmux για την εκκίνηση του airgeddon"
 	arr["ITALIAN",621]="Non è possibile eseguire airgeddon nella sessione corrente di tmux. Questa sessione verrà mandata in background e verrà creata una nuova sessione tmux in cui verrà lanciato airgeddon"
-	arr["POLISH",621]="${pending_of_translation} Nie można uruchomić airgeddon w bieżącej sesji tmux. Ta sesja zostanie wysłana do tła i zostanie utworzona nowa sesja tmux, w której zostanie uruchomiony airgeddon"
+	arr["POLISH",621]="Nie można uruchomić airgeddon w bieżącej sesji tmux. Ta sesja zostanie wysłana na drugi plan. Zostanie utworzona nowa sesja tmux, w której będzie uruchomiony airgeddon"
 	arr["GERMAN",621]="Es ist nicht möglich, airgeddon in der aktuellen tmux-Sitzung auszuführen. Diese Sitzung wird in den Hintergrund gesendet und eine neue Sitzung wird erstellt, in der airgeddon gestartet wird"
 	arr["TURKISH",621]="Mevcut tmux seansında airgeddon çalıştırmak mümkün değildir. Bu oturum arka plana gönderilecek ve airgeddon'un başlatılacağı yeni bir tmux oturumu oluşturulacak"
 
@@ -8342,7 +8342,7 @@ function language_strings() {
 	arr["RUSSIAN",622]="13. (reaver) Атака с нулевым PIN"
 	arr["GREEK",622]="13. (reaver) Null PIN επίθεση"
 	arr["ITALIAN",622]="13. (reaver) Attacco del PIN nullo"
-	arr["POLISH",622]="${pending_of_translation} 13. (reaver) Atak null PIN"
+	arr["POLISH",622]="13. (reaver) Atak null PIN"
 	arr["GERMAN",622]="13. (reaver) Null-PIN-Angriff"
 	arr["TURKISH",622]="13. (reaver) Null PIN saldırısı"
 
@@ -8354,7 +8354,7 @@ function language_strings() {
 	arr["RUSSIAN",623]="У вас установлен reaver (v${reaver_version}). Версия удовлетворяет требованиям для выполнения интегрированной в reaver атаки нулевого PIN (минимальная версия v${minimum_reaver_nullpin_version}). Скрипт может продолжить работу..."
 	arr["GREEK",623]="Έχετε εγκατεστημένο το reaver (v${reaver_version}). Έχετε την απαραίτητη έκδοση reaver για την επίθεση null PIN με ενσωματωμένο reaver (ελάχιστη έκδοση v${minimum_reaver_nullpin_version}). Το script μπορεί να συνεχίσει..."
 	arr["ITALIAN",623]="È stato installato reaver (v${reaver_version}). Soddisfi il requisito della versione per realizzare l'attacco del PIN nullo integrato in reaver (versione minima v${minimum_reaver_nullpin_version}). Lo script può continuare..."
-	arr["POLISH",623]="${pending_of_translation} Masz zainstalowany reaver (v${reaver_version}). Spełnia on wymagania dotyczące wersji, aby wykonać atak null PIN (wersja minimalna v${minimum_reaver_nullpin_version}). Skrypt może kontynuować..."
+	arr["POLISH",623]="Masz zainstalowany reaver (v${reaver_version}). Spełnia on wymagania dotyczące wersji, aby wykonać atak null PIN (wersja minimalna v${minimum_reaver_nullpin_version}). Skrypt może kontynuować..."
 	arr["GERMAN",623]="Reaver ist installiert (v${reaver_version}). Sie erfüllen die Versionsvoraussetzung, um den Null-PIN-Angriff auszuführen, der mit Reaver integriert ist (min Version v${minimum_reaver_nullpin_version}). Das Skript kann fortfahren..."
 	arr["TURKISH",623]="Reaver sisteminizde kurulu (v${reaver_version}). Null PIN entegre edilmiş reaver saldırısını gerçekleştirmek için sürüm gereksinimini karşılıyorsunuz (minimum sürüm v${minimum_reaver_nullpin_version}). Script devam edebilir..."
 
@@ -8366,7 +8366,7 @@ function language_strings() {
 	arr["RUSSIAN",624]="У вас установлен reaver (v${reaver_version}), но не та версия, которая требуется. Для выполнения интегрированной в reaver атаки нулевого PIN у вас должна быть по крайней мере v${minimum_reaver_nullpin_version}"
 	arr["GREEK",624]="Έχετε εγκατεστημένο το reaver (v${reaver_version}), αλλά όχι την απαιτούμενη έκδοση. Για να εκτελέσετε την επίθεση null PIN με ενσωματωμένο reaver θα πρέπει να έχετε τουλάχιστον την έκδοση v${minimum_reaver_nullpin_version}"
 	arr["ITALIAN",624]="È stato installato reaver (v${reaver_version}), ma non la versione richiesta. Per realizzare l'attacco del PIN nullo integrato in reaver devi avere almeno la versione v${minimum_reaver_nullpin_version}"
-	arr["POLISH",624]="${pending_of_translation} Masz zainstalowany reaver (v${reaver_version}), ale nie wymaganą wersję. Aby zrealizować atak null PIN zintegrowany z programem reaver musisz mieć co najmniej wersję v${minimum_reaver_nullpin_version}"
+	arr["POLISH",624]="Masz zainstalowany reaver (v${reaver_version}), ale zbyt niską wersję. Aby zrealizować atak null PIN zintegrowany z programem reaver musisz mieć co najmniej wersję v${minimum_reaver_nullpin_version}"
 	arr["GERMAN",624]="Reaver ist installiert (v${reaver_version}), jedoch nicht die erforderliche Version. Um den Null-PIN-Angriff mit Reaver zu integrieren, müssen Sie mindestens die Version v${minimum_reaver_nullpin_version} haben"
 	arr["TURKISH",624]="Reaver sisteminizde kurulu (v${reaver_version}), ancak sürüm uygun değil. Boş PIN entegre reaver saldırısını gerçekleştirmek için minimum sürüm olan ${minimum_reaver_nullpin_version} olmalıdır"
 
@@ -8378,7 +8378,7 @@ function language_strings() {
 	arr["RUSSIAN",625]="Атака по нулевому PIN-коду очень быстрая и мгновенно получает пароль, но уязвимы только несколько точек доступа. Примеры некоторых из них: \"Huawei HG658C\", \"ZTE H218N\", \"ZTE H108N\" и \"ZTE H298N\""
 	arr["GREEK",625]="Η επίθεση null PIN είναι πολύ γρήγορη και παίρνει τον κωδικό άμεσα, αλλά μόνο λίγα σημεία πρόσβασης είναι ευάλωτα. Κάποια από αυτά είναι τα \"Huawei HG658C\", \"ZTE H218N\", \"ZTE H108N\" και \"ZTE H298N\""
 	arr["ITALIAN",625]="L'attacco del PIN nullo è molto veloce e ottiene la password all'istante, ma solo pochi punti di accesso sono vulnerabili. Alcuni conosciuti sono \"Huawei HG658C\", \"ZTE H218N\", \"ZTE H108N\" e \"ZTE H298N\""
-	arr["POLISH",625]="${pending_of_translation} Atak null kodu PIN jest bardzo szybki i natychmiast otrzymuje hasło, ale tylko kilka punktów dostępu jest podatnych na ataki. Niektóre są \"Huawei HG658C\", \"ZTE H218N\", \"ZTE H108N\" i \"ZTE H298N\""
+	arr["POLISH",625]="Atak null PIN jest bardzo szybki i natychmiast uzyskuje hasło. Niestety, tylko kilka punktów dostępu jest podatnych na ten atak. Niektóre z nich to \"Huawei HG658C\", \"ZTE H218N\", \"ZTE H108N\" i \"ZTE H298N\""
 	arr["GERMAN",625]="Der Null-PIN-Angriff ist sehr schnell und erhält das Kennwort sofort, aber nur wenige access points sind anfällig. Einige sind \"Huawei HG658C\", \"ZTE H218N\", \"ZTE H108N\" und \"ZTE H298N\""
 	arr["TURKISH",625]="Null PIN saldırısı çok hızlıdır ve şifreyi anında alır, ancak yalnızca birkaç erişim noktası korunmasızdır. Bazı \"Huawei HG658C\", \"ZTE H218N\", \"ZTE H108N\" ve \"ZTE H298N\""
 
@@ -8390,7 +8390,7 @@ function language_strings() {
 	arr["RUSSIAN",626]="Начиная с версии airgeddon 9.20, поддерживается tmux и он может использоваться вместо xterm в качестве обработчика окон. Скрипт может быть запущен в автономной среде без графической системы X Window. Рекомендуется только для опытных пользователей. Как и любой другой параметр, его можно настроить в меню параметров, в файле параметров ${rc_path} или запустить с помощью ${normal_color}AIRGEDDON_WINDOWS_HANDLING${pink_color} \"flag\" в командной строке. Больше информации о настройке опций на Wiki: ${urlgithub_wiki}/Options"
 	arr["GREEK",626]="Από την έκδοση 9.20 του airgeddon, υποστηρίζεται το tmux και μπορεί να χρησιμοποιηθεί αντί του xterm ως χειριστής παραθύρων. Το script μπορεί να εκκινηθεί σε headless περιβάλλον χωρίς γραφικό σύστημα παραθύρου X. Συνιστάται μόνο για προχωρημένους χρήστες. Όπως και κάθε άλλη επιλογή, μπορεί να ρυθμιστεί στο μενού επιλογών, στο αρχείο επιλογών ${rc_path} ή να εκκινηθεί χρησιμοποιώντας το \"flag\" ${normal_color}AIRGEDDON_WINDOWS_HANDLING${pink_color} στη γραμμή εντολών. Περισσότερες πληροφορίες σχετικά με την προσαρμογή των επιλογών στο Wiki: ${urlgithub_wiki}/Options"
 	arr["ITALIAN",626]="A partire dalla versione 9.20 di airgeddon, tmux è supportato e può essere usato al posto di xterm come gestore di finestre. È possibile avviare lo script in un ambiente senza un sistema grafico di finestre X. È consigliato solo per utenti esperti. Come qualsiasi altra opzione, può essere configurata dal menu delle opzioni, configurata nel file delle opzioni ${rc_path} o avviata utilizzando il \"flag\" ${normal_color}AIRGEDDON_WINDOWS_HANDLING${pink_color} dalla linea di comando. Maggiori informazioni sulla personalizzazione delle opzioni nella Wiki: ${urlgithub_wiki}/Options"
-	arr["POLISH",626]="${pending_of_translation} Począwszy od wersji 9.20 airgeddon, tmux jest obsługiwany i może być używany zamiast xterm jako menedżer okien. Skrypt można uruchomić w środowisku bez systemu graficznego okien X. Zalecany jest tylko dla zaawansowanych użytkowników. Jak każda inna opcja, można ją skonfigurować z menu opcji, skonfigurować w pliku opcji ${rc_path} lub uruchomić za pomocą \"flag\" ${normal_color}AIRGEDDON_WINDOWS_HANDLING${pink_color} w wierszu poleceń. Więcej informacji na temat dostosowywania opcji w Wikiv"
+	arr["POLISH",626]="Począwszy od wersji 9.20 airgeddon, tmux jest obsługiwany i może być używany zamiast xterm jako menedżer okien. Skrypt można uruchomić w środowisku bez systemu graficznego X window. Zalecany jest tylko dla zaawansowanych użytkowników. Jak każdą inna opcję, można ją skonfigurować z menu, w pliku opcji ${rc_path} lub uruchomić za pomocą \"flag\" ${normal_color}AIRGEDDON_WINDOWS_HANDLING${pink_color} w wierszu poleceń. Więcej informacji na temat dostosowywania opcji w Wiki: ${urlgithub_wiki}/Options"
 	arr["GERMAN",626]="Ab airgeddon Version 9.20 wird tmux unterstützt und kann anstelle von xterm als Fenstermanager verwendet werden. Sie können das Skript in einer Umgebung ohne Grafiksystem von X-Fenstern starten, es wird nur für fortgeschrittene Benutzer empfohlen. Wie jede andere Option kann sie über das Optionsmenü konfiguriert werden, in der Optionsdatei ${rc_path} konfiguriert oder mit dem \"flag\" ${normal_color}AIRGEDDON_WINDOWS_HANDLING${pink_color} in der Befehlszeile gestartet werden. Weitere Informationen zur Anpassung der Optionen im Wiki: ${urlgithub_wiki}/Options"
 	arr["TURKISH",626]="airgeddon'un 9.20 sürümünden itibaren, tmux destekleniyor ve bir pencere yöneticisi olarak xterm yerine kullanılabilir. Senaryoyu X windows grafik sistemine sahip olmayan bir ortamda başlatabilirsiniz, sadece ileri düzey kullanıcılar için önerilir. Diğer seçeneklerde olduğu gibi, seçenekler menüsünden yapılandırılabilir, ${rc_path} seçenekler dosyasında yapılandırılabilir veya komut satırında \"flag\" ${normal_color}AIRGEDDON_WINDOWS_HANDLING${pink_color} kullanılarak başlatılabilir. Wiki'deki seçeneklerin özelleştirilmesi hakkında daha fazla bilgi: ${urlgithub_wiki}/Options"
 
@@ -8402,7 +8402,7 @@ function language_strings() {
 	arr["RUSSIAN",627]="сертификаты"
 	arr["GREEK",627]="πιστοποιητικά"
 	arr["ITALIAN",627]="certificati"
-	arr["POLISH",627]="${pending_of_translation} certyfikaty"
+	arr["POLISH",627]="certyfikaty"
 	arr["GERMAN",627]="Zertifikate"
 	arr["TURKISH",627]="sertifikalar"
 
@@ -8414,7 +8414,7 @@ function language_strings() {
 	arr["RUSSIAN",628]="5.  Создать пользовательские сертификаты"
 	arr["GREEK",628]="5.  Δημιουργία προσαρμοσμένων πιστοποιητικών"
 	arr["ITALIAN",628]="5.  Creare certificati personalizzati"
-	arr["POLISH",628]="${pending_of_translation} 5.  Twórz niestandardowe certyfikaty"
+	arr["POLISH",628]="5.  Tworzenie niestandardowych certyfikatów"
 	arr["GERMAN",628]="5.  Benutzerdefinierte Zertifikate erstellen"
 	arr["TURKISH",628]="5.  Özel sertifika oluştur"
 
@@ -8426,7 +8426,7 @@ function language_strings() {
 	arr["RUSSIAN",629]="Создавая собственные сертификаты, мы сделаем нашу атаку на корпоративную сеть более надёжной"
 	arr["GREEK",629]="Δημιουργώντας προσαρμοσμένα πιστοποιητικά, θα κάνουμε την επίθεσή μας σε ένα επιχειρηματικό δίκτυο πιο αξιόπιστη"
 	arr["ITALIAN",629]="Generando certificati personalizzati, renderemo più credibile il nostro attacco a una rete enterprise"
-	arr["POLISH",629]="${pending_of_translation} Generując niestandardowe certyfikaty, sprawimy, że nasz atak do sieci przedsiębiorstwa stanie się bardziej wiarygodny"
+	arr["POLISH",629]="$Generując niestandardowe certyfikaty sprawimy, że nasz atak na sieć firmową stanie się bardziej wiarygodny"
 	arr["GERMAN",629]="Indem wir benutzerdefinierte Zertifikate generieren, werden wir unseren Angriff auf ein Unternehmensnetzwerk glaubwürdiger machen"
 	arr["TURKISH",629]="Özel sertifikalar üreterek, kurumsal bir ağa saldırımızı daha güvenilir hale getireceğiz"
 
@@ -8438,7 +8438,7 @@ function language_strings() {
 	arr["RUSSIAN",630]="Введите двухбуквенный код страны (US, ES, FR):"
 	arr["GREEK",630]="Εισάγετε τον κωδικό χώρας δύο χαρακτήρων (US, ES, FR):"
 	arr["ITALIAN",630]="Inserisci le due lettere del codice del paese (US, ES, FR):"
-	arr["POLISH",630]="${pending_of_translation} Wpisz dwuliterowy kod kraju (US, ES, FR):"
+	arr["POLISH",630]="Wpisz dwuliterowy kod kraju (US, ES, FR):"
 	arr["GERMAN",630]="Den zweistelligen Ländercode eingeben (US, ES, FR):"
 	arr["TURKISH",630]="İki harfli ülke kodunu giriniz (US, ES, FR):"
 
@@ -8450,7 +8450,7 @@ function language_strings() {
 	arr["RUSSIAN",631]="Введите штат или провинцию (Madrid, New Jersey):"
 	arr["GREEK",631]="Εισάγετε κράτος ή επαρχία (Madrid, New Jersey):"
 	arr["ITALIAN",631]="Inserisci lo stato o la provincia (Madrid, New Jersey):"
-	arr["POLISH",631]="${pending_of_translation} Wpisz stan lub prowincję (Madrid, New Jersey):"
+	arr["POLISH",631]="Wpisz stan lub prowincję (Madrid, New Jersey):"
 	arr["GERMAN",631]="Bundesstaat oder Provinz eingeben (Madrid, New Jersey):"
 	arr["TURKISH",631]="Eyalet veya ilinizi giriniz (Madrid, New Jersey):"
 
@@ -8462,7 +8462,7 @@ function language_strings() {
 	arr["RUSSIAN",632]="Введите язык (Hong Kong, Dublin):"
 	arr["GREEK",632]="Εισάγετε την τοποθεσία συμβάντος (Hong Kong, Dublin):"
 	arr["ITALIAN",632]="Inserisci la localitá (Hong Kong, Dublin):"
-	arr["POLISH",632]="${pending_of_translation} Wpisz ustawienia regionalne (Hong Kong, Dublin):"
+	arr["POLISH",632]="Wpisz ustawienia regionalne (Hong Kong, Dublin):"
 	arr["GERMAN",632]="Lokale eingeben (Hong Kong, Dublin):"
 	arr["TURKISH",632]="Yerel ayarı girin (Hong Kong, Dublin):"
 
@@ -8474,7 +8474,7 @@ function language_strings() {
 	arr["RUSSIAN",633]="Введите название организации (Evil Corp):"
 	arr["GREEK",633]="Εισάγετε το όνομα του οργανισμού (Evil Corp):"
 	arr["ITALIAN",633]="Inserisci il nome dell'organizzazione (Evil Corp):"
-	arr["POLISH",633]="${pending_of_translation} Wpisz nazwę organizacji (Evil Corp):"
+	arr["POLISH",633]="Wpisz nazwę organizacji (Evil Corp):"
 	arr["GERMAN",633]="Organisationsname eingeben (Evil Corp):"
 	arr["TURKISH",633]="Kuruluş adını girin (Evil Corp):"
 
@@ -8486,7 +8486,7 @@ function language_strings() {
 	arr["RUSSIAN",634]="Введите адрес электронной почты (tyrellwellick@ecorp.com):"
 	arr["GREEK",634]="Εισάγετε το email (tyrellwellick@ecorp.com):"
 	arr["ITALIAN",634]="Inserisci l'email (tyrellwellick@ecorp.com):"
-	arr["POLISH",634]="${pending_of_translation} Wpisz adres e-mail (tyrellwellick@ecorp.com):"
+	arr["POLISH",634]="Wpisz adres e-mail (tyrellwellick@ecorp.com):"
 	arr["GERMAN",634]="E-Mail eingeben (tyrellwellick@ecorp.com):"
 	arr["TURKISH",634]="E-posta adresini girin (tyrellwellick@ecorp.com):"
 
@@ -8498,7 +8498,7 @@ function language_strings() {
 	arr["RUSSIAN",635]="Введите \"common name\" (CN) для сертификата (ecorp.com):"
 	arr["GREEK",635]="Εισάγετε \"common name\" (CN) για cert (ecorp.com):"
 	arr["ITALIAN",635]="Inserisci il \"common name\" (CN) del certificato (ecorp.com):"
-	arr["POLISH",635]="${pending_of_translation} Wpisz \"common name\" (CN) dla cert (ecorp.com):"
+	arr["POLISH",635]="Wpisz \"common name\" (CN) dla cert (ecorp.com):"
 	arr["GERMAN",635]="Einen \"common name\" (CN) eingeben (ecorp.com):"
 	arr["TURKISH",635]="Bir \"common name\" (CN) girin (ecorp.com):"
 
@@ -8510,7 +8510,7 @@ function language_strings() {
 	arr["RUSSIAN",636]="В вашей конфигурации имеется ошибка. Пожалуйста, проверьте файл ${rc_path}. Вы включили опцию принудительного использования mdk3 (${normal_color}AIRGEDDON_MDK_VERSION${red_color}), но в вашей системе не установлена mdk3. Отключите эту опцию или установите mdk3, чтобы исправить проблему"
 	arr["GREEK",636]="Υπάρχει ένα σφάλμα στο configuration σας. Παρακαλώ ελέγξτε το αρχείο ${rc_path}. Έχετε ενεργοποιήσει την επιλογή που εξαναγκάζει τη χρήση του mdk3 (${normal_color}AIRGEDDON_MDK_VERSION${red_color}) αλλά το σύστημά σας δεν έχει το mdk3 εγκατεστημένο. Απενεργοποιήστε την επιλογή αυτή ή εγκαταστήστε το mdk3 για να επιλυθεί το πρόβλημα"
 	arr["ITALIAN",636]="C'è un errore nella tua configurazione. Per favore controlla il file ${rc_path}. Hai attivato l'opzione per forzare l'uso di mdk3 (${normal_color}AIRGEDDON_MDK_VERSION${red_color}) ma il tuo sistema non ha mdk3 installato. Disabilita questa opzione o installa mdk3 per risolvere il problema"
-	arr["POLISH",636]="${pending_of_translation} Wystąpił błąd konfiguracji. Sprawdź plik ${rc_path}. Aktywowałeś opcję wymuszania użycia mdk3 (${normal_color}AIRGEDDON_MDK_VERSION${red_color}), ale twój system nie ma zainstalowanego mdk3. Wyłącz tę opcję lub zainstaluj mdk3, aby rozwiązać problem"
+	arr["POLISH",636]="Wystąpił błąd konfiguracji. Sprawdź plik ${rc_path}. Aktywowałeś opcję wymuszania użycia mdk3 (${normal_color}AIRGEDDON_MDK_VERSION${red_color}), ale twój system nie ma zainstalowanego mdk3. Wyłącz tę opcję lub zainstaluj mdk3, aby rozwiązać problem"
 	arr["GERMAN",636]="Ein Fehler wurde in Ihren Einstellungen gefunden. Bitte überprüfen Sie die Datei ${rc_path}. Sie haben die Option aktiviert, um die Verwendung von mdk3 zu erzwingen (${normal_color}AIRGEDDON_MDK_VERSION${red_color}), aber auf Ihrem System ist mdk3 nicht installiert. Deaktivieren Sie diese Option oder installieren Sie mdk3, um dieses Problem zu lösen"
 	arr["TURKISH",636]="Yapılandırmanızda bir hata var. Lütfen ${rc_path} dosyasını kontrol edin. (${normal_color}AIRGEDDON_MDK_VERSION${red_color}) mdk3 kullanımını zorlama seçeneğini etkinleştirdiniz, ancak sisteminizde mdk3 kurulu değil. Bu seçeneği devre dışı bırakın veya sorunu çözmek için mdk3 yükleyin"
 
@@ -8522,7 +8522,7 @@ function language_strings() {
 	arr["RUSSIAN",637]="11. Изменить версию mdk на mdk3"
 	arr["GREEK",637]="11. Αλλάξτε την έκδοση mdk σε mdk3"
 	arr["ITALIAN",637]="11. Cambiare la versione di mdk in mdk3"
-	arr["POLISH",637]="${pending_of_translation} 11. Zmień wersję mdk na mdk3"
+	arr["POLISH",637]="$11. Zmień wersję mdk na mdk3"
 	arr["GERMAN",637]="11. Die mdk-Version zu mdk3 wechseln"
 	arr["TURKISH",637]="11. mdk sürümünü mdk3 olarak değiştir"
 
@@ -8534,7 +8534,7 @@ function language_strings() {
 	arr["RUSSIAN",638]="11. Изменить версию mdk на mdk4"
 	arr["GREEK",638]="11. Αλλάξτε την έκδοση mdk σε mdk4"
 	arr["ITALIAN",638]="11. Cambiare la versione di mdk in mdk4"
-	arr["POLISH",638]="${pending_of_translation} 11. Zmień wersję mdk na mdk4"
+	arr["POLISH",638]="11. Zmień wersję mdk na mdk4"
 	arr["GERMAN",638]="11. Die mdk-Version zu mdk4 wechseln"
 	arr["TURKISH",638]="11. mdk sürümünü mdk4 olarak değiştirin"
 
@@ -8546,7 +8546,7 @@ function language_strings() {
 	arr["RUSSIAN",639]="${blue_color}Это изменит версию mdk. ${green_color}Вы хотите продолжить? ${normal_color}${visual_choice}"
 	arr["GREEK",639]="${blue_color}Θα αλλάξει η έκδοση mdk. ${green_color}Θέλετε να συνεχίσετε; ${normal_color}${visual_choice}"
 	arr["ITALIAN",639]="${blue_color}La versione di mdk da usare sta per essere cambiata. ${green_color}Vuoi continuare? ${normal_color}${visual_choice}"
-	arr["POLISH",639]="${pending_of_translation} ${blue_color}Zmieni używaną wersję mdk. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
+	arr["POLISH",639]="${blue_color}Wersja mdk zostanie zmieniona. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
 	arr["GERMAN",639]="${blue_color}Die zu verwendende mdk-Version wird geändert. ${green_color}Möchten Sie fortfahren? ${normal_color}${visual_choice}"
 	arr["TURKISH",639]="Kullanılacak mdk sürümünü değiştirilecek. ${green_color}Devam etmek istiyor musunuz? ${normal_color}${visual_choice}"
 
@@ -8558,7 +8558,7 @@ function language_strings() {
 	arr["RUSSIAN",640]="Версия mdk для ${mdk_command} была успешно изменена"
 	arr["GREEK",640]="Η έκδοση mdk άλλαξε με επιτυχία σε ${mdk_command}"
 	arr["ITALIAN",640]="La versione di mdk è stata cambiata con successo a ${mdk_command}"
-	arr["POLISH",640]="${pending_of_translation} Wersja mdk na ${mdk_command} została pomyślnie zmieniona"
+	arr["POLISH",640]="Wersja z mdk na ${mdk_command} została pomyślnie zmieniona"
 	arr["GERMAN",640]="Die mdk-Version wurde zu ${mdk_command} erfolgreich geändert"
 	arr["TURKISH",640]="mdk sürümü başarıyla ${mdk_command} olarak değiştirildi"
 
@@ -8570,7 +8570,7 @@ function language_strings() {
 	arr["RUSSIAN",641]="Выбрана версия mdk: ${pink_color}${mdk_command}${normal_color}"
 	arr["GREEK",641]="Επιλεγμένη έκδοση mdk: ${pink_color}${mdk_command}${normal_color}"
 	arr["ITALIAN",641]="Versione di mdk selezionata: ${pink_color}${mdk_command}${normal_color}"
-	arr["POLISH",641]="${pending_of_translation} Wybrana wersja mdk: ${pink_color}${mdk_command}${normal_color}"
+	arr["POLISH",641]="Wybrana wersja mdk: ${pink_color}${mdk_command}${normal_color}"
 	arr["GERMAN",641]="Ausgewählte mdk-Version: ${pink_color}${mdk_command}${normal_color}"
 	arr["TURKISH",641]="Seçilen mdk versiyonu: ${pink_color}${mdk_command}${normal_color}"
 
@@ -8582,7 +8582,7 @@ function language_strings() {
 	arr["RUSSIAN",642]="Сертификаты создаются. Пожалуйста, будьте терпеливы, процесс может занять некоторое время..."
 	arr["GREEK",642]="Δημιουργούνται πιστοποιητικά. Παρακαλούμε να είστε υπομονετικοί, η διαδικασία μπορεί να διαρκέσει λίγο..."
 	arr["ITALIAN",642]="I certificati si stanno generando. Ti preghiamo di essere paziente, il processo potrebbe richiedere del tempo..."
-	arr["POLISH",642]="${pending_of_translation} Generowane są certyfikaty. Prosimy o cierpliwość, proces może trochę potrwać..."
+	arr["POLISH",642]="Generowane są certyfikaty. Prosimy o cierpliwość, proces może trochę potrwać..."
 	arr["GERMAN",642]="Zertifikate werden generiert. Bitte haben Sie etwas Geduld, der Vorgang kann eine Weile dauern..."
 	arr["TURKISH",642]="Sertifikalar üretiliyor. Lütfen sabırlı olun, işlem biraz zaman alabilir..."
 
@@ -8594,7 +8594,7 @@ function language_strings() {
 	arr["RUSSIAN",643]="Файлы сертификатов были созданы правильно, вам нужно решить, где их сохранить. ${green_color}Введите путь, по которому мы будем сохранять файлы, или нажмите [Enter], чтобы принять предложение по умолчанию ${normal_color}[${enterprisecertspath}]"
 	arr["GREEK",643]="Τα αρχεία πιστοποιητικών έχουν δημιουργηθεί σωστά, πρέπει να αποφασίσετε πού να τα αποθηκεύσετε. ${green_color}Πληκτρολογήστε τη διαδρομή στην οποία θα αποθηκευτούν τα αρχεία ή πατήστε [Enter] για να αποδεχθείτε την προεπιλεγμένη πρόταση ${normal_color}[${enterprisecertspath}]"
 	arr["ITALIAN",643]="I files del certificato sono stati creati correttamente, devi decidere dove salvarli. ${green_color}Digita il percorso in cui salveremo i file o premi [Enter] per accettare la proposta predefinita ${normal_color}[${enterprisecertspath}]"
-	arr["POLISH",643]="${pending_of_translation} Pliki certyfikatów zostały utworzone poprawnie, musisz zdecydować, gdzie je zapisać. ${green_color}Wpisz ścieżkę, w której będziemy zapisywać pliki, lub naciśnij [Enter], aby zaakceptować domyślną propozycję ${normal_color}[${enterprisecertspath}]"
+	arr["POLISH",643]="Pliki certyfikatów zostały utworzone poprawnie. Musisz zdecydować, gdzie je zapisać. ${green_color}Wpisz ścieżkę zapisu lub naciśnij [Enter], aby zaakceptować domyślną propozycję ${normal_color}[${enterprisecertspath}]"
 	arr["GERMAN",643]="Die Zertifikatsdateien wurden erfolgreich erstellt. Sie müssen entscheiden, wo diese gespeichert werden sollen. ${green_color}Geben Sie den Pfad ein, in dem die Dateien gespeichert werden sollen, oder drücken Sie [Enter], um den Standardvorschlag zu akzeptieren. ${normal_color}[${enterprisecertspath}]"
 	arr["TURKISH",643]="Sertifika dosyaları başarılıyla oluşturuldu, nereye kaydedileceğine karar vermelisiniz. ${green_color}Dosyaları kaydedeceğimiz yolu yazın veya varsayılan teklifi kabul etmek için [Enter] tuşuna basın ${normal_color}[${enterprisecertspath}]"
 
@@ -8606,7 +8606,7 @@ function language_strings() {
 	arr["RUSSIAN",644]="Файлы сертификатов (ca.pem, server.pem и server.key) были успешно сохранены по выбранному пути [${normal_color}${enterprisecerts_completepath}${blue_color}]. Срок действия этих сертификатов составляет ${normal_color}10${blue_color} лет, а пароль, использованный при их создании, был \"${normal_color} ${certspass} ${blue_color}\""
 	arr["GREEK",644]="Τα πιστοποιητικά (ca.pem, server.pem και server.key) αποθηκεύτηκαν με επιτυχία στην επιλεγμένη διαδρομή [${normal_color}${enterprisecerts_completepath}${blue_color}}. Ο χρόνος λήξης αυτών των πιστοποιητικών είναι ${normal_color}10${blue_color} χρόνια και ο κωδικός πρόσβασης που χρησιμοποιήθηκε κατά τη δημιουργία του ήταν \"${normal_color}${certspass}${blue_color}\""
 	arr["ITALIAN",644]="I files del certificato (ca.pem, server.pem e server.key) sono stati salvati correttamente nel percorso scelto [${normal_color}${enterprisecerts_completepath}${blue_color}]. Il tempo di scadenza per questi certificati è ${normal_color}10${blue_color} anni e la password utilizzata nella sua creazione era \"${normal_color}${certspass}${blue_color}\""
-	arr["POLISH",644]="${pending_of_translation} pliki certyfikatów (ca.pem, server.pem i server.key) zostały poprawnie zapisane w wybranej ścieżce [${normal_color}${enterprisecerts_completepath}${blue_color}]. Czas wygaśnięcia tych certyfikatów wynosi ${normal_color}10${blue_color} lat, a hasło użyte do jego utworzenia to \"${normal_color}${certspass}${blue_color}\""
+	arr["POLISH",644]="Pliki certyfikatów (ca.pem, server.pem i server.key) zostały poprawnie zapisane w wybranej ścieżce [${normal_color}${enterprisecerts_completepath}${blue_color}]. Czas ważności tych certyfikatów wynosi ${normal_color}10${blue_color} lat, a hasło użyte ich utworzenia to \"${normal_color}${certspass}${blue_color}\""
 	arr["GERMAN",644]="Die Zertifikatdateien (ca.pem, server.pem und server.key) wurden erfolgreich im ausgewählten Pfad [${normal_color}${enterprisecerts_completepath}${blue_color}] gespeichert. Die Gültigkeitsdauer für diese zertifikate beträgt ${normal_color}10${blue_color} Jahre und das bei der Erstellung verwendete Passwort war \"${normal_color}${certspass}${blue_color}\""
 	arr["TURKISH",644]="Sertifika dosyaları (ca.pem, server.pem ve server.key) seçilen yola başarıyla kaydedildi [${normal_color}${enterprisecerts_completepath}${blue_color}]. Bu sertifikaların son kullanma süresi ${normal_color}10${blue_color} yıl ve oluşturmada kullanılan şifre \"${normal_color}${certspass}${blue_color}\" idi"
 
@@ -8618,7 +8618,7 @@ function language_strings() {
 	arr["RUSSIAN",645]="${green_color}Хотите использовать собственные сертификаты во время атаки? ${blue_color}Если вы ответите нет \"n\", airgeddon будет использовать дефолтные сертификаты. Если вы ответите да \"y\", то вам нужно будет указать путь до ваших сертификатов и знать пароль, с помощью которого они были сгенерированы ${normal_color}${visual_choice}"
 	arr["GREEK",645]="${green_color}Θέλετε να χρησιμοποιήσετε προσαρμοσμένα πιστοποιητικά κατά τη διάρκεια της επίθεσης; ${blue_color}Εάν απαντήσετε όχι \"n\", το airgeddon θα χρησιμοποιήσει αυτά από προεπιλογή. Αν απαντήσετε ναι \"y\" τότε θα πρέπει να δώσετε τη διαδρομή τους και να γνωρίσετε τον κωδικό πρόσβασης με τον οποίο δημιουργήθηκαν ${normal_color}${visual_choice}"
 	arr["ITALIAN",645]="${green_color}Vuoi usare certificati personalizzati durante l'attacco? ${blue_color}Se rispondi no \"n\", airgeddon ne utilizzerà uno di default. se rispondi sì \"y\" dovrai fornire il loro percorso e conoscere la password con cui sono stati generati ${normal_color}${visual_choice}"
-	arr["POLISH",645]="${pending_of_translation} ${green_color}Czy chcesz używać niestandardowych certyfikatów podczas ataku? ${blue_color}Jeśli odpowiesz nie \"n\", airgeddon będzie domyślnie używał tych. jeśli odpowiesz tak \"y\", będziesz musiał podać ich ścieżkę i znać hasło, z którego zostały wygenerowane ${normal_color}${visual_choice}"
+	arr["POLISH",645]="${green_color}Czy chcesz używać niestandardowych certyfikatów podczas ataku? ${blue_color}Jeśli odpowiesz nie \"n\", airgeddon użyje domyślnych. Jeśli odpowiesz tak \"y\", będziesz musiał podać ścieżkę i hasło użyte do ich wygenerowania ${normal_color}${visual_choice}"
 	arr["GERMAN",645]="${green_color}Möchten Sie während des Angriffs benutzerdefinierte Zertifikate verwenden? ${blue_color}Wenn sie mit Nein \"n\" antworten, verwendet airgeddon die Standardzertifikaten. wenn sie mit Ja \"y\" antworten, müssen Sie deren Pfad und das Kennwort eingeben, mit dem sie generiert wurden ${normal_color}${visual_choice}"
 	arr["TURKISH",645]="${green_color}Saldırı sırasında özel sertifikalar kullanmak ister misiniz? ${blue_color}Hayır \"n\" cevabını verirseniz, airgeddon varsayılanları kullanacaktır. eğer evet \"y\" cevabını verirseniz, yollarını belirtmeniz ve oluşturdukları şifreyi bilmeniz gerekir ${normal_color}${visual_choice}"
 
@@ -8630,7 +8630,7 @@ function language_strings() {
 	arr["RUSSIAN",646]="${blue_color}airgeddon обнаружил, что пользовательские сертификаты были созданы во время этого сеанса. ${green_color}вы хотите использовать их во время атаки? ${normal_color}${visual_choice}"
 	arr["GREEK",646]="${blue_color}Το airgeddon έχει εντοπίσει ότι έχουν δημιουργηθεί προσαρμοσμένα πιστοποιητικά κατά τη διάρκεια αυτής της περιόδου σύνδεσης. ${green_color}Θέλετε να τα χρησιμοποιήσετε κατά τη διάρκεια της επίθεσης; ${normal_color} ${visual_choice}"
 	arr["ITALIAN",646]="${blue_color}airgeddon ha rilevato che durante questa sessione sono stati generati certificati personalizzati. ${green_color}Vuoi usarli durante l'attacco? ${normal_color}${visual_choice}"
-	arr["POLISH",646]="${pending_of_translation} ${blue_color}airgeddon wykrył, że podczas tej sesji wygenerowano niestandardowe certyfikaty. ${green_color}Czy chcesz ich użyć podczas ataku? ${normal_color}${visual_choice}"
+	arr["POLISH",646]="${blue_color}airgeddon wykrył, że podczas tej sesji wygenerowano niestandardowe certyfikaty. ${green_color}Czy chcesz ich użyć podczas ataku? ${normal_color}${visual_choice}"
 	arr["GERMAN",646]="${blue_color}airgeddon hat bemerkt, dass während dieser Sitzung benutzerdefinierte Zertifikate generiert wurden. ${green_color}Möchten Sie diese während des Angriffs benutzen? ${normal_color}${visual_choice}"
 	arr["TURKISH",646]="${blue_color}airgeddon, bu oturum sırasında özel sertifikaların oluşturulduğunu tespit etti. ${green_color}Onları saldırı sırasında kullanmak istiyor musunuz? ${normal_color}${visual_choice}"
 
@@ -8642,7 +8642,7 @@ function language_strings() {
 	arr["RUSSIAN",647]="Будут использоваться дефолтные сертификаты"
 	arr["GREEK",647]="Θα χρησιμοποιηθούν τα προεπιλεγμένα πιστοποιητικά"
 	arr["ITALIAN",647]="Verranno utilizzati i certificati predefiniti"
-	arr["POLISH",647]="${pending_of_translation} Zostaną użyte domyślne certyfikaty"
+	arr["POLISH",647]="Zostaną użyte domyślne certyfikaty"
 	arr["GERMAN",647]="Die Standardzertifikate werden verwendet"
 	arr["TURKISH",647]="Varsayılan sertifikalar kullanılacak"
 
@@ -8654,7 +8654,7 @@ function language_strings() {
 	arr["RUSSIAN",648]="Будут использованы сертификаты, сгенерированные с airgeddon"
 	arr["GREEK",648]="Θα χρησιμοποιηθούν τα προηγούμενα πιστοποιητικά που δημιουργήθηκαν από airgeddon"
 	arr["ITALIAN",648]="Verranno utilizzati i certificati generati in precedenza con airgeddon"
-	arr["POLISH",648]="${pending_of_translation} Zostaną wykorzystane wcześniej wygenerowane certyfikaty z airgeddon"
+	arr["POLISH",648]="Zostaną wykorzystane certyfikaty wygenerowane wcześniej z airgeddon"
 	arr["GERMAN",648]="Mit airgeddon erstellte Zertifikate werden verwendet"
 	arr["TURKISH",648]="Daha önce airgeddon ile üretilen sertifikalar kullanılacak"
 
@@ -8666,7 +8666,7 @@ function language_strings() {
 	arr["RUSSIAN",649]="Проверка сертификатов..."
 	arr["GREEK",649]="Επικύρωση πιστοποιητικών..."
 	arr["ITALIAN",649]="Convalidando i certificati..."
-	arr["POLISH",649]="${pending_of_translation} Sprawdzanie poprawności certyfikatów..."
+	arr["POLISH",649]="Sprawdzanie poprawności certyfikatów..."
 	arr["GERMAN",649]="Validiere Zertfikiate..."
 	arr["TURKISH",649]="Sertifikalar doğrulanıyor..."
 
@@ -8678,7 +8678,7 @@ function language_strings() {
 	arr["RUSSIAN",650]="Сертификаты действительны. Можно выполнить атаку"
 	arr["GREEK",650]="Τα πιστοποιητικά είναι έγκυρα. Μπορεί να γίνει επίθεση"
 	arr["ITALIAN",650]="I certificati sono validi. L'attacco può essere eseguito"
-	arr["POLISH",650]="${pending_of_translation} Certyfikaty są ważne. Można wykonać atak"
+	arr["POLISH",650]="Certyfikaty są ważne. Można wykonać atak"
 	arr["GERMAN",650]="Die Zertifikate sind gültig. Der Angriff kann ausgeführt werden"
 	arr["TURKISH",650]="Sertifikalar geçerli. Saldırı yapılabilir"
 
@@ -8690,7 +8690,7 @@ function language_strings() {
 	arr["RUSSIAN",651]="12. Насовсем отключить систему плагинов"
 	arr["GREEK",651]="12. Απενεργοποιήστε το σύστημα plugins μόνιμα"
 	arr["ITALIAN",651]="12. Disattivare sistema di plugins permanentemente"
-	arr["POLISH",651]="${pending_of_translation} 12. Wyłącz system wtyczek na stałe"
+	arr["POLISH",651]="12. Wyłącz system wtyczek na stałe"
 	arr["GERMAN",651]="12. Plugins-System dauerhaft deaktivieren"
 	arr["TURKISH",651]="12. Eklentiler sistemini kalıcı olarak devre dışı bırak"
 
@@ -8702,7 +8702,7 @@ function language_strings() {
 	arr["RUSSIAN",652]="12. Включить систему плагинов"
 	arr["GREEK",652]="12. Ενεργοποιήστε το σύστημα plugins μόνιμα"
 	arr["ITALIAN",652]="12. Attivare sistema di plugin permanentemente"
-	arr["POLISH",652]="${pending_of_translation} 12. Włączenie na stałe system wtyczek"
+	arr["POLISH",652]="12. Włącz system wtyczek na stałe"
 	arr["GERMAN",652]="12. Plugins-System dauerhaft aktivieren"
 	arr["TURKISH",652]="12. Eklentiler sistemini kalıcı olarak etkinleştir"
 
@@ -8714,7 +8714,7 @@ function language_strings() {
 	arr["RUSSIAN",653]="Система плагинов: ${pink_color}Включена${normal_color}${reboot_required_text}"
 	arr["GREEK",653]="Σύστημα plugins: ${pink_color}Ενεργοποιημένo${normal_color}${reboot_required_text}"
 	arr["ITALIAN",653]="Sistema di plugin: ${pink_color}Attivato${normal_color}${reboot_required_text}"
-	arr["POLISH",653]="${pending_of_translation} System wtyczek: ${pink_color}Włączone${normal_color}${reboot_required_text}"
+	arr["POLISH",653]="System wtyczek: ${pink_color}Włączony${normal_color}${reboot_required_text}"
 	arr["GERMAN",653]="Plugins-System: ${pink_color}Aktiviert${normal_color}${reboot_required_text}"
 	arr["TURKISH",653]="Eklentiler sistemi: ${pink_color}Aktif${normal_color}${reboot_required_text}"
 
@@ -8726,7 +8726,7 @@ function language_strings() {
 	arr["RUSSIAN",654]="Система плагинов: ${pink_color}Отключена${normal_color}${reboot_required_text}"
 	arr["GREEK",654]="Σύστημα plugins: ${pink_color}Απενεργοποιημένo${normal_color}${reboot_required_text}"
 	arr["ITALIAN",654]="Sistema di plugin: ${pink_color}Disattivato${normal_color}${reboot_required_text}"
-	arr["POLISH",654]="${pending_of_translation} System wtyczek: ${pink_color}Wyłączone${normal_color}${reboot_required_text}"
+	arr["POLISH",654]="System wtyczek: ${pink_color}Wyłączony${normal_color}${reboot_required_text}"
 	arr["GERMAN",654]="Plugins-System: ${pink_color}Deaktiviert${normal_color}${reboot_required_text}"
 	arr["TURKISH",654]="Eklentiler sistemi: ${pink_color}DevreDışı${normal_color}${reboot_required_text}"
 
@@ -8738,7 +8738,7 @@ function language_strings() {
 	arr["RUSSIAN",655]="${blue_color}Система плагинов будет отключена. ${green_color}Вы хотите продолжить? ${normal_color}${visual_choice}"
 	arr["GREEK",655]="${blue_color}Το σύστημα plugins θα απενεργοποιηθεί. ${green_color}Θέλετε να συνεχίσετε; ${normal_color}${visual_choice}"
 	arr["ITALIAN",655]="${blue_color}Il sistema di plugin sarà disabilitato. ${green_color}Vuoi continuare? ${normal_color}${visual_choice}"
-	arr["POLISH",655]="${pending_of_translation} ${blue_color}System wtyczek zostanie wyłączony. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
+	arr["POLISH",655]="${blue_color}System wtyczek zostanie wyłączony. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
 	arr["GERMAN",655]="${blue_color}Das Plugins-System wird deaktiviert. ${green_color}Möchten Sie fortfahren? ${normal_color}${visual_choice}"
 	arr["TURKISH",655]="${blue_color}Eklenti sistemi devre dışı bırakılacak. ${green_color}Devam etmek istiyor musunuz? ${normal_color}${visual_choice}"
 
@@ -8750,7 +8750,7 @@ function language_strings() {
 	arr["RUSSIAN",656]="${blue_color}Система плагинов будет включена. ${green_color}Вы хотите продолжить? ${normal_color}${visual_choice}"
 	arr["GREEK",656]="${blue_color}Το σύστημα plugins θα ενεργοποιηθεί. ${green_color}Θέλετε να συνεχίσετε; ${normal_color}${visual_choice}"
 	arr["ITALIAN",656]="${blue_color}Il sistema di plugin verrà abilitato ${green_color}Vuoi continuare? ${normal_color}${visual_choice}"
-	arr["POLISH",656]="${pending_of_translation} ${blue_color}System wtyczek zostanie włączony. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
+	arr["POLISH",656]="${blue_color}System wtyczek zostanie włączony. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
 	arr["GERMAN",656]="${blue_color}Das Plugins-System wird aktiviert. ${green_color}Möchten Sie fortfahren? ${normal_color}${visual_choice}"
 	arr["TURKISH",656]="${blue_color}Eklenti sistemi etkinleştirilecek. ${green_color}Devam etmek istiyor musunuz? ${normal_color}${visual_choice}"
 
@@ -8762,7 +8762,7 @@ function language_strings() {
 	arr["RUSSIAN",657]="${blue_color}tmux будет включен. ${green_color}Вы хотите продолжить? ${normal_color}${visual_choice}"
 	arr["GREEK",657]="${blue_color}tmux θα ενεργοποιηθεί. ${green_color}Θέλετε να συνεχίσετε; ${normal_color}${visual_choice}"
 	arr["ITALIAN",657]="${blue_color}tmux verrà attivato ${green_color}Vuoi continuare? ${normal_color}${visual_choice}"
-	arr["POLISH",657]="${pending_of_translation} ${blue_color}tmux zostanie włączone. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
+	arr["POLISH",657]="${blue_color}tmux zostanie włączony. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
 	arr["GERMAN",657]="${blue_color}tmux wird aktiviert. ${green_color}Möchten Sie fortfahren? ${normal_color}${visual_choice}"
 	arr["TURKISH",657]="${blue_color}tmux etkinleştirilecek. ${green_color}Devam etmek istiyor musunuz? ${normal_color}${visual_choice}"
 
@@ -8774,7 +8774,7 @@ function language_strings() {
 	arr["RUSSIAN",658]="${blue_color}xterm будет включен. ${green_color}Вы хотите продолжить? ${normal_color}${visual_choice}"
 	arr["GREEK",658]="${blue_color}xterm θα ενεργοποιηθεί. ${green_color}Θέλετε να συνεχίσετε; ${normal_color}${visual_choice}"
 	arr["ITALIAN",658]="${blue_color}xterm verrà attivato ${green_color}Vuoi continuare? ${normal_color}${visual_choice}"
-	arr["POLISH",658]="${pending_of_translation} ${blue_color}xterm zostanie włączone. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
+	arr["POLISH",658]="${blue_color}xterm zostanie włączony. ${green_color}Czy chcesz kontynuować? ${normal_color}${visual_choice}"
 	arr["GERMAN",658]="${blue_color}xterm wird aktiviert. ${green_color}Möchten Sie fortfahren? ${normal_color}${visual_choice}"
 	arr["TURKISH",658]="${blue_color}xterm etkinleştirilecek. ${green_color}Devam etmek istiyor musunuz? ${normal_color}${visual_choice}"
 
@@ -8786,7 +8786,7 @@ function language_strings() {
 	arr["RUSSIAN",659]="Ошибка. Недействительные функции \"${normal_color}${current_function}${red_color}\" в плагине \"${normal_color}${plugin}${red_color}\". Попытка изменить несуществующую функцию. Исправьте это, прежде чем продолжить"
 	arr["GREEK",659]="Σφάλμα. Μη έγκυρη λειτουργία \"${normal_color}${current_function}${red_color}\" στο plugin \"${normal_color}${plugin}${red_color}\". Η λειτουργία που προσπάθησε να τροποποιηθεί δεν υπάρχει. Διορθώστε το πριν συνεχίσετε"
 	arr["ITALIAN",659]="Errore. Funzione non valida \"${normal_color}${current_function}${red_color}\" nel plugin \"${normal_color}${plugin}${red_color}\". La funzione che si cerca di modificare non esiste. Risolvilo prima di continuare"
-	arr["POLISH",659]="${pending_of_translation} Błąd. Nieprawidłowe funkcyjne \"${normal_color}${current_function}${red_color}\" we wtyczce \"${normal_color}${plugin}${red_color}\". Funkcja próbuje modyfikować nie istnieją. Napraw to przed kontynuowaniem"
+	arr["POLISH",659]="Błąd. Nieprawidłowa funkcja \"${normal_color}${current_function}${red_color}\" we wtyczce \"${normal_color}${plugin}${red_color}\". Funkcja próbuje modyfikować nie istnieją. Napraw to przed kontynuowaniem"
 	arr["GERMAN",659]="Fehler. Ungültige Funktion \"${normal_color}${current_function}${red_color}\" im Plugin \"${normal_color}${plugin}${red_color}\". Die zu-ändernde Funktion ist nicht vorhanden. Beheben Sie es, bevor Sie fortfahren"
 	arr["TURKISH",659]="Hata. \"${normal_color}${plugin}${red_color}\" eklentisinde geçersiz İşlev \"${normal_color}${current_function}${red_color}\". Değiştirmeye çalışılan fonksiyon mevcut değil. Devam etmeden önce düzeltin"
 
@@ -8798,7 +8798,7 @@ function language_strings() {
 	arr["RUSSIAN",660]="Благодаря плагинам можно быстро и просто разработать настраиваемое содержимое, собственные модификации с любой функциональностью или меню. Более подробная информация о Wiki: ${urlgithub_wiki}/Plugins%20System"
 	arr["GREEK",660]="Χάρη στα plugins, μπορεί να αναπτυχθεί προσαρμοσμένο περιεχόμενο. Τροποποιήστε από οποιαδήποτε μενού ή λειτουργία σε ένα γρήγορο και απλό τρόπο. Περισσότερες πληροφορίες σχετικά με το Wiki: ${urlgithub_wiki}/Plugins%20System"
 	arr["ITALIAN",660]="Grazie al sistema di plugins si possono sviluppare contenuti personalizzati, modifiche di alcune funzionalità o un menu in modo semplice e veloce. Maggiori informazioni su Wiki: ${urlgithub_wiki}/Plugins%20System"
-	arr["POLISH",660]="${pending_of_translation} Dzięki wtyczek może rozwijać spersonalizowanej treści, własne modyfikacje jakiejkolwiek funkcji lub menu w szybki i prosty sposób. Więcej informacji na wiki: ${urlgithub_wiki}/Plugins%20System"
+	arr["POLISH",660]="Dzięki systemowi wtyczek można rozwijać spersonalizowane treści, własne modyfikacje jakiejkolwiek funkcji lub menu w szybki i prosty sposób. Więcej informacji w Wiki: ${urlgithub_wiki}/Plugins%20System"
 	arr["GERMAN",660]="Dank des Plugin-Systems können individuell angepasste Inhalte, eigene Modifikationen jeglicher Funktionalität oder ein Menü in einer schnellen und einfachen Art und Weise entwickelt werden. Weitere Informationen finden Sie auf Wiki: ${urlgithub_wiki}/Plugins%20System"
 	arr["TURKISH",660]="Eklentiler sistemi sayesinde özel içerikler, menü veya özellik kolay ve hızlı bir şekilde eklenebilir. Hakkında daha fazla bilgi: ${urlgithub_wiki}/Plugins%20System"
 
@@ -8810,7 +8810,7 @@ function language_strings() {
 	arr["RUSSIAN",661]="Ошибка. У вас есть конфликтующие плагины (\"${normal_color}${function_hooks[${original_function},${action}]}${red_color}\" и \"${normal_color}${plugin}${red_color}\") выполняют одно о то же действие \"${normal_color}${action}${red_color}\" над одной и той же функцией \"${normal_color}${original_function}${red_color}\". Исправьте это, прежде чем продолжить"
 	arr["GREEK",661]="Σφάλμα. Έχετε αντικρουόμενα plugins (\"${normal_color}${function_hooks[${original_function},${action}]}${red_color}\" και \"${normal_color}${plugin}${red_color}\") εκτελεί την ίδια ενέργεια \"${normal_color}${action}${red_color}\" για την ίδια λειτουργία \"${normal_color}${original_function}${red_color}\". Διορθώστε το πριν συνεχίσετε"
 	arr["ITALIAN",661]="Errore. Hai plugins in conflitto (\"${normal_color}${function_hooks[${original_function},${action}]}${red_color}\" e \"${normal_color}${plugin}${red_color}\") si sta eseguendo la stessa azione \"${normal_color}${action}${red_color}\" sopra la stessa funzione \"${normal_color}${original_function}${red_color}\". Risolvilo prima di continuare"
-	arr["POLISH",661]="${pending_of_translation} Błąd. Masz sprzecznych wtyczek (\"${normal_color}${function_hooks[${original_function},${action}]}${red_color}\" i \"${normal_color}${plugin}${red_color}\") wykonywania tej samej czynności \"${normal_color}${action}${red_color}\" na tej samej funkcji \"${normal_color}${original_function}${red_color}\". Napraw to przed kontynuowaniem"
+	arr["POLISH",661]="Błąd. Konflikt wtyczek (\"${normal_color}${function_hooks[${original_function},${action}]}${red_color}\" i \"${normal_color}${plugin}${red_color}\") wykonujących tą samą czynność \"${normal_color}${action}${red_color}\" na tej samej funkcji \"${normal_color}${original_function}${red_color}\". Napraw to przed kontynuowaniem"
 	arr["GERMAN",661]="Error. Sie haben widersprüchliche Plugins (\"${normal_color}${function_hooks[${original_function},${action}]}${red_color}\" und \"${normal_color}${plugin}${red_color}\") die die gleiche Aktion \"${normal_color}${action}${red_color}\" über die gleiche funktion \"${normal_color}${original_function}${red_color}\" durchführen. Beheben Sie es, bevor Sie fortfahren"
 	arr["TURKISH",661]="Hata. Çakışan eklentiler var: (\"${normal_color}${function_hooks[${original_function},${action}]}${red_color}\" ve \"${normal_color}${plugin}${red_color}\"). Aynı eylemi gerçekleştirerek \"${normal_color}${action}${red_color}\" aynı işlevi \"${normal_color}${original_function}${red_color}\" gerçekleştirmeye çalışıyorlar. Devam etmeden önce düzeltin"
 
