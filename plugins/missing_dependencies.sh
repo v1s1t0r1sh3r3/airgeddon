@@ -262,7 +262,7 @@ function missing_dependencies_posthook_check_compatibility() {
 			local resultok=0
 			case "${distro}" in
 				"Kali"|"Parrot")
-					if apt update > /dev/null 2>&1 && apt -y install "${missing_packages_string_clean}" > /dev/null 2>&1; then
+					if apt update > /dev/null 2>&1 && apt -y install ${missing_packages_string_clean} > /dev/null 2>&1; then
 						resultok=1
 					fi
 				;;
