@@ -12302,7 +12302,7 @@ function explore_for_wps_targets_option() {
 				fi
 			fi
 
-			if [[ ${expwps_power} -le 9 ]]; then
+			if [[ ${expwps_power} -le 9 ]] && [[ ${expwps_power} -ge 0 ]]; then
 				wpssp4=" "
 			else
 				wpssp4=""
@@ -12403,7 +12403,7 @@ function select_target() {
 			exp_power=0
 		fi
 
-		if [[ ${exp_power} -le 9 ]]; then
+		if [[ ${exp_power} -le 9 ]] && [[ ${exp_power} -ge 0 ]]; then
 			sp4=" "
 		else
 			sp4=""
