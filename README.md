@@ -8,7 +8,7 @@
 
 All the needed info about how to "install | use | enjoy" `airgeddon` is present at [Github's Wiki].
 
-- *I. Content & Features*
+- *I.Content & Features*
   - [Home]
   - [Features]
   - [Screenshots]
