@@ -31,5 +31,5 @@ assignees: ''
 
 <!--- Insert description here. Screenshots or any clarifying info are welcome too -->
 
-#### what are the basic tool required by airgeddon?
-<!---Insert an explained ans with an suggestion how to install if tools is missing -->
+#### Can we use airgeddon as a wifi network jammer(by evil twin) ?
+<!---Insert an answer if apply  -->
