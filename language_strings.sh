@@ -75,7 +75,7 @@ function initialize_language_strings() {
 	optionaltool_needed["POLISH"]="Opcja zablokowana, wymaga: "
 	optionaltool_needed["GERMAN"]="Option gesperrt, folgendes ist erfordert: "
 	optionaltool_needed["TURKISH"]="Engellenen seçenek şunları gerektirir: "
-	optionaltool_needed["ARABIC"]=":خيار مغلق يتطلب"
+	optionaltool_needed["ARABIC"]=":خيار مغلق, يتطلب"
 
 	declare -A under_construction
 	under_construction["ENGLISH"]="under construction"
