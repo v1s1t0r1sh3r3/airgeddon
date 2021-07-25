@@ -9206,6 +9206,8 @@ function restore_spoofed_macs() {
 		ip link set dev "${item}" address "${original_macs[${item}]}" > /dev/null 2>&1
 		ip link set "${item}" up > /dev/null 2>&1
 	done
+	
+	spoofed_mac=0
 }
 
 #Set routing state and firewall rules for Evil Twin attacks
