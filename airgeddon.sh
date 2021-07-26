@@ -12856,9 +12856,11 @@ function et_prerequisites() {
 		fi
 	fi
 
-	ask_yesno 419 "no"
-	if [ "${yesno}" = "y" ]; then
-		mac_spoofing_desired=1
+	if [[ -z mac_spoofing_desired ]] || [[ ${mac_spoofing_desired} -eq 0 ]]; then
+		ask_yesno 419 "no"
+		if [ "${yesno}" = "y" ]; then
+			mac_spoofing_desired=1
+		fi
 	fi
 
 	if [ "${et_mode}" = "et_captive_portal" ]; then
