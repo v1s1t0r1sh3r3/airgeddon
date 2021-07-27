@@ -400,38 +400,38 @@ function check_language_strings() {
 
 		generate_dynamic_line "airgeddon" "title"
 		if [ "${language_file_found}" -eq 0 ]; then
-			echo_red "${language_strings_no_file[${language}]}"
+			echo_colored red "${language_strings_no_file[${language}]}"
 			if [ "${airgeddon_version}" = "6.1" ]; then
 				echo
-				echo_yellow "${language_strings_first_time[${language}]}"
+				echo_colored yellow "${language_strings_first_time[${language}]}"
 			fi
 		elif [ "${language_file_mismatch}" -eq 1 ]; then
-			echo_red "${language_strings_file_mismatch[${language}]}"
+			echo_colored red "${language_strings_file_mismatch[${language}]}"
 		fi
 
 		echo
-		echo_blue "${language_strings_try_to_download[${language}]}"
+		echo_colored blue "${language_strings_try_to_download[${language}]}"
 		read -p "${language_strings_key_to_continue[${language}]}" -r
 
 		if check_repository_access; then
 
 			if download_language_strings_file; then
 				echo
-				echo_yellow "${language_strings_successfully_downloaded[${language}]}"
+				echo_colored yellow "${language_strings_successfully_downloaded[${language}]}"
 				read -p "${language_strings_key_to_continue[${language}]}" -r
 				clear
 				return 0
 			else
 				echo
-				echo_red "${language_strings_failed_downloading[${language}]}"
+				echo_colored red "${language_strings_failed_downloading[${language}]}"
 			fi
 		else
 			echo
-			echo_red "${language_strings_failed_downloading[${language}]}"
+			echo_colored red "${language_strings_failed_downloading[${language}]}"
 		fi
 
 		echo
-		echo_blue "${language_strings_exiting[${language}]}"
+		echo_colored blue "${language_strings_exiting[${language}]}"
 		echo
 		hardcore_exit
 	fi
@@ -669,16 +669,7 @@ function debug_print() {
 							"clean_env_vars"
 							"contains_element"
 							"create_rcfile"
-							"echo_blue"
-							"echo_brown"
-							"echo_cyan"
-							"echo_green"
-							"echo_green_title"
-							"echo_pink"
-							"echo_red"
-							"echo_red_slim"
-							"echo_white"
-							"echo_yellow"
+							"echo_colored"
 							"env_vars_initialization"
 							"env_vars_values_validation"
 							"fix_autocomplete_chars"
@@ -757,7 +748,7 @@ function special_text_missed_optional_tool() {
 	else
 		[[ ${message} =~ ^([0-9]+)\.(.*)$ ]] && forbidden_options+=("${BASH_REMATCH[1]}")
 		tools_needed=${tools_needed:: -1}
-		echo_red_slim "${message} (${tools_needed})"
+		echo_colored red_slim "${message} (${tools_needed})"
 	fi
 }
 
@@ -802,9 +793,9 @@ function generate_dynamic_line() {
 	fi
 
 	if [ "${type}" = "title" ]; then
-		echo_green_title "${finaltitle}"
+		echo_colored green_title "${finaltitle}"
 	elif [ "${type}" = "separator" ]; then
-		echo_blue "${finaltitle}"
+		echo_colored blue "${finaltitle}"
 	fi
 }
 
@@ -15884,7 +15875,7 @@ function print_simple_separator() {
 
 	debug_print
 
-	echo_blue "---------"
+	echo_colored blue "---------"
 }
 
 #Print a large separator
@@ -15892,7 +15883,7 @@ function print_large_separator() {
 
 	debug_print
 
-	echo_blue "-------------------------------------------------------"
+	echo_colored blue "-------------------------------------------------------"
 }
 
 #Add the PoT prefix on printed strings if PoT mark is found
@@ -15924,7 +15915,7 @@ function under_construction_message() {
 
 	local var_uc="${under_constructionvar^}"
 	echo
-	echo_red "${var_uc}..."
+	echo_colored red "${var_uc}..."
 	language_strings "${language}" 115 "read"
 }
 
@@ -15940,84 +15931,27 @@ function last_echo() {
 	fi
 }
 
-#Print green messages
-function echo_green() {
+#Print colored messages:
+declare -A colors_array=(
+	["green"]="green_color"				#Print green messages
+	["blue"]="blue_color"				#Print blue messages
+	["yellow"]="yellow_color"			#Print yellow messages
+	["red"]="red_color"					#Print red messages
+	["red_slim"]="red_color_slim"		#Print red messages using a slimmer thickness
+	["green_title"]="green_color_title"	#Print black messages with background for titles
+	["pink"]="pink_color"				#Print pink messages
+	["cyan"]="cyan_color"				#Print cyan messages
+	["brown"]="brown_color"				#Print brown messages
+	["white"]="white_color"				#Print white messages
+)
+function echo_colored() {
 
 	debug_print
 
-	last_echo "${1}" "${green_color}"
-}
+	local colorName; colorName="${1}"
+	local messageStr; messageStr="${2}"
 
-#Print blue messages
-function echo_blue() {
-
-	debug_print
-
-	last_echo "${1}" "${blue_color}"
-}
-
-#Print yellow messages
-function echo_yellow() {
-
-	debug_print
-
-	last_echo "${1}" "${yellow_color}"
-}
-
-#Print red messages
-function echo_red() {
-
-	debug_print
-
-	last_echo "${1}" "${red_color}"
-}
-
-#Print red messages using a slimmer thickness
-function echo_red_slim() {
-
-	debug_print
-
-	last_echo "${1}" "${red_color_slim}"
-}
-
-#Print black messages with background for titles
-function echo_green_title() {
-
-	debug_print
-
-	last_echo "${1}" "${green_color_title}"
-}
-
-#Print pink messages
-function echo_pink() {
-
-	debug_print
-
-	last_echo "${1}" "${pink_color}"
-}
-
-#Print cyan messages
-function echo_cyan() {
-
-	debug_print
-
-	last_echo "${1}" "${cyan_color}"
-}
-
-#Print brown messages
-function echo_brown() {
-
-	debug_print
-
-	last_echo "${1}" "${brown_color}"
-}
-
-#Print white messages
-function echo_white() {
-
-	debug_print
-
-	last_echo "${1}" "${white_color}"
+	last_echo "${messageStr}" $(echo "${!colors_array[${colorName}]}")
 }
 
 #Script starting point

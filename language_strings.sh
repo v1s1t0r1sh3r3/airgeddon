@@ -10072,25 +10072,25 @@ function language_strings() {
 	case "${3}" in
 		"yellow")
 			interrupt_checkpoint "${2}" "${3}"
-			echo_yellow "${message}"
+			echo_colored yellow "${message}"
 		;;
 		"blue")
-			echo_blue "${message}"
+			echo_colored blue "${message}"
 		;;
 		"red")
-			echo_red "${message}"
+			echo_colored red "${message}"
 		;;
 		"green")
 			if [[ "${2}" -ne "${abort_question}" ]] 2>/dev/null && [[ "${2}" != "${abort_question}" ]]; then
 				interrupt_checkpoint "${2}" "${3}"
 			fi
-			echo_green "${message}"
+			echo_colored green "${message}"
 		;;
 		"pink")
-			echo_pink "${message}"
+			echo_colored pink "${message}"
 		;;
 		"white")
-			echo_white "${message}"
+			echo_colored white "${message}"
 		;;
 		"title")
 			generate_dynamic_line "${message}" "title"
@@ -10104,19 +10104,19 @@ function language_strings() {
 		;;
 		"hint")
 			if [ "${is_rtl_language}" -eq 1 ]; then
-				echo_pink "${message} ${brown_color}${hintvar}"
+				echo_colored pink "${message} ${brown_color}${hintvar}"
 			else
-				echo_brown "${hintvar} ${pink_color}${message}"
+				echo_colored brown "${hintvar} ${pink_color}${message}"
 			fi
 		;;
 		"separator")
 			generate_dynamic_line "${message}" "separator"
 		;;
 		"warning")
-			echo_yellow "${message}"
+			echo_colored yellow "${message}"
 		;;
 		"under_construction")
-			echo_red_slim "${message} (${under_constructionvar})"
+			echo_colored red_slim "${message} (${under_constructionvar})"
 		;;
 		*)
 			if [ -z "${3}" ]; then
