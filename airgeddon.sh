@@ -2636,23 +2636,31 @@ function select_interface() {
 	if [[ ! ${iface} =~ ^[[:digit:]]+$ ]] || (( iface < 1 || iface > option_counter )); then
 		invalid_iface_selected
 	else
-		option_counter2=0
-		for item2 in ${ifaces}; do
-			option_counter2=$((option_counter2 + 1))
-			if [[ "${iface}" = "${option_counter2}" ]]; then
-				interface=${item2}
-				phy_interface=$(physical_interface_finder "${interface}")
-				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-				interface_mac=$(ip link show "${interface}" | awk '/ether/ {print $2}')
-				if ! check_vif_support; then
-					card_vif_support=0
-				else
-					card_vif_support=1
-				fi
-				break
-			fi
-		done
+		interface=$(convert_iface_to_ifname "${iface}")
+		phy_interface=$(physical_interface_finder "${interface}")
+		check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+		interface_mac=$(ip link show "${interface}" | awk '/ether/ {print $2}')
+		if ! check_vif_support; then
+			card_vif_support=0
+		else
+			card_vif_support=1
+		fi
 	fi
+}
+function convert_iface_to_ifname() {
+
+	debug_print
+
+	local ifaceNumber; ifaceNumber="${1}"
+	local option_counter; option_counter=0
+
+	for ifaceName in ${ifaces}; do
+		option_counter=$((option_counter + 1))
+		if [[ "${ifaceNumber}" = "${option_counter}" ]]; then
+			echo "${ifaceName}"
+			break
+		fi
+	done
 }
 
 #Read the user input on yes/no questions
