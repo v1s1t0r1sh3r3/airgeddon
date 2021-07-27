@@ -15951,7 +15951,7 @@ function echo_colored() {
 	local colorName; colorName="${1}"
 	local messageStr; messageStr="${2}"
 
-	last_echo "${messageStr}" $(echo "${!colors_array[${colorName}]}")
+	last_echo "${messageStr}" "${!colors_array[${colorName}]}"
 }
 
 #Script starting point
