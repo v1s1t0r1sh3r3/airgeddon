@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 #Title........: airgeddon.sh
 #Description..: This is a multi-use bash script for Linux systems to audit wireless networks.
 #Author.......: v1s1t0r
@@ -341,6 +341,7 @@ known_compatible_distros=(
 							"OpenMandriva"
 							"Pentoo"
 							"Manjaro"
+							"blackPanther OS"
 						)
 
 known_arm_compatible_distros=(
@@ -14198,7 +14199,9 @@ function detect_distro_phase2() {
 	debug_print
 
 	if [ "${distro}" = "Unknown Linux" ]; then
-		if [ -f "${osversionfile_dir}centos-release" ]; then
+		if [ -f "${osversionfile_dir}blackPanther-release" ]; then
+			distro="blackPanther OS"
+		elif [ -f "${osversionfile_dir}centos-release" ]; then
 			distro="CentOS"
 		elif [ -f "${osversionfile_dir}fedora-release" ]; then
 			distro="Fedora"
@@ -14395,6 +14398,13 @@ function special_distro_features() {
 			ywindow_edge_lines=2
 			ywindow_edge_pixels=-10
 		;;
+		"blackPanther OS")
+			networkmanager_cmd="services networkmanager restart"
+			xratio=6.2
+			yratio=14
+			ywindow_edge_lines=2
+			ywindow_edge_pixels=10
+		;;
 	esac
 }
 
@@ -14452,7 +14462,7 @@ function general_checkings() {
 		if [ "${is_docker}" -eq 1 ]; then
 			echo -e "${yellow_color}${docker_based_distro} Linux ${pink_color}(${docker_image[${language}]})${normal_color}"
 		else
-			echo -e "${yellow_color}${distro} Linux${normal_color}"
+			echo -e "${yellow_color}${distro} (Linux)${normal_color}"
 		fi
 	fi
 
