@@ -2368,7 +2368,7 @@ function set_chipset() {
 
 		elif [[ "${bus_type}" =~ pci|ssb|bcma|pcmcia ]]; then
 			if [[ -f /sys/class/net/${1}/device/vendor ]] && [[ -f /sys/class/net/${1}/device/device ]]; then
-				vendor_and_device=$(cat "/sys/class/net/${1}/device/vendor"):$(cat "/sys/class/net/${1}/device/device")
+				vendor_and_device=$(sed -e 's/0x//' "/sys/class/net/${1}/device/vendor"):$(sed -e 's/0x//' "/sys/class/net/${1}/device/device")
 				if [[ -n "${2}" ]] && [[ "${2}" = "read_only" ]]; then
 					requested_chipset=$(lspci -d "${vendor_and_device}" | head -n 1 | cut -f 3 -d ":" | sed -e "${sedruleall}")
 				else
