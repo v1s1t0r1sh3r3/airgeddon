@@ -10824,7 +10824,7 @@ function initialize_language_strings() {
     arr["CHINA",660]="由于插件系统,可以开发定制内容。以快速简单的方式自定义修改任何菜单或功能。Wiki上的更多信息: \${normal_color}\${urlgithub_wiki}/Plugins%20System"
     arr["CHINA",661]="错误您有冲突的插件（\"\${normal_color}\${function_hooks[\${original_function}，\${action}]}\${red_color}\"和\"\$1{normal_color}\${plugin}\${red_color}\"）在同一函数上执行相同的操作\"\${normal_color} \${original_function}\${red_color}\"。在继续之前修复它"
     arr["CHINA",662]="检测到只能使用一个附加接口。自动选定"
-    arr["CHINA",663]="5.  Capture PMKID"
+    arr["CHINA",663]="5.  捕获PMKID"
     arr["CHINA",664]="可以从无客户端的WPA/WPA2-PSK网络获取PMKID"
     arr["CHINA",665]="在WPA/WPA2-PSK网络中,您可以破解PMKID或握手以获取网络密码"
     arr["CHINA",666]="捕获握手或PMKID后,您可以尝试在脱机WPA/WPA2解密菜单上选择\"个人\"子菜单对其进行解密"
