@@ -25,6 +25,7 @@ declare -A lang_association=(
 								["de"]="GERMAN"
 								["tr"]="TURKISH"
 								["ar"]="ARABIC"
+								["cn"]="CHINA"
 							)
 
 rtl_languages=(
@@ -496,6 +497,7 @@ function language_strings_handling_messages() {
 	language_strings_no_file["GERMAN"]="Fehler. Die Übersetzungsdatei wurde nicht gefunden"
 	language_strings_no_file["TURKISH"]="Hata. Çeviri dosyası bulunamadı"
 	language_strings_no_file["ARABIC"]="خطأ. ملف اللغة غير موجود"
+	language_strings_no_file["CHINA"]="错误.找不到语言字符串文件"
 
 	declare -gA language_strings_file_mismatch
 	language_strings_file_mismatch["ENGLISH"]="Error. The language strings file found mismatches expected version"
@@ -510,6 +512,7 @@ function language_strings_handling_messages() {
 	language_strings_file_mismatch["GERMAN"]="Fehler. Die gefundene Übersetzungsdatei ist nicht die erwartete Version"
 	language_strings_file_mismatch["TURKISH"]="Hata. Bulunan çeviri dosyası beklenen sürüm değil"
 	language_strings_file_mismatch["ARABIC"]="خطأ. ملف اللغة غيرمتطابق مع الإصدار المتوقع"
+	language_strings_file_mismatch["CHINA"]="错误语言字符串文件发现与预期版本不匹配"
 
 	declare -gA language_strings_try_to_download
 	language_strings_try_to_download["ENGLISH"]="airgeddon will try to download the language strings file..."
@@ -524,6 +527,7 @@ function language_strings_handling_messages() {
 	language_strings_try_to_download["GERMAN"]="airgeddon wird versuchen, die Übersetzungsdatei herunterzuladen..."
 	language_strings_try_to_download["TURKISH"]="airgeddon çeviri dosyasını indirmeye çalışacak..."
 	language_strings_try_to_download["ARABIC"]="سيحاول airgeddon تنزيل ملف سلاسل اللغة ..."
+	language_strings_try_to_download["CHINA"]="airgeddon将尝试下载语言字符串文件..."
 
 	declare -gA language_strings_successfully_downloaded
 	language_strings_successfully_downloaded["ENGLISH"]="Language strings file was successfully downloaded"
@@ -538,6 +542,7 @@ function language_strings_handling_messages() {
 	language_strings_successfully_downloaded["GERMAN"]="Die Übersetzungsdatei wurde erfolgreich heruntergeladen"
 	language_strings_successfully_downloaded["TURKISH"]="Çeviri dosyası başarıyla indirildi"
 	language_strings_successfully_downloaded["ARABIC"]="تم تنزيل ملف سلاسل اللغة بنجاح"
+	language_strings_successfully_downloaded["CHINA"]="已成功下载语言字符串文件"
 
 	declare -gA language_strings_failed_downloading
 	language_strings_failed_downloading["ENGLISH"]="The language string file can't be downloaded. Check your internet connection or download it manually from ${normal_color}${urlgithub}"
@@ -552,6 +557,7 @@ function language_strings_handling_messages() {
 	language_strings_failed_downloading["GERMAN"]="Die Übersetzungsdatei konnte nicht heruntergeladen werden. Überprüfen Sie Ihre Internetverbindung oder laden Sie sie manuell von ${normal_color}${urlgithub} runter"
 	language_strings_failed_downloading["TURKISH"]="Çeviri dosyası indirilemedi. İnternet bağlantınızı kontrol edin veya manuel olarak indirin ${normal_color}${urlgithub}"
 	language_strings_failed_downloading["ARABIC"]="${normal_color}${urlgithub}${red_color} لا يمكن تنزيل ملف اللغة. تحقق من اتصالك بالإنترنت أو قم بتنزيله يدويًا من"
+  language_strings_failed_downloading["CHINA"]="无法下载语言字符串文件。检查您的互联网连接或从手动下载 ${normal_color}${urlgithub}"
 
 	declare -gA language_strings_first_time
 	language_strings_first_time["ENGLISH"]="If you are seeing this message after an automatic update, don't be scared! It's probably because airgeddon has different file structure since version 6.1. It will be automatically fixed"
@@ -566,6 +572,7 @@ function language_strings_handling_messages() {
 	language_strings_first_time["GERMAN"]="Wenn Sie diese Nachricht nach einem automatischen Update sehen, haben Sie keine Angst! Das liegt vermutlich daran, dass ab Version 6.1 die Dateistruktur von airgeddon geändert wurde. Es wird automatisch repariert"
 	language_strings_first_time["TURKISH"]="Otomatik bir güncellemeden sonra bu mesajı görüyorsanız, korkmayın! muhtemelen 6.1 sürümünden itibaren airgeddon dosya yapısı değişmiştir. Otomatik olarak tamir edilecektir"
 	language_strings_first_time["ARABIC"]="إذا كنت ترى هذه الرسالة بعد التحديث التلقائي ، فلا تخف! ربما يرجع السبب في ذلك إلى أن airgeddon له بنية ملفات مختلفة منذ الإصدار 6.1. سيتم إصلاحه تلقائيًا "
+	language_strings_first_time["CHINA"]="如果您在自动更新后看到此消息，不要害怕！这可能是因为airgeddon的文件结构与6.1版不同。它将自动修复"
 
 	declare -gA language_strings_exiting
 	language_strings_exiting["ENGLISH"]="Exiting airgeddon script v${airgeddon_version} - See you soon! :)"
@@ -580,6 +587,8 @@ function language_strings_handling_messages() {
 	language_strings_exiting["GERMAN"]="Sie verlassen airgeddon v${airgeddon_version} - Bis bald! :)"
 	language_strings_exiting["TURKISH"]="airgeddon yazılımından çıkış yapılıyor v${airgeddon_version} - Yakında görüşürüz! :)"
 	language_strings_exiting["ARABIC"]="الخروج من البرنامج airgeddon v${airgeddon_version}- نراكم قريبًا! :)"
+	language_strings_exiting["CHINA"]="退出airgeddon脚本v${airgeddon_version}-再见！ :)"
+
 
 	declare -gA language_strings_key_to_continue
 	language_strings_key_to_continue["ENGLISH"]="Press [Enter] key to continue..."
@@ -594,6 +603,7 @@ function language_strings_handling_messages() {
 	language_strings_key_to_continue["GERMAN"]="Drücken Sie die [Enter]-Taste um fortzufahren..."
 	language_strings_key_to_continue["TURKISH"]="Devam etmek için [Enter] tuşuna basın..."
 	language_strings_key_to_continue["ARABIC"]="اضغط على مفتاح [Enter] للمتابعة ..."
+	language_strings_key_to_continue["CHINA"]="按[Enter]键继续..."
 }
 
 #Generic toggle option function
@@ -2216,6 +2226,7 @@ function language_menu() {
 	language_strings "${language}" 331
 	language_strings "${language}" 519
 	language_strings "${language}" 687
+	language_strings "${language}" 702
 	print_hint ${current_menu}
 
 	read -rp "> " language_selected
@@ -2328,6 +2339,15 @@ function language_menu() {
 				language_strings "${language}" 251 "red"
 			else
 				language="ARABIC"
+				language_strings "${language}" 83 "yellow"
+			fi
+			language_strings "${language}" 115 "read"
+		;;
+    13)
+			if [ "${language}" = "CHINA" ]; then
+				language_strings "${language}" 251 "red"
+			else
+				language="CHINA"
 				language_strings "${language}" 83 "yellow"
 			fi
 			language_strings "${language}" 115 "read"
@@ -8443,6 +8463,7 @@ function set_captive_portal_language() {
 	language_strings "${language}" 331
 	language_strings "${language}" 519
 	language_strings "${language}" 687
+	language_strings "${language}" 702
 	print_hint ${current_menu}
 
 	read -rp "> " captive_portal_language_selected
@@ -8487,6 +8508,9 @@ function set_captive_portal_language() {
 		;;
 		12)
 			captive_portal_language="ARABIC"
+		;;
+    13)
+			captive_portal_language="CHINA"
 		;;
 		*)
 			invalid_captive_portal_language_selected
@@ -10751,15 +10775,16 @@ function set_captive_portal_page() {
 	echo -e "\tfont-family: Helvetica, Arial, sans-serif;"
 	echo -e "}\n"
 	echo -e ".button {"
-	echo -e "\tcolor: #ffffff;"
-	echo -e "\tbackground-color: #1b5e20;"
+	echo -e "\tcolor: #ffffff;width: 100%;"
+	echo -e "\tbackground-color: #1aad18;"
 	echo -e "\tborder-radius: 5px;"
 	echo -e "\tcursor: pointer;"
-	echo -e "\theight: 30px;"
+	echo -e "\theight: 2rem;"
 	echo -e "}\n"
+	echo -e "input{border:0;padding:0 0.5rem;}"
 	echo -e ".content {"
 	echo -e "\twidth: 100%;"
-	echo -e "\tbackground-color: #43a047;"
+	echo -e "\tbackground-color: #5dabdc;"
 	echo -e "\tpadding: 20px;"
 	echo -e "\tmargin: 15px auto 0;"
 	echo -e "\tborder-radius: 15px;"
