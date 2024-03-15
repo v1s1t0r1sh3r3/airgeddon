@@ -2,7 +2,12 @@
  - Added 6Ghz partial support (some scans, some attacks, card detection, etc.)
 
 ### 11.22
+ - Possibility to add manually ESSID name for selected hidden networks
  - Improvement on process killing on Evil Twin attacks
+ - Add WPS version to network selection menu for WPS networks
+ - Reordered networks on network selection menus (standard and WPS), now networks with the strongest received signal will be placed last to avoid scrolling
+ - Fixed small bug on Evil Twin captive portal attack for passwords containing more than one space char
+ - Fixed Docker routing problem
 
 ### 11.21
  - Chinese language translation added (Thank you to "zcbxx")
@@ -177,7 +182,7 @@
  - Routing rules adapted to work with nftables
 
 ### 9.01
- - Improvments on options environment var system
+ - Improvements on options environment var system
  - Minor fixes for ARM devices
  - Fixed iptables (nf_tables) problem
 

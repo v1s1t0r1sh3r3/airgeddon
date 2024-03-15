@@ -21,7 +21,7 @@ Please note we have a [Code of Conduct], please follow it in all your interactio
 
 ## Collaborating Translators
 
-1. Ask ALWAYS before start a translation to add a new language (by mail at [v1s1t0r.1s.h3r3@gmail.com], by Twitter (X) at [@OscarAkaElvis], by [IRC] channel or [Discord] server). Contact to the development team in order to know what are you going to do. You'll be informed about how to proceed.
+1. ALWAYS ask before starting a translation to add a new language. You can do so by contacting us via email at [v1s1t0r.1s.h3r3@gmail.com], through Twitter (X) at [@OscarAkaElvis], via [IRC] channel, or on the [Discord] server. Please reach out to the development team to clarify your intentions. You will then be informed about how to proceed.
 2. Translate the strings located in `language_strings.sh`, the existing strings of _language_strings_handling_messages_ function in `airgeddon.sh` and the strings of _missing_dependencies_text_ function in `missing_dependencies.sh` (this last file is in plugins dir).
 3. If you want to create a pull request with a new language to be added, at least the 80% of the phrases must be translated and the rest must be done with at least _an automatic-translation_ system and marked with PoT (Pending of Translation) mark. Anyway, always ask first.
 4. Remember that pull requests done over master branch will be rejected. Read the git workflow policy first.
@@ -70,7 +70,7 @@ Anything can be also discussed on public [IRC] channel or [Discord] server. More
 ## Beta Testers
 
 1. Download the main version from the [Master] branch or the beta testing version from the development branch called [Dev]. Temporary branches may be existing for specific features that can also be tested.
-2. Report any issues or bugs by Twitter (X) at [@OscarAkaElvis], mail [v1s1t0r.1s.h3r3@gmail.com], on [IRC] channel, [Discord] server or submit GitHub issue requests [Here] reading first the Issue Creation Policy.
+2. Report any issues or bugs via [IRC] channel, [Discord] server, or submit GitHub issue requests [here] after reading the Issue Creation Policy.
 
 ## Git Workflow Policy
 
