@@ -1,6 +1,9 @@
 ### 12.0
  - Added 6Ghz partial support (some scans, some attacks, card detection, etc.)
 
+### 11.30
+ - Improvements on 5Ghz country code check
+
 ### 11.22
  - Possibility to add manually ESSID name for selected hidden networks
  - Improvement on process killing on Evil Twin attacks

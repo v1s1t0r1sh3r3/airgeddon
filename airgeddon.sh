@@ -1516,7 +1516,7 @@ function region_check() {
 	debug_print
 
 	country_code="$(iw reg get | awk 'FNR == 2 {print $2}' | cut -f 1 -d ":" 2> /dev/null)"
-	[[ ! ${country_code} =~ ^[A-Z]{2}$ ]] && country_code="00"
+	[[ ! ${country_code} =~ ^[A-Z]{2}$|^99$ ]] && country_code="00"
 }
 
 #Prepare monitor mode avoiding the use of airmon-ng or airmon-zc generating two interfaces from one
@@ -13970,7 +13970,9 @@ function et_prerequisites() {
 	if [ "${channel}" -gt 14 ]; then
 		echo
 		if [ "${country_code}" = "00" ]; then
-			language_strings "${language}" 706 "blue"
+			language_strings "${language}" 706 "yellow"
+		elif [ "${country_code}" = "99" ]; then
+			language_strings "${language}" 719 "yellow"
 		else
 			language_strings "${language}" 392 "blue"
 		fi
