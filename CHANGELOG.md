@@ -1,5 +1,5 @@
 ### 12.0
- - Added 6Ghz partial support (some scans, some attacks, card detection, etc.)
+ - Added 6Ghz partial support (some scans, some attacks, capable adapter detection, etc.)
 
 ### 11.30
  - Improvements on 5Ghz country code check and 5Ghz band capability on adapters
