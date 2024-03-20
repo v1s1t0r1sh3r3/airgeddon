@@ -1483,7 +1483,7 @@ function get_5ghz_band_info_from_phy_interface() {
 
 	debug_print
 
-	if iw phy "${1}" channels 2> /dev/null | grep -i "5180 MHz" > /dev/null; then
+	if iw phy "${1}" channels 2> /dev/null | grep -Ei "5180(\.0)? MHz" > /dev/null; then
 		if "${AIRGEDDON_5GHZ_ENABLED:-true}"; then
 			return 0
 		else
