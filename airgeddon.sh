@@ -758,7 +758,7 @@ function interrupt_checkpoint() {
 		last_buffered_type1=${2}
 		last_buffered_type2=${2}
 	else
-		if [[ "${1}" -ne "${resume_message}" ]] 2>/dev/null && [[ "${1}" != "${resume_message}" ]]; then
+		if [[ "${1}" -ne "${resume_message}" ]] 2> /dev/null && [[ "${1}" != "${resume_message}" ]]; then
 			last_buffered_message2=${last_buffered_message1}
 			last_buffered_message1=${1}
 			last_buffered_type2=${last_buffered_type1}
@@ -976,7 +976,7 @@ function check_airmon_compatibility() {
 	if [ "${1}" = "interface" ]; then
 		set_chipset "${interface}" "read_only"
 
-		if iw phy "${phy_interface}" info 2>/dev/null | grep -iq 'interface combinations are not supported'; then
+		if iw phy "${phy_interface}" info 2> /dev/null | grep -iq 'interface combinations are not supported'; then
 			interface_airmon_compatible=0
 		else
 			interface_airmon_compatible=1
@@ -9047,9 +9047,9 @@ function set_charset() {
 				done
 				charset="\"${charset}\" \"${charset_tmp}\""
 			else
-				charset_tmp=${charset}
+				charset_tmp="${charset}"
 				for ((i=0; i < maxlength - 1; i++)); do
-					charset+=${charset_tmp}
+					charset+="${charset_tmp}"
 				done
 			fi
 		;;
@@ -9561,7 +9561,7 @@ function set_bettercap_config() {
 
 		{
 		echo -e "set http.proxy.script ${bettercap_hook_file}"
-		} >> ${tmpdir}${bettercap_config_file}
+		} >> "${tmpdir}${bettercap_config_file}"
 
 		{
 		echo -e "function onLoad() {"
@@ -9576,7 +9576,7 @@ function set_bettercap_config() {
 		echo -e "\t\t}"
 		echo -e "\t}"
 		echo -e "}"
-		} >> ${tmpdir}${bettercap_hook_file}
+		} >> "${tmpdir}${bettercap_hook_file}"
 	fi
 
 	{
@@ -9597,7 +9597,7 @@ function set_bettercap_config() {
 	echo -e "events.ignore net.sniff.sni"
 	echo -e "events.ignore net.sniff.https\n"
 	echo -e "events.stream on"
-	} >> ${tmpdir}${bettercap_config_file}
+	} >> "${tmpdir}${bettercap_config_file}"
 }
 
 #Create configuration file for hostapd
