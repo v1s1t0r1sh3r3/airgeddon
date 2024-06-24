@@ -2,7 +2,10 @@
  - Added 6Ghz partial support (some scans, some attacks, capable adapter detection, etc.)
 
 ### 11.30
+ - Added Multi-instance support to launch more than one airgeddon at a time
  - Improvements on 5Ghz country code check and 5Ghz band capability detection on adapters
+ - Fixed bug to avoid set advanced captive portal on second time if is not desired after setting it previously
+ - Now channel is automatically updated on control window during "DoS pursuit mode" for all Evil Twin attacks
 
 ### 11.22
  - Possibility to add manually ESSID name for selected hidden networks
