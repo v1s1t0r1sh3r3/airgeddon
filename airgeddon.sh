@@ -1605,8 +1605,8 @@ function restore_et_interface() {
 
 	iw dev "${iface_monitor_et_deauth}" del > /dev/null 2>&1
 
-	ip addr del ${et_ip_router}/${std_c_mask} dev "${interface}" > /dev/null 2>&1
-	ip route del ${et_ip_range}/${std_c_mask_cidr} dev "${interface}" table local proto static scope link > /dev/null 2>&1
+	ip addr del "${et_ip_router}/${std_c_mask}" dev "${interface}" > /dev/null 2>&1
+	ip route del "${et_ip_range}/${std_c_mask_cidr}" dev "${interface}" table local proto static scope link > /dev/null 2>&1
 
 	if [ "${et_initial_state}" = "Managed" ]; then
 		set_mode_without_airmon "${interface}" "managed"
@@ -10197,8 +10197,8 @@ function set_std_internet_routing_rules() {
 		save_iptables_nftables
 	fi
 
-	ip addr add ${et_ip_router}/${std_c_mask} dev "${interface}" > /dev/null 2>&1
-	ip route add ${et_ip_range}/${std_c_mask_cidr} dev "${interface}" table local proto static scope link > /dev/null 2>&1
+	ip addr add "${et_ip_router}/${std_c_mask}" dev "${interface}" > /dev/null 2>&1
+	ip route add "${et_ip_range}/${std_c_mask_cidr}" dev "${interface}" table local proto static scope link > /dev/null 2>&1
 	routing_modified=1
 
 	clean_initialize_iptables_nftables "start"
@@ -10207,54 +10207,54 @@ function set_std_internet_routing_rules() {
 
 	if [ "${et_mode}" = "et_captive_portal" ]; then
 		if [ "${iptables_nftables}" -eq 1 ]; then
-			"${iptables_cmd}" add rule ip nat_"${airgeddon_instance_name}" prerouting_"${airgeddon_instance_name}" iifname "${interface}" tcp dport ${www_port} counter dnat to ${et_ip_router}:${www_port}
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport ${www_port} counter accept
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport ${https_port} counter accept
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" udp dport ${dns_port} counter accept
+			"${iptables_cmd}" add rule ip nat_"${airgeddon_instance_name}" prerouting_"${airgeddon_instance_name}" iifname "${interface}" tcp dport "${www_port}" counter dnat to "${et_ip_router}:${www_port}"
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport "${www_port}" counter accept
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport "${https_port}" counter accept
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" udp dport "${dns_port}" counter accept
 		else
-			"${iptables_cmd}" -t nat -A PREROUTING -p tcp -i "${interface}" --dport ${www_port} -j DNAT --to-destination ${et_ip_router}:${www_port}
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port ${www_port} -j ACCEPT
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port ${https_port} -j ACCEPT
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p udp -i "${interface}" --destination-port ${dns_port} -j ACCEPT
+			"${iptables_cmd}" -t nat -A PREROUTING -p tcp -i "${interface}" --dport "${www_port}" -j DNAT --to-destination "${et_ip_router}:${www_port}"
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port "${www_port}" -j ACCEPT
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port "${https_port}" -j ACCEPT
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p udp -i "${interface}" --destination-port "${dns_port}" -j ACCEPT
 		fi
 	elif [ "${et_mode}" = "et_sniffing_sslstrip2" ]; then
 		if [ "${iptables_nftables}" -eq 1 ]; then
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport ${bettercap_proxy_port} counter accept
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" udp dport ${bettercap_dns_port} counter accept
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport "${bettercap_proxy_port}" counter accept
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" udp dport "${bettercap_dns_port}" counter accept
 			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${loopback_interface}" counter accept
 		else
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port ${bettercap_proxy_port} -j ACCEPT
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p udp -i "${interface}" --destination-port ${bettercap_dns_port} -j ACCEPT
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port "${bettercap_proxy_port}" -j ACCEPT
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p udp -i "${interface}" --destination-port "${bettercap_dns_port}" -j ACCEPT
 			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -i "${loopback_interface}" -j ACCEPT
 		fi
 	elif [ "${et_mode}" = "et_sniffing_sslstrip2_beef" ]; then
 		if [ "${iptables_nftables}" -eq 1 ]; then
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport ${bettercap_proxy_port} counter accept
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" udp dport ${bettercap_dns_port} counter accept
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport "${bettercap_proxy_port}" counter accept
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" udp dport "${bettercap_dns_port}" counter accept
 			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${loopback_interface}" counter accept
-			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport ${beef_port} counter accept
+			"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" tcp dport "${beef_port}" counter accept
 		else
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port ${bettercap_proxy_port} -j ACCEPT
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p udp -i "${interface}" --destination-port ${bettercap_dns_port} -j ACCEPT
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port "${bettercap_proxy_port}" -j ACCEPT
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p udp -i "${interface}" --destination-port "${bettercap_dns_port}" -j ACCEPT
 			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -i "${loopback_interface}" -j ACCEPT
-			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port ${beef_port} -j ACCEPT
+			"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -p tcp -i "${interface}" --destination-port "${beef_port}" -j ACCEPT
 		fi
 	fi
 
 	if [ "${et_mode}" != "et_captive_portal" ]; then
 		if [ "${iptables_nftables}" -eq 1 ]; then
-			"${iptables_cmd}" add rule nat_"${airgeddon_instance_name}" postrouting_"${airgeddon_instance_name}" ip saddr ${et_ip_range}/${std_c_mask_cidr} oifname "${internet_interface}" counter masquerade
+			"${iptables_cmd}" add rule nat_"${airgeddon_instance_name}" postrouting_"${airgeddon_instance_name}" ip saddr "${et_ip_range}/${std_c_mask_cidr}" oifname "${internet_interface}" counter masquerade
 		else
-			"${iptables_cmd}" -t nat -A POSTROUTING -s ${et_ip_range}/${std_c_mask} -o ${internet_interface} -j MASQUERADE
+			"${iptables_cmd}" -t nat -A POSTROUTING -s "${et_ip_range}/${std_c_mask}" -o "${internet_interface}" -j MASQUERADE
 		fi
 	fi
 
 	if [ "${iptables_nftables}" -eq 1 ]; then
-		"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" ip daddr ${et_ip_router}/${ip_mask_cidr} icmp type echo-request ct state new,related,established counter accept
-		"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" ip daddr ${et_ip_router}/${ip_mask_cidr} counter drop
+		"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" iifname "${interface}" ip daddr "${et_ip_router}/${ip_mask_cidr}" icmp type echo-request ct state new,related,established counter accept
+		"${iptables_cmd}" add rule ip filter_"${airgeddon_instance_name}" input_"${airgeddon_instance_name}" ip daddr "${et_ip_router}/${ip_mask_cidr}" counter drop
 	else
-		"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -i "${interface}" -p icmp --icmp-type 8 -d ${et_ip_router}/${ip_mask} -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-		"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -d ${et_ip_router}/${ip_mask} -j DROP
+		"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -i "${interface}" -p icmp --icmp-type 8 -d "${et_ip_router}/${ip_mask}" -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+		"${iptables_cmd}" -A input_"${airgeddon_instance_name}" -d "${et_ip_router}/${ip_mask}" -j DROP
 	fi
 	sleep 2
 }
