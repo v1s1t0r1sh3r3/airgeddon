@@ -8033,7 +8033,7 @@ function check_bssid_in_captured_file() {
 
 	if [[ "${handshake_captured}" = "1" ]] || [[ "${pmkid_captured}" = "1" ]]; then
 		if [[ "${2}" = "showing_msgs_capturing" ]] || [[ "${2}" = "showing_msgs_checking" ]]; then
-			if ! is_wpa2_handshake "${1}" "${bssid}"; then
+			if ! is_wpa2_handshake "${1}" "${bssid}" > /dev/null 2>&1; then
 				echo
 				language_strings "${language}" 700 "red"
 				language_strings "${language}" 115 "read"
