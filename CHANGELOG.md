@@ -1,6 +1,10 @@
 ### 12.0
  - Added 6Ghz partial support (some scans, some attacks, capable adapter detection, etc.)
 
+### 11.31
+ - Fixed graphics system detection when launched on a headless system using remote X windows
+ - Fixed minor bug on paths when selecting a directory instead of a file while saving a trophy file
+ 
 ### 11.30
  - Added Multi-instance support to launch more than one airgeddon at a time
  - Improvements on 5Ghz country code check and 5Ghz band capability detection on adapters

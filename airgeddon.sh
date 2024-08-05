@@ -722,6 +722,7 @@ function debug_print() {
 							"read_yesno"
 							"register_instance_pid"
 							"remove_warnings"
+							"set_absolute_path"
 							"set_script_paths"
 							"special_text_missed_optional_tool"
 							"store_array"
@@ -11667,9 +11668,13 @@ function set_captive_portal_page() {
 	echo -e "#showpass {"
 	echo -e "\tvertical-align: top;"
 	echo -e "}\n"
-	echo -e "@media screen (min-width: 1000px) {"
+	echo -e "@media screen and (min-width: 1000px) {"
 	echo -e "\t.content {"
 	echo -e "\t\twidth: 50%;"
+	echo -e "\t\tposition: absolute;"
+	echo -e "\t\ttop: 50%;"
+	echo -e "\t\tleft: 50%;"
+	echo -e "\t\ttransform: translate(-50%, -50%);"
 	echo -e "\t}"
 	echo -e "}\n"
 	} >> "${tmpdir}${webdir}${cssfile}"
@@ -15039,6 +15044,9 @@ function set_absolute_path() {
 
 	local string_path
 	string_path=$(readlink -f "${1}")
+	if [ -d "${string_path}" ]; then
+		string_path="${string_path%/}/"
+	fi
 	echo "${string_path}"
 }
 
@@ -15969,6 +15977,11 @@ function check_graphics_system() {
 		"tty"|*)
 			if [ -z "${XAUTHORITY}" ]; then
 				xterm_ok=0
+				if hash xset 2> /dev/null; then
+					if xset -q > /dev/null 2>&1; then
+						xterm_ok=1
+					fi
+				fi
 			fi
 		;;
 	esac
