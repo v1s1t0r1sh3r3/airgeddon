@@ -547,6 +547,20 @@ function initialize_language_strings() {
 	et_misc_texts["ARABIC",27]="هذا الهجوم من جزئين. تحقق أثناء الهجوم في وحدة تحكم المتشمم إذا تم التقاط كلمة سر. يمكنك أيضًا فتحوحاول التحكم في متصفح الزبون (${white_color}${beef_pass}${pink_color}:كلمة السر ${white_color}beef${pink_color}:المستخدم) ${white_color}${beef_control_panel_url}${pink_color} في BeEF هذا الهجوم من جزئين. تحقق أثناء الهجوم في وحدة تحكم المتشمم إذا تم التقاط كلمة سر. يمكنك أيضًا فتح"
 	et_misc_texts["CHINESE",27]="这次攻击有两个部分。观察嗅探器的屏幕以查看是否出现密码。您还可以在 ${white_color}${beef_control_panel_url}${pink_color} 打开 BeEF 控制面板，登录 (用户: ${white_color}beef${pink_color} / 密码: ${white_color}${beef_pass}${pink_color}) 并尝试控制客户端浏览器"
 
+	et_misc_texts["ENGLISH",28]="Portal access"
+	et_misc_texts["SPANISH",28]="Acceso al portal"
+	et_misc_texts["FRENCH",28]="\${pending_of_translation} Accès au portail"
+	et_misc_texts["CATALAN",28]="\${pending_of_translation} Accés al portal"
+	et_misc_texts["PORTUGUESE",28]="\${pending_of_translation} Acesso ao portal"
+	et_misc_texts["RUSSIAN",28]="\${pending_of_translation} Доступ к порталу"
+	et_misc_texts["GREEK",28]="\${pending_of_translation} Πρόσβαση στην πύλη"
+	et_misc_texts["ITALIAN",28]="\${pending_of_translation} Accesso al portale"
+	et_misc_texts["POLISH",28]="\${pending_of_translation} Dostęp do portalu"
+	et_misc_texts["GERMAN",28]="\${pending_of_translation} Portalzugang"
+	et_misc_texts["TURKISH",28]="\${pending_of_translation} Portal erişimi"
+	et_misc_texts["ARABIC",28]="\${pending_of_translation} الوصول إلى البوابة"
+	et_misc_texts["CHINESE",28]="\${pending_of_translation} 门户访问"
+
 	declare -gA wps_texts
 	wps_texts["ENGLISH",0]="The password was saved on file"
 	wps_texts["SPANISH",0]="La contraseña se ha guardado en el fichero"

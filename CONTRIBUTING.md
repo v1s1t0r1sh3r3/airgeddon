@@ -11,13 +11,14 @@ Please note we have a [Code of Conduct], please follow it in all your interactio
 
 ## Issue Creation Policy
 
-1. Please, consider to contact us on [IRC] channel or [Discord] server before opening an issue. More info at [Wiki Contact Section]
-2. Filling the issue template with *ALL* the requested info is mandatory. Otherwise, the issue can be marked as "invalid" and closed immediately.
-3. Issues must be opened in English.
-4. If an issue is opened and more info is needed, `airgeddon` staff will request it. If there is no answer in 7 days or the OP is not collaborating, the issue will be closed.
-5. If the issue is not related to airgeddon or the root cause is out of scope, it will be closed. `airgeddon` staff is not a helpdesk support service.
-6. Try to be sure that your problem is related to airgeddon and that is not a driver issue. A good practice is always to try to perform the same operation without using `airgeddon` in order to see if the problem or the behavior can be reproduced. In that case, probably the issue should not be created.
-7. Don't talk or mention references to other tools. If you want to talk about other similar tools you can do it on their pages/GitHub. `airgeddon` issues are to talk about `airgeddon`.
+1. Please, consider to contact us on [IRC] channel or [Discord] server before opening an issue. More info at [Wiki Contact Section].
+2. Before opening an issue, keep in mind that many of the common questions are already addressed in the [Wiki FAQ Section]. Please avoid asking questions that are already answered there.
+3. Filling the issue template with *ALL* the requested info is mandatory. Otherwise, the issue can be marked as "invalid" and closed immediately.
+4. Issues must be opened in English.
+5. If an issue is opened and more info is needed, `airgeddon` staff will request it. If there is no answer in 7 days or the OP is not collaborating, the issue will be closed.
+6. If the issue is not related to airgeddon or the root cause is out of scope, it will be closed. `airgeddon` staff is not a helpdesk support service.
+7. Try to be sure that your problem is related to airgeddon and that is not a driver issue. A good practice is always to try to perform the same operation without using `airgeddon` in order to see if the problem or the behavior can be reproduced. In that case, probably the issue should not be created.
+8. Don't talk or mention references to other tools. If you want to talk about other similar tools you can do it on their pages/GitHub. `airgeddon` issues are to talk about `airgeddon`.
 
 ## Collaborating Translators
 
@@ -55,7 +56,7 @@ Please note we have a [Code of Conduct], please follow it in all your interactio
 4. If you want to add your plugin to [Wiki Plugins Hall of Fame Section], follow the instructions explained there. Don't open an issue.
 
 We also have a private Telegram group for *trusted collaborators* for more agile discussion about developments, improvements, etc. 
-To be added on it, you must prove first you are a *trusted collaborator* with your contributions.
+To be added on it, you must first prove that you are a *trusted collaborator* through your contributions.
 Anything can be also discussed on public [IRC] channel or [Discord] server. More info at [Wiki Contact Section].
 
 ## WPS PIN Database Collaborators
@@ -181,6 +182,7 @@ You can also contribute using your Nitro Boosts on our [Discord] server. After b
 [v1s1t0r]: https://github.com/v1s1t0r1sh3r3
 [OscarAkaElvis]: https://github.com/OscarAkaElvis
 [Wiki Contact Section]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Contact
+[Wiki FAQ Section]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/FAQ%20&%20Troubleshooting
 [Wiki Plugins Development Section]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Plugins%20Development
 [Wiki Plugins Hall of Fame Section]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Plugins%20Hall%20of%20Fame
 

@@ -140,7 +140,7 @@ standardhandshake_filename="handshake-01.cap"
 standardpmkid_filename="pmkid_hash.txt"
 standardpmkidcap_filename="pmkid.cap"
 timeout_capture_handshake="20"
-timeout_capture_pmkid="25"
+timeout_capture_pmkid="15"
 osversionfile_dir="/etc/"
 plugins_dir="plugins/"
 ag_orchestrator_file="ag.orchestrator.txt"
@@ -286,11 +286,13 @@ certspass="airgeddon"
 default_certs_path="/etc/hostapd-wpe/certs/"
 default_certs_pass="whatever"
 webserver_file="ag.lighttpd.conf"
+webserver_log="ag.lighttpd.log"
 webdir="www/"
 indexfile="index.htm"
 checkfile="check.htm"
 cssfile="portal.css"
 jsfile="portal.js"
+pixelfile="pixel.png"
 attemptsfile="ag.et_attempts.txt"
 currentpassfile="ag.et_currentpass.txt"
 et_successfile="ag.et_success.txt"
@@ -6059,6 +6061,7 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}${bettercap_hook_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${beef_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${webserver_file}" > /dev/null 2>&1
+		rm -rf "${tmpdir}${webserver_log}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${webdir}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${certsdir}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${enterprisedir}" > /dev/null 2>&1
@@ -11355,10 +11358,21 @@ function set_et_control_script() {
 						client_hostname=""
 						[[ ${client} =~ .*(\(.+\)).* ]] && client_hostname="${BASH_REMATCH[1]}"
 						if [[ -z "${client_hostname}" ]]; then
-							echo -e "\t${client_ip} ${client_mac}"
+							echo -ne "\t${client_ip} ${client_mac}"
 						else
-							echo -e "\t${client_ip} ${client_mac} ${client_hostname}"
+							echo -ne "\t${client_ip} ${client_mac} ${client_hostname}"
 						fi
+	EOF
+
+	cat >&7 <<-EOF
+						if grep -qE "^\${client_ip} 200 GET /${pixelfile}" "${tmpdir}${webserver_log}" > /dev/null 2>&1; then
+							echo -ne " ${blue_color}${et_misc_texts[${language},28]}${green_color} ✓${normal_color}\n"
+						else
+							echo -ne " ${blue_color}${et_misc_texts[${language},28]}${red_color} ✘${normal_color}\n"
+						fi
+	EOF
+
+	cat >&7 <<-'EOF'
 					fi
 					client_ips+=(${client_ip})
 				done
@@ -11466,13 +11480,15 @@ function set_webserver_config() {
 	debug_print
 
 	rm -rf "${tmpdir}${webserver_file}" > /dev/null 2>&1
+	rm -rf "${tmpdir}${webserver_log}" > /dev/null 2>&1
 
 	{
 	echo -e "server.document-root = \"${tmpdir}${webdir}\"\n"
 	echo -e "server.modules = ("
 	echo -e "\"mod_auth\","
 	echo -e "\"mod_cgi\","
-	echo -e "\"mod_redirect\""
+	echo -e "\"mod_redirect\","
+	echo -e "\"mod_accesslog\""
 	echo -e ")\n"
 	echo -e "\$HTTP[\"host\"] =~ \"(.*)\" {"
 	echo -e "url.redirect = ( \"^/index.htm$\" => \"/\")"
@@ -11494,15 +11510,19 @@ function set_webserver_config() {
 	echo -e "url.redirect = ( \"^/(.*)$\" => \"http://connectivitycheck.microsoft.com/\")"
 	echo -e "url.redirect-code = 302"
 	echo -e "}"
-	echo -e "server.bind = \"${et_ip_router}\"\n"
+	echo -e "server.bind = \"${et_ip_router}\""
 	echo -e "server.port = ${www_port}\n"
-	echo -e "index-file.names = ( \"${indexfile}\" )\n"
+	echo -e "index-file.names = (\"${indexfile}\")"
 	echo -e "server.error-handler-404 = \"/\"\n"
 	echo -e "mimetype.assign = ("
 	echo -e "\".css\" => \"text/css\","
 	echo -e "\".js\" => \"text/javascript\""
 	echo -e ")\n"
-	echo -e "cgi.assign = ( \".htm\" => \"/bin/bash\" )"
+	echo -e "cgi.assign = (\".htm\" => \"/bin/bash\")\n"
+	echo -e "accesslog.filename = \"${tmpdir}${webserver_log}\""
+	echo -e "accesslog.escaping = \"default\""
+	echo -e "accesslog.format = \"%h %s %r %v%U %t '%{User-Agent}i'\""
+	echo -e "\$HTTP[\"remote-ip\"] == \"${loopback_ip}\" { accesslog.filename = \"\" }"
 	} >> "${tmpdir}${webserver_file}"
 
 	sleep 2
@@ -11598,7 +11618,7 @@ function prepare_captive_portal_data() {
 				captive_portal_button_color=$(echo "${captive_portal_data}" | cut -d " " -f 2)
 				captive_portal_shadow_color=$(echo "${captive_portal_data}" | cut -d " " -f 3)
 				captive_portal_img=$(echo "${captive_portal_data}" | cut -d " " -f 4)
-				captive_portal_logo='<div class="logo"><img src="'${captive_portal_img}'" alt="Logo" style="display:block;margin:auto;width:200px;"></div>'
+				captive_portal_logo='\t\t\t\t<div class="logo">\n\t\t\t\t\t\t\t<img src="'${captive_portal_img}'" title="Logo" style="display: block; margin: auto; width: 200px;"/>\n\t\t\t\t\t\t</div>'
 				cp_vendor_detected="1"
 				break
 			fi
@@ -11720,9 +11740,13 @@ function set_captive_portal_page() {
 	echo -e "echo -e '\t\t<script type=\"text/javascript\" src=\"${jsfile}\"></script>'"
 	echo -e "echo -e '\t</head>'"
 	echo -e "echo -e '\t<body>'"
+	echo -e "echo -e '\t\t<img src=\"${pixelfile}\" style=\"display: none;\"/>'"
 	echo -e "echo -e '\t\t<div class=\"content\">'"
 	echo -e "echo -e '\t\t\t<form method=\"post\" id=\"loginform\" name=\"loginform\" action=\"check.htm\">'"
-	echo -e "echo -e '\t\t\t\t${captive_portal_logo}<div class=\"title\">'"
+	if [ "${advanced_captive_portal}" -eq 1 ]; then
+		echo -e "echo -e '${captive_portal_logo}'"
+	fi
+	echo -e "echo -e '\t\t\t\t<div class=\"title\">'"
 	echo -e "echo -e '\t\t\t\t\t<p>${et_misc_texts[${captive_portal_language},9]}</p>'"
 	echo -e "echo -e '\t\t\t\t\t<span class=\"bold\">${essid//[\`\']/}</span>'"
 	echo -e "echo -e '\t\t\t\t</div>'"
@@ -11738,6 +11762,8 @@ function set_captive_portal_page() {
 	echo -e "echo '</html>'"
 	echo -e "exit 0"
 	} >> "${tmpdir}${webdir}${indexfile}"
+
+	base64 -d <<< "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=" > "${tmpdir}${webdir}${pixelfile}"
 
 	exec 4>"${tmpdir}${webdir}${checkfile}"
 
@@ -12816,6 +12842,15 @@ function capture_pmkid_handshake() {
 		return 1
 	fi
 
+	if [ "${channel}" -gt 14 ]; then
+		if [ "${interfaces_band_info['main_wifi_interface','5Ghz_allowed']}" -eq 0 ]; then
+			echo
+			language_strings "${language}" 515 "red"
+			language_strings "${language}" 115 "read"
+			return 1
+		fi
+	fi
+
 	if ! validate_network_encryption_type "WPA"; then
 		return 1
 	fi
@@ -13430,13 +13465,13 @@ function launch_pmkid_capture() {
 
 		tcpdump -i "${interface}" wlan addr3 "${bssid}" -ddd > "${tmpdir}pmkid.bpf"
 
-		if [ "${interfaces_band_info['main_wifi_interface','5Ghz_allowed']}" -eq 0 ]; then
+		if [ "${channel}" -gt 14 ]; then
 			hcxdumptool_band_modifier="b"
 		else
 			hcxdumptool_band_modifier="a"
 		fi
 
-		hcxdumptool_parameters="-c ${channel}${hcxdumptool_band_modifier} -F --rds=1 --bpf=${tmpdir}pmkid.bpf -w ${tmpdir}pmkid.pcapng"
+		hcxdumptool_parameters="-c ${channel}${hcxdumptool_band_modifier} --rds=1 --bpf=${tmpdir}pmkid.bpf -w ${tmpdir}pmkid.pcapng"
 	elif compare_floats_greater_or_equal "${hcxdumptool_version}" "${minimum_hcxdumptool_filterap_version}"; then
 		rm -rf "${tmpdir}target.txt" > /dev/null 2>&1
 		echo "${bssid//:}" > "${tmpdir}target.txt"
@@ -15267,7 +15302,11 @@ function detect_distro_phase1() {
 		if uname -a | grep -i "${i}" > /dev/null; then
 			possible_distro="${i^}"
 			if [ "${possible_distro}" != "Arch" ]; then
-				distro="${i^}"
+				if [[ "$(uname -a)" =~ [Rr]pi ]]; then
+					distro="Raspberry Pi OS"
+				else
+					distro="${i^}"
+				fi
 				break
 			else
 				if uname -a | grep -i "aarch64" > /dev/null; then
@@ -15316,7 +15355,7 @@ function detect_distro_phase2() {
 				elif [[ "${extra_os_info}" =~ [Pp]arrot ]]; then
 					distro="Parrot arm"
 					is_arm=1
-				elif [[ "${extra_os_info}" =~ [Dd]ebian ]] && [[ "$(uname -a)" =~ [Rr]aspberry ]]; then
+				elif [[ "${extra_os_info}" =~ [Dd]ebian ]] && [[ "$(uname -a)" =~ [Rr]aspberry|[Rr]pi ]]; then
 					distro="Raspberry Pi OS"
 					is_arm=1
 				fi
