@@ -55,7 +55,8 @@ RUN \
 	wget \
 	ccze \
 	systemd \
-	x11-xserver-utils
+	x11-xserver-utils \
+	arping
 
 #Install update tools
 RUN \

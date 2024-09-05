@@ -24,8 +24,6 @@ function commands_to_packages() {
 
 	case "${distro}" in
 		"Kali"|"Parrot")
-			commands_to_packages_correspondence["hcxpcapngtool"]="hcxtools"
-			commands_to_packages_correspondence["hcxdumptool"]="hcxdumptool"
 			commands_to_packages_correspondence["iw"]="iw"
 			commands_to_packages_correspondence["awk"]="gawk"
 			commands_to_packages_correspondence["airmon-ng"]="aircrack-ng"
@@ -37,8 +35,10 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["lspci"]="pciutils"
 			commands_to_packages_correspondence["ps"]="procps"
 			commands_to_packages_correspondence["wpaclean"]="aircrack-ng"
-			commands_to_packages_correspondence["crunch"]="crunch"
 			commands_to_packages_correspondence["aireplay-ng"]="aircrack-ng"
+			commands_to_packages_correspondence["crunch"]="crunch"
+			commands_to_packages_correspondence["hcxpcapngtool"]="hcxtools"
+			commands_to_packages_correspondence["hcxdumptool"]="hcxdumptool"
 			commands_to_packages_correspondence["mdk3"]="mdk3"
 			commands_to_packages_correspondence["mdk4"]="mdk4"
 			commands_to_packages_correspondence["hashcat"]="hashcat"
@@ -62,6 +62,7 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["john"]="john"
 			commands_to_packages_correspondence["openssl"]="openssl"
 			commands_to_packages_correspondence["tshark"]="tshark"
+			commands_to_packages_correspondence["tcpdump"]="tcpdump"
 			commands_to_packages_correspondence["xdpyinfo"]="x11-utils"
 			commands_to_packages_correspondence["ethtool"]="ethtool"
 			commands_to_packages_correspondence["lsusb"]="usbutils"
@@ -70,12 +71,10 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["ccze"]="ccze"
 			commands_to_packages_correspondence["loginctl"]="systemd"
 			commands_to_packages_correspondence["xset"]="x11-xserver-utils"
+			commands_to_packages_correspondence["arping"]="arping"
 			commands_to_packages_correspondence["curl"]="curl"
-			commands_to_packages_correspondence["tcpdump"]="tcpdump"
 		;;
 		"BlackArch")
-			commands_to_packages_correspondence["hcxpcapngtool"]="hcxtools"
-			commands_to_packages_correspondence["hcxdumptool"]="hcxdumptool"
 			commands_to_packages_correspondence["iw"]="iw"
 			commands_to_packages_correspondence["awk"]="gawk"
 			commands_to_packages_correspondence["airmon-ng"]="aircrack-ng"
@@ -87,8 +86,10 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["lspci"]="pciutils"
 			commands_to_packages_correspondence["ps"]="procps-ng"
 			commands_to_packages_correspondence["wpaclean"]="aircrack-ng"
-			commands_to_packages_correspondence["crunch"]="crunch"
 			commands_to_packages_correspondence["aireplay-ng"]="aircrack-ng"
+			commands_to_packages_correspondence["crunch"]="crunch"
+			commands_to_packages_correspondence["hcxpcapngtool"]="hcxtools"
+			commands_to_packages_correspondence["hcxdumptool"]="hcxdumptool"
 			commands_to_packages_correspondence["mdk3"]="mdk3"
 			commands_to_packages_correspondence["mdk4"]="mdk4"
 			commands_to_packages_correspondence["hashcat"]="hashcat"
@@ -112,6 +113,7 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["john"]="john"
 			commands_to_packages_correspondence["openssl"]="openssl"
 			commands_to_packages_correspondence["tshark"]="wireshark-cli"
+			commands_to_packages_correspondence["tcpdump"]="tcpdump"
 			commands_to_packages_correspondence["xdpyinfo"]="xorg-xdpyinfo"
 			commands_to_packages_correspondence["ethtool"]="ethtool"
 			commands_to_packages_correspondence["lsusb"]="usbutils"
@@ -120,8 +122,8 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["ccze"]="ccze"
 			commands_to_packages_correspondence["loginctl"]="systemd"
 			commands_to_packages_correspondence["xset"]="xorg-xset"
+			commands_to_packages_correspondence["arping"]="arping"
 			commands_to_packages_correspondence["curl"]="curl"
-			commands_to_packages_correspondence["tcpdump"]="tcpdump"
 		;;
 	esac
 
