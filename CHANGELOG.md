@@ -1,6 +1,11 @@
 ### 12.0
  - Added 6Ghz partial support (some scans, some attacks, capable adapter detection, etc.)
 
+### 11.40
+ - Code refactor of the heredocs used for the Evil Twin, WEP and WPS attacks
+ - Standardize xterm parameters and adjust some colors to override the system's default settings
+ - Fixed bug parsing version number for newer hcxdumptool versions
+
 ### 11.31
  - Fixed graphics system detection when launched on a headless system using remote X windows
  - Fixed minor bug on paths when selecting a directory instead of a file while saving a trophy file
