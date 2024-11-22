@@ -130,7 +130,7 @@ language_strings_expected_version="12.0-1"
 standardhandshake_filename="handshake-01.cap"
 standardpmkid_filename="pmkid_hash.txt"
 standardpmkidcap_filename="pmkid.cap"
-timeout_capture_handshake="20"
+timeout_capture_handshake_decloak="20"
 timeout_capture_pmkid="15"
 osversionfile_dir="/etc/"
 plugins_dir="plugins/"
@@ -356,8 +356,8 @@ sponsors=(
 #Hint vars
 declare main_hints=(128 134 163 437 438 442 445 516 590 626 660 697 699 712)
 declare dos_hints=(129 131 133 697 699)
-declare handshake_pmkid_hints=(127 130 132 664 665 697 699)
-declare dos_handshake_hints=(142 697 699)
+declare handshake_pmkid_decloaking_hints=(127 130 132 664 665 697 699 728 729)
+declare dos_handshake_decloak_hints=(142 697 699 733)
 declare decrypt_hints=(171 179 208 244 163 697 699)
 declare personal_decrypt_hints=(171 178 179 208 244 163 697 699)
 declare enterprise_decrypt_hints=(171 179 208 244 163 610 697 699)
@@ -790,7 +790,7 @@ function generate_dynamic_line() {
 
 	local type=${2}
 	if [ "${type}" = "title" ]; then
-		if [ "${FUNCNAME[2]}" = "main_menu" ]; then
+		if [[ "${FUNCNAME[2]}" = "main_menu" ]] || [[ "${FUNCNAME[2]}" = "main_menu_override" ]]; then
 			ncharstitle=91
 		else
 			ncharstitle=78
@@ -2529,7 +2529,7 @@ function dos_pursuit_mode_et_handler() {
 	if [ "${yesno}" = "y" ]; then
 		dos_pursuit_mode=1
 
-		if [ "${et_dos_attack}" = "Wds Confusion" ]; then
+		if [ "${et_dos_attack}" = "Auth DoS" ]; then
 			echo
 			language_strings "${language}" 508 "yellow"
 			language_strings "${language}" 115 "read"
@@ -3116,9 +3116,9 @@ function read_timeout() {
 			min_max_timeout="25-2400"
 			timeout_shown="${timeout_secs_per_pixiedust}"
 		;;
-		"capture_handshake")
+		"capture_handshake_decloak")
 			min_max_timeout="10-100"
-			timeout_shown="${timeout_capture_handshake}"
+			timeout_shown="${timeout_capture_handshake_decloak}"
 		;;
 		"capture_pmkid")
 			min_max_timeout="10-100"
@@ -3142,7 +3142,7 @@ function ask_timeout() {
 		"wps_pixiedust")
 			local regexp="^2[5-9]$|^[3-9][0-9]$|^[1-9][0-9]{2}$|^1[0-9]{3}$|^2[0-3][0-9]{2}$|^2400$|^$"
 		;;
-		"capture_handshake")
+		"capture_handshake_decloak")
 			local regexp="^[1-9][0-9]$|^100$|^$"
 		;;
 		"capture_pmkid")
@@ -3163,8 +3163,8 @@ function ask_timeout() {
 			"wps_pixiedust")
 				timeout=${timeout_secs_per_pixiedust}
 			;;
-			"capture_handshake")
-				timeout=${timeout_capture_handshake}
+			"capture_handshake_decloak")
+				timeout=${timeout_capture_handshake_decloak}
 			;;
 			"capture_pmkid")
 				timeout=${timeout_capture_pmkid}
@@ -3180,15 +3180,39 @@ function ask_timeout() {
 		"wps_pixiedust")
 			timeout_secs_per_pixiedust=${timeout}
 		;;
-		"capture_handshake")
-			timeout_capture_handshake=${timeout}
+		"capture_handshake_decloak")
+			timeout_capture_handshake_decloak=${timeout}
 		;;
 		"capture_pmkid")
-				timeout_capture_pmkid=${timeout}
-			;;
+			timeout_capture_pmkid=${timeout}
+		;;
 	esac
 
 	language_strings "${language}" 391 "blue"
+}
+
+#Handle the proccess of checking decloak capture
+function decloak_check() {
+
+	debug_print
+
+	local time_counter=0
+	while true; do
+		sleep 5
+		if check_essid_in_capture_file; then
+			break
+		fi
+
+		time_counter=$((time_counter + 5))
+		if [ "${time_counter}" -ge "${timeout_capture_handshake_decloak}" ]; then
+			break
+		fi
+	done
+
+	kill "${processiddecloak}" &> /dev/null
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		tmux kill-window -t "${session_name}:Decloaking"
+	fi
 }
 
 #Handle the proccess of checking handshake capture
@@ -3204,7 +3228,7 @@ function handshake_capture_check() {
 		fi
 
 		time_counter=$((time_counter + 5))
-		if [ "${time_counter}" -ge "${timeout_capture_handshake}" ]; then
+		if [ "${time_counter}" -ge "${timeout_capture_handshake_decloak}" ]; then
 			break
 		fi
 	done
@@ -4405,13 +4429,13 @@ function launch_dos_pursuit_mode_attack() {
 				global_process_pid=""
 			fi
 		;;
-		"wids / wips / wds confusion attack")
-			dos_delay=10
+		"auth dos attack")
+			dos_delay=1
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${interface}"
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}" "${1} (DoS Pursuit mode)"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
+				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -4427,13 +4451,13 @@ function launch_dos_pursuit_mode_attack() {
 				global_process_pid=""
 			fi
 		;;
-		"auth dos attack")
-			dos_delay=1
+		"wids / wips / wds confusion attack")
+			dos_delay=10
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${interface}"
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m -s 1024" "${1} (DoS Pursuit mode)"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m -s 1024"
+				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -4472,13 +4496,13 @@ function launch_dos_pursuit_mode_attack() {
 				global_process_pid=""
 			fi
 		;;
-		"Wds Confusion")
+		"Auth DoS")
 			dos_delay=10
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${iface_monitor_et_deauth}"
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${deauth_scr_window_position} -T \"Deauth (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}" "Deauth (DoS Pursuit mode)"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${deauth_scr_window_position} -T \"Deauth (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m" "Deauth (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
+				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -4730,8 +4754,8 @@ function exec_authdos() {
 		language_strings "${language}" 33 "yellow"
 		language_strings "${language}" 4 "read"
 		recalculate_windows_sizes
-		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"auth dos attack\"" "${mdk_command} ${interface} a -a ${bssid} -m -s 1024" "auth dos attack" "active"
-		wait_for_process "${mdk_command} ${interface} a -a ${bssid} -m -s 1024" "auth dos attack"
+		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"auth dos attack\"" "${mdk_command} ${interface} a -a ${bssid} -m" "auth dos attack" "active"
+		wait_for_process "${mdk_command} ${interface} a -a ${bssid} -m" "auth dos attack"
 	fi
 }
 
@@ -5778,10 +5802,10 @@ function initialize_menu_and_print_selections() {
 			enterprise_asleap_challenge=""
 			enterprise_asleap_response=""
 		;;
-		"handshake_pmkid_tools_menu")
+		"handshake_pmkid_decloaking_tools_menu")
 			print_iface_selected
 			print_all_target_vars
-			return_to_handshake_pmkid_tools_menu=0
+			return_to_handshake_pmkid_decloaking_tools_menu=0
 		;;
 		"dos_attacks_menu")
 			enterprise_mode=""
@@ -5790,7 +5814,7 @@ function initialize_menu_and_print_selections() {
 			print_iface_selected
 			print_all_target_dos_attacks_menu_vars
 		;;
-		"dos_handshake_menu")
+		"dos_handshake_decloak_menu")
 			print_iface_selected
 			print_all_target_vars
 		;;
@@ -5939,6 +5963,7 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}bl.txt" > /dev/null 2>&1
 		rm -rf "${tmpdir}target.txt" > /dev/null 2>&1
 		rm -rf "${tmpdir}handshake"* > /dev/null 2>&1
+		rm -rf "${tmpdir}decloak"* > /dev/null 2>&1
 		rm -rf "${tmpdir}pmkid"* > /dev/null 2>&1
 		rm -rf "${tmpdir}nws"* > /dev/null 2>&1
 		rm -rf "${tmpdir}clts"* > /dev/null 2>&1
@@ -5980,6 +6005,7 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}wep.cap" > /dev/null 2>&1
 		rm -rf "${tmpdir}wps.cap" > /dev/null 2>&1
 		rm -rf "${tmpdir}besside.log" > /dev/null 2>&1
+		rm -rf "${tmpdir}decloak.log" > /dev/null 2>&1
 	fi
 
 	if [ "${dhcpd_path_changed}" -eq 1 ]; then
@@ -6161,19 +6187,19 @@ function print_hint() {
 			randomhint=$(shuf -i 0-"${hintlength}" -n 1)
 			strtoprint=${hints[dos_hints|${randomhint}]}
 		;;
-		"handshake_pmkid_tools_menu")
-			store_array hints handshake_pmkid_hints "${handshake_pmkid_hints[@]}"
-			hintlength=${#handshake_pmkid_hints[@]}
+		"handshake_pmkid_decloaking_tools_menu")
+			store_array hints handshake_pmkid_decloaking_hints "${handshake_pmkid_decloaking_hints[@]}"
+			hintlength=${#handshake_pmkid_decloaking_hints[@]}
 			((hintlength--))
 			randomhint=$(shuf -i 0-"${hintlength}" -n 1)
-			strtoprint=${hints[handshake_pmkid_hints|${randomhint}]}
+			strtoprint=${hints[handshake_pmkid_decloaking_hints|${randomhint}]}
 		;;
-		"dos_handshake_menu")
-			store_array hints dos_handshake_hints "${dos_handshake_hints[@]}"
-			hintlength=${#dos_handshake_hints[@]}
+		"dos_handshake_decloak_menu")
+			store_array hints dos_handshake_decloak_hints "${dos_handshake_decloak_hints[@]}"
+			hintlength=${#dos_handshake_decloak_hints[@]}
 			((hintlength--))
 			randomhint=$(shuf -i 0-"${hintlength}" -n 1)
-			strtoprint=${hints[dos_handshake_hints|${randomhint}]}
+			strtoprint=${hints[dos_handshake_decloak_hints|${randomhint}]}
 		;;
 		"decrypt_menu")
 			store_array hints decrypt_hints "${decrypt_hints[@]}"
@@ -6485,7 +6511,7 @@ function main_menu() {
 			dos_attacks_menu
 		;;
 		5)
-			handshake_pmkid_tools_menu
+			handshake_pmkid_decloaking_tools_menu
 		;;
 		6)
 			decrypt_menu
@@ -7862,6 +7888,56 @@ function check_valid_file_to_clean() {
 	fi
 
 	return 0
+}
+
+#Check if an essid is present on the mdk3/mdk4 log file to know if it is decloaked for that bssid
+function check_essid_in_mdk_decloak_log() {
+
+	debug_print
+
+	local regexp
+	if [ "${AIRGEDDON_MDK_VERSION}" = "mdk3" ]; then
+		if ! grep -q "End of SSID list reached" "${tmpdir}decloak.log"; then
+			regexp='SSID:[[:blank:]]\"([^\"]+)\"'
+			[[ $(grep "${bssid}" "${tmpdir}decloak.log") =~ ${regexp} ]] && essid="${BASH_REMATCH[1]}"
+		fi
+	else
+		regexp="Probe[[:blank:]]Response[[:blank:]]from[[:blank:]]target[[:blank:]]AP[[:blank:]]with[[:blank:]]SSID[[:blank:]]+([^[:blank:]]+.*[^[:blank:]]|[^[:blank:]])"
+		[[ $(grep -m 1 "Probe Response from target AP with SSID" "${tmpdir}decloak.log") =~ ${regexp} ]] && essid="${BASH_REMATCH[1]}"
+	fi
+
+	if [ "${essid}" = "(Hidden Network)" ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
+#Check if an essid is present on a capture file to know if it is decloaked for that bssid
+function check_essid_in_capture_file() {
+
+	debug_print
+
+	while IFS=, read -r exp_bssid _ _ _ _ _ _ _ _ _ _ _ _ exp_essid _; do
+
+		chars_bssid=${#exp_bssid}
+		if [ "${chars_bssid}" -ge 17 ]; then
+			if [ "${exp_bssid}" = "${bssid}" ]; then
+					exp_essid="${exp_essid#"${exp_essid%%[![:space:]]*}"}"
+					exp_essid="${exp_essid%"${exp_essid##*[![:space:]]}"}"
+				if [[ -n "${exp_essid}" ]] && [[ ${exp_essid} != "" ]]; then
+					essid="${exp_essid}"
+					break
+				fi
+			fi
+		fi
+	done < "${tmpdir}decloak-01.csv"
+
+	if [ "${essid}" = "(Hidden Network)" ]; then
+		return 1
+	else
+		return 0
+	fi
 }
 
 #Check if a bssid is present on a capture file to know if there is a Handshake/PMKID with that bssid
@@ -10275,8 +10351,8 @@ function exec_et_deauth() {
 		"Aireplay")
 			deauth_et_cmd="aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${iface_monitor_et_deauth}"
 		;;
-		"Wds Confusion")
-			deauth_et_cmd="${mdk_command} ${iface_monitor_et_deauth} w -e ${essid} -c ${channel}"
+		"Auth DoS")
+			deauth_et_cmd="${mdk_command} ${iface_monitor_et_deauth} a -a ${bssid} -m"
 		;;
 	esac
 
@@ -10334,6 +10410,7 @@ function set_wps_attack_script() {
 
 	wps_attack_tool="${1}"
 	wps_attack_mode="${2}"
+	local unbuffer
 	if [ "${wps_attack_tool}" = "reaver" ]; then
 		unbuffer=""
 		case ${wps_attack_mode} in
@@ -12347,14 +12424,14 @@ function convert_cap_to_hashcat_format() {
 	fi
 }
 
-#Handshake/PMKID tools menu
-function handshake_pmkid_tools_menu() {
+#Handshake/PMKID/Decloaking tools menu
+function handshake_pmkid_decloaking_tools_menu() {
 
 	debug_print
 
 	clear
 	language_strings "${language}" 120 "title"
-	current_menu="handshake_pmkid_tools_menu"
+	current_menu="handshake_pmkid_decloaking_tools_menu"
 	initialize_menu_and_print_selections
 	echo
 	language_strings "${language}" 47 "green"
@@ -12367,8 +12444,10 @@ function handshake_pmkid_tools_menu() {
 	language_strings "${language}" 124 "separator"
 	language_strings "${language}" 663 pmkid_dependencies[@]
 	language_strings "${language}" 121
-	print_simple_separator
 	language_strings "${language}" 122 clean_handshake_dependencies[@]
+	language_strings "${language}" 727 "separator"
+	language_strings "${language}" 725
+	language_strings "${language}" 726 mdk_attack_dependencies[@]
 	print_hint ${current_menu}
 
 	read -rp "> " handshake_option
@@ -12386,7 +12465,7 @@ function handshake_pmkid_tools_menu() {
 			managed_option "${interface}"
 		;;
 		4)
-			explore_for_targets_option "WPA"
+			explore_for_targets_option
 		;;
 		5)
 			if contains_element "${handshake_option}" "${forbidden_options[@]}"; then
@@ -12418,12 +12497,22 @@ function handshake_pmkid_tools_menu() {
 				clean_handshake_file_option
 			fi
 		;;
+		8)
+			decloak_prequisites "deauth"
+		;;
+		9)
+			if contains_element "${handshake_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				decloak_prequisites "dictionary"
+			fi
+		;;
 		*)
 			invalid_menu_option
 		;;
 	esac
 
-	handshake_pmkid_tools_menu
+	handshake_pmkid_decloaking_tools_menu
 }
 
 #Execute the cleaning of a Handshake file
@@ -12492,10 +12581,10 @@ function dos_attacks_menu() {
 	language_strings "${language}" 50 "separator"
 	language_strings "${language}" 51 mdk_attack_dependencies[@]
 	language_strings "${language}" 52 aireplay_attack_dependencies[@]
-	language_strings "${language}" 53 mdk_attack_dependencies[@]
+	language_strings "${language}" 63 mdk_attack_dependencies[@]
 	language_strings "${language}" 54 "separator"
 	language_strings "${language}" 62 mdk_attack_dependencies[@]
-	language_strings "${language}" 63 mdk_attack_dependencies[@]
+	language_strings "${language}" 53 mdk_attack_dependencies[@]
 	language_strings "${language}" 64 mdk_attack_dependencies[@]
 	print_hint ${current_menu}
 
@@ -12534,7 +12623,7 @@ function dos_attacks_menu() {
 			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				wds_confusion_option
+				auth_dos_option
 			fi
 		;;
 		8)
@@ -12548,7 +12637,7 @@ function dos_attacks_menu() {
 			if contains_element "${dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				auth_dos_option
+				wds_confusion_option
 			fi
 		;;
 		10)
@@ -12575,7 +12664,7 @@ function capture_handshake_evil_twin() {
 		return 1
 	fi
 
-	ask_timeout "capture_handshake"
+	ask_timeout "capture_handshake_decloak"
 	capture_handshake_window
 
 	case ${et_dos_attack} in
@@ -12602,11 +12691,11 @@ function capture_handshake_evil_twin() {
 			fi
 			sleeptimeattack=12
 		;;
-		"Wds Confusion")
+		"Auth DoS")
 			recalculate_windows_sizes
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"auth dos attack\"" "${mdk_command} ${interface} a -a ${bssid} -m" "auth dos attack"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface} w -e ${essid} -c ${channel}"
+				get_tmux_process_id "${mdk_command} ${interface} a -a ${bssid} -m"
 				processidattack="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -12655,6 +12744,82 @@ function capture_handshake_evil_twin() {
 	esac
 }
 
+#Decloak ESSID by deauthentication or by dictionary on Handshake/PMKID/Decloak tools
+function decloak_prequisites() {
+
+	debug_print
+
+	if [[ "${essid}" != "(Hidden Network)" ]] || [[ -z ${channel} ]]; then
+		echo
+		language_strings "${language}" 731 "red"
+		language_strings "${language}" 115 "read"
+		return 1
+	fi
+
+	if ! check_monitor_enabled "${interface}"; then
+		echo
+		language_strings "${language}" 14 "red"
+		language_strings "${language}" 115 "read"
+		return 1
+	fi
+
+	if [ "${channel}" -gt 14 ]; then
+		if [ "${interfaces_band_info['main_wifi_interface','5Ghz_allowed']}" -eq 0 ]; then
+			echo
+			language_strings "${language}" 515 "red"
+			language_strings "${language}" 115 "read"
+			return 1
+		fi
+	fi
+
+	echo
+	language_strings "${language}" 730 "yellow"
+	language_strings "${language}" 115 "read"
+
+	if [ "${1}" = "deauth" ]; then
+		dos_handshake_decloaking_menu "decloak"
+	else
+		manage_asking_for_dictionary_file
+
+		echo
+		language_strings "${language}" 737 "blue"
+		language_strings "${language}" 115 "read"
+
+		exec_decloak_by_dictionary
+	fi
+}
+
+#Execute mdk decloak by dictionary
+function exec_decloak_by_dictionary() {
+
+	debug_print
+
+	iw "${interface}" set channel "${channel}" > /dev/null 2>&1
+
+	local unbuffer
+	unbuffer=""
+	if [ "${AIRGEDDON_MDK_VERSION}" = "mdk3" ]; then
+		unbuffer="stdbuf -i0 -o0 -e0 "
+	fi
+
+	rm -rf "${tmpdir}decloak.log" > /dev/null 2>&1
+	recalculate_windows_sizes
+	manage_output "+j -bg \"#000000\" -fg \"#FFFF00\" -geometry ${g1_topright_window} -T \"decloack by dictionary\"" "${unbuffer}${mdk_command} ${interface} p -t ${bssid} -f ${DICTIONARY} | tee ${tmpdir}decloak.log ${colorize}" "decloack by dictionary" "active"
+	wait_for_process "${mdk_command} ${interface} p -t ${bssid} -f ${DICTIONARY}" "decloack by dictionary"
+
+	if check_essid_in_mdk_decloak_log; then
+		echo
+		language_strings "${language}" 162 "yellow"
+		echo
+		language_strings "${language}" 736 "blue"
+		language_strings "${language}" 115 "read"
+	else
+		echo
+		language_strings "${language}" 738 "red"
+		language_strings "${language}" 115 "read"
+	fi
+}
+
 #Capture Handshake on Handshake/PMKID tools
 function capture_pmkid_handshake() {
 
@@ -12694,7 +12859,7 @@ function capture_pmkid_handshake() {
 	language_strings "${language}" 115 "read"
 
 	if [ "${1}" = "handshake" ]; then
-		dos_handshake_menu
+		dos_handshake_decloaking_menu "${1}"
 	else
 		launch_pmkid_capture
 	fi
@@ -13111,18 +13276,23 @@ function read_path() {
 	return "${validpath}"
 }
 
-#Launch the DoS selection menu before capture a Handshake and process the captured file
-function dos_handshake_menu() {
+#Launch the DoS selection menu before capture a Handshake or decloak a network and process the captured file
+function dos_handshake_decloaking_menu() {
 
 	debug_print
 
-	if [ "${return_to_handshake_pmkid_tools_menu}" -eq 1 ]; then
+	if [ "${return_to_handshake_pmkid_decloaking_tools_menu}" -eq 1 ]; then
 		return
 	fi
 
 	clear
-	language_strings "${language}" 138 "title"
-	current_menu="dos_handshake_menu"
+	if [ "${1}" = "decloak" ]; then
+		language_strings "${language}" 732 "title"
+	else
+		language_strings "${language}" 138 "title"
+	fi
+
+	current_menu="dos_handshake_decloak_menu"
 	initialize_menu_and_print_selections
 	echo
 	language_strings "${language}" 47 "green"
@@ -13134,17 +13304,21 @@ function dos_handshake_menu() {
 	language_strings "${language}" 141 mdk_attack_dependencies[@]
 	print_hint ${current_menu}
 
-	read -rp "> " attack_handshake_option
-	case ${attack_handshake_option} in
+	read -rp "> " attack_handshake_decloak_option
+	case ${attack_handshake_decloak_option} in
 		0)
 			return
 		;;
 		1)
-			if contains_element "${attack_handshake_option}" "${forbidden_options[@]}"; then
+			if contains_element "${attack_handshake_decloak_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				ask_timeout "capture_handshake"
-				capture_handshake_window
+				ask_timeout "capture_handshake_decloak"
+				if [ "${1}" = "decloak" ]; then
+					decloak_window
+				else
+					capture_handshake_window
+				fi
 				rm -rf "${tmpdir}bl.txt" > /dev/null 2>&1
 				echo "${bssid}" > "${tmpdir}bl.txt"
 				recalculate_windows_sizes
@@ -13155,15 +13329,23 @@ function dos_handshake_menu() {
 					global_process_pid=""
 				fi
 				sleeptimeattack=12
-				launch_handshake_capture
+				if [ "${1}" = "decloak" ]; then
+					launch_decloak_capture
+				else
+					launch_handshake_capture
+				fi
 			fi
 		;;
 		2)
-			if contains_element "${attack_handshake_option}" "${forbidden_options[@]}"; then
+			if contains_element "${attack_handshake_decloak_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				ask_timeout "capture_handshake"
-				capture_handshake_window
+				ask_timeout "capture_handshake_decloak"
+				if [ "${1}" = "decloak" ]; then
+					decloak_window
+				else
+					capture_handshake_window
+				fi
 				${airmon} start "${interface}" "${channel}" > /dev/null 2>&1
 				recalculate_windows_sizes
 				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"aireplay deauth attack\"" "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface}" "aireplay deauth attack"
@@ -13173,24 +13355,36 @@ function dos_handshake_menu() {
 					global_process_pid=""
 				fi
 				sleeptimeattack=12
-				launch_handshake_capture
+				if [ "${1}" = "decloak" ]; then
+					launch_decloak_capture
+				else
+					launch_handshake_capture
+				fi
 			fi
 		;;
 		3)
-			if contains_element "${attack_handshake_option}" "${forbidden_options[@]}"; then
+			if contains_element "${attack_handshake_decloak_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				ask_timeout "capture_handshake"
-				capture_handshake_window
+				ask_timeout "capture_handshake_decloak"
+				if [ "${1}" = "decloak" ]; then
+					decloak_window
+				else
+					capture_handshake_window
+				fi
 				recalculate_windows_sizes
-				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack"
+				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"auth dos attack\"" "${mdk_command} ${interface} a -a ${bssid} -m" "auth dos attack"
 				if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-					get_tmux_process_id "${mdk_command} ${interface} w -e ${essid} -c ${channel}"
+					get_tmux_process_id "${mdk_command} ${interface} a -a ${bssid} -m"
 					processidattack="${global_process_pid}"
 					global_process_pid=""
 				fi
 				sleeptimeattack=16
-				launch_handshake_capture
+				if [ "${1}" = "decloak" ]; then
+					launch_decloak_capture
+				else
+					launch_handshake_capture
+				fi
 			fi
 		;;
 		*)
@@ -13198,7 +13392,35 @@ function dos_handshake_menu() {
 		;;
 	esac
 
-	dos_handshake_menu
+	dos_handshake_decloaking_menu "${1}"
+}
+
+#Decloak capture launcher
+function launch_decloak_capture() {
+
+	debug_print
+
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+		processidattack=$!
+		sleep "${sleeptimeattack}" && kill "${processidattack}" &> /dev/null
+	else
+		sleep "${sleeptimeattack}" && kill "${processidattack}" && kill_tmux_windows "Decloaking" &> /dev/null
+	fi
+
+	decloak_check
+
+	if check_essid_in_capture_file; then
+		echo
+		language_strings "${language}" 162 "yellow"
+		echo
+		language_strings "${language}" 736 "blue"
+		language_strings "${language}" 115 "read"
+		return_to_handshake_pmkid_decloaking_tools_menu=1
+	else
+		echo
+		language_strings "${language}" 146 "red"
+		language_strings "${language}" 115 "read"
+	fi
 }
 
 #Handshake capture launcher
@@ -13233,7 +13455,7 @@ function launch_handshake_capture() {
 			echo
 			language_strings "${language}" 149 "blue"
 			language_strings "${language}" 115 "read"
-			return_to_handshake_pmkid_tools_menu=1
+			return_to_handshake_pmkid_decloaking_tools_menu=1
 		;;
 		"1")
 			echo
@@ -13253,6 +13475,31 @@ function is_wpa2_handshake() {
 
 	bash -c "aircrack-ng -a 2 -b \"${2}\" -w \"${1}\" \"${1}\" > /dev/null 2>&1"
 	return $?
+}
+
+#Launch the Decloak window
+function decloak_window() {
+
+	debug_print
+
+	echo
+	language_strings "${language}" 734 "blue"
+	echo
+	language_strings "${language}" 735 "yellow"
+	language_strings "${language}" 115 "read"
+	echo
+	language_strings "${language}" 325 "blue"
+
+	rm -rf "${tmpdir}decloak"* > /dev/null 2>&1
+	recalculate_windows_sizes
+	manage_output "+j -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g1_topright_window} -T \"Decloaking\"" "airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}decloak ${interface}" "Decloaking" "active"
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		get_tmux_process_id "airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}decloak ${interface}"
+		processiddecloak="${global_process_pid}"
+		global_process_pid=""
+	else
+		processiddecloak=$!
+	fi
 }
 
 #Launch the Handshake capture window
@@ -14318,7 +14565,7 @@ function et_dos_menu() {
 			if contains_element "${et_dos_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				et_dos_attack="Wds Confusion"
+				et_dos_attack="Auth DoS"
 
 				echo
 				language_strings "${language}" 509 "yellow"
@@ -15699,18 +15946,18 @@ function check_update_tools() {
 	debug_print
 
 	if "${AIRGEDDON_AUTO_UPDATE:-true}"; then
-		if [ "${update_toolsok}" -eq 1 ]; then
-			autoupdate_check
-		else
-			echo
-			language_strings "${language}" 225 "yellow"
-			language_strings "${language}" 115 "read"
-		fi
-	else
 		if [ "${is_docker}" -eq 1 ]; then
 			echo
 			language_strings "${language}" 422 "blue"
 			language_strings "${language}" 115 "read"
+		else
+			if [ "${update_toolsok}" -eq 1 ]; then
+				autoupdate_check
+			else
+				echo
+				language_strings "${language}" 225 "yellow"
+				language_strings "${language}" 115 "read"
+			fi
 		fi
 	fi
 }
@@ -17037,9 +17284,8 @@ function under_construction_message() {
 
 	debug_print
 
-	local var_uc="${under_constructionvar^}"
 	echo
-	echo_red "${var_uc}..."
+	echo_red "${under_construction[$language]^}..."
 	language_strings "${language}" 115 "read"
 }
 
