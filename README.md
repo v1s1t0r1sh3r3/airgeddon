@@ -47,7 +47,11 @@ All the needed info about how to "install | use | enjoy" `airgeddon` is present 
   - [FAQ & Troubleshooting]
 
 
-- *IV. Project & Development*
+- *IV. Learning*
+  - [CWP Certification]
+
+
+- *V. Project & Development*
   - [Plugins system]
 	 - [Plugins development]
 	 - [Plugins Hall of Fame]
@@ -59,7 +63,7 @@ All the needed info about how to "install | use | enjoy" `airgeddon` is present 
   - [Contact]
 
 
-- *V. Acknowledgments & References*
+- *VI. Acknowledgments & References*
   - [Hat Tip To]
   - [Inspiration]
 
@@ -94,6 +98,7 @@ All the needed info about how to "install | use | enjoy" `airgeddon` is present 
 [Windows]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Docker%20Windows
 [Other Sources]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Other%20Sources
 [FAQ & Troubleshooting]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/FAQ%20&%20Troubleshooting
+[CWP Certification]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/CWP%20Certification
 [Plugins system]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Plugins%20System
 [Plugins development]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Plugins%20Development
 [Plugins Hall of Fame]: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Plugins%20Hall%20of%20Fame

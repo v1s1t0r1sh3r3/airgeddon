@@ -354,22 +354,22 @@ sponsors=(
 		)
 
 #Hint vars
-declare main_hints=(128 134 163 437 438 442 445 516 590 626 660 697 699 712)
+declare main_hints=(128 134 163 437 438 442 445 516 590 626 660 697 699 712 739)
 declare dos_hints=(129 131 133 697 699)
 declare handshake_pmkid_decloaking_hints=(127 130 132 664 665 697 699 728 729)
-declare dos_handshake_decloak_hints=(142 697 699 733)
+declare dos_handshake_decloak_hints=(142 697 699 733 739)
 declare decrypt_hints=(171 179 208 244 163 697 699)
 declare personal_decrypt_hints=(171 178 179 208 244 163 697 699)
 declare enterprise_decrypt_hints=(171 179 208 244 163 610 697 699)
-declare select_interface_hints=(246 697 699 712)
+declare select_interface_hints=(246 697 699 712 739)
 declare language_hints=(250 438)
 declare option_hints=(445 250 448 477 591 626 697 699)
-declare evil_twin_hints=(254 258 264 269 309 328 400 509 697 699)
+declare evil_twin_hints=(254 258 264 269 309 328 400 509 697 699 739)
 declare evil_twin_dos_hints=(267 268 509 697 699)
 declare beef_hints=(408)
-declare wps_hints=(342 343 344 356 369 390 490 625 697 699)
-declare wep_hints=(431 429 428 432 433 697 699)
-declare enterprise_hints=(112 332 483 518 629 301 697 699)
+declare wps_hints=(342 343 344 356 369 390 490 625 697 699 739)
+declare wep_hints=(431 429 428 432 433 697 699 739)
+declare enterprise_hints=(112 332 483 518 629 301 697 699 739)
 
 #Charset vars
 crunch_lowercasecharset="abcdefghijklmnopqrstuvwxyz"
