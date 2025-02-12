@@ -94,12 +94,12 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
   <tr>
     <td>
       <b>PayPal</b>: <em>v1s1t0r.1s.h3r3&#64;gmail.com</em> <br/>
-      <b>Bitcoin</b>: <em>1NSzwqtBBdo4CrvynPZmd85xfbL7hw3Ptu</em> <br/>
-      <b>Bitcoin Cash</b>: <em>1GyUesBgwHKZBeFvkT5nfteecPdH6bAEaL</em> <br/>
-      <b>Dash</b>: <em>XgKL8GTsdKAL2fypiMRFFL8m4wWTm1Netn</em> <br/>
-      <b>Ethereum</b>: <em>0xf88107ba5e10776a37ec089a7ed2bac57638eea7</em> <br/>
-      <b>Litecoin</b>: <em>LX1ytoQhRzUAuArpkNRjnfTmwYuxxJezTn</em> <br/>
-      <b>ZCash</b>: <em>t1dt1ZDCgDUt9pqnyzkZd9GE2NpZBfMVsXq</em>
+      <b>Bitcoin</b>: <em>bc1qymhcwsdmw0rn773czet7dv220a4u9fn0278r76</em> <br/>
+      <b>Bitcoin Cash</b>: <em>1GspqR87pn8569etY1Qfs3amUGQo9S5a1w</em> <br/>
+      <b>BAT</b>: <em>0x1b844e8251Db6A938813466Cf033FAF70c7c94bB</em> <br/>
+      <b>Ethereum</b>: <em>0xaEf16Ffbd03A742Ab6DAB8Bd60C6014726099583</em> <br/>
+      <b>Litecoin</b>: <em>ltc1q3ncz8gxzvzuekupatpm29k6u3c26cf78tw3zjx</em> <br/>
+      <b>Cardano</b>: <em>addr1qy4sdmjhpsx3z3wh7ryptyt9c3xfcdxrxull33sh9senmcxfeqzunfuzdvas294dmd6d265aep7u87eg8ypwx4flq84q36l5pu</em>
     </td>
   </tr>
 </table>
@@ -123,7 +123,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
         Bitcoin Cash QR code:
       </td>
       <td>
-        Dash QR code:
+        BAT QR code:
       </td>
     </tr>
     <tr>
@@ -134,7 +134,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
         <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/bitcoincash_qr.png" alt="Bitcoin Cash" title="Bitcoin Cash"/>
       </td>
       <td>
-        <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/dash_qr.png" alt="Dash" title="Dash"/>
+        <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/bat_qr.png" alt="BAT" title="BAT"/>
       </td>
     </tr>
     <tr>
@@ -145,7 +145,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
         Litecoin QR code:
       </td>
       <td>
-        ZCash QR code:
+        Cardano QR code:
       </td>
     </tr>
     <tr>
@@ -156,7 +156,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
         <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/litecoin_qr.png" alt="Litecoin" title="Litecoin"/>
       </td>
       <td>
-        <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/zcash_qr.png" alt="ZCash" title="ZCash"/>
+        <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/cardano_qr.png" alt="Cardano" title="Cardano"/>
       </td>
     </tr>
   </table>

@@ -132,6 +132,7 @@ standardpmkid_filename="pmkid_hash.txt"
 standardpmkidcap_filename="pmkid.cap"
 timeout_capture_handshake_decloak="20"
 timeout_capture_pmkid="15"
+timeout_capture_identities="30"
 osversionfile_dir="/etc/"
 plugins_dir="plugins/"
 ag_orchestrator_file="ag.orchestrator.txt"
@@ -369,7 +370,7 @@ declare evil_twin_dos_hints=(267 268 509 697 699)
 declare beef_hints=(408)
 declare wps_hints=(342 343 344 356 369 390 490 625 697 699 739)
 declare wep_hints=(431 429 428 432 433 697 699 739)
-declare enterprise_hints=(112 332 483 518 629 301 697 699 739)
+declare enterprise_hints=(112 332 483 518 629 301 697 699 739 742)
 
 #Charset vars
 crunch_lowercasecharset="abcdefghijklmnopqrstuvwxyz"
@@ -2454,6 +2455,7 @@ function language_menu() {
 
 	detect_rtl_language
 	initialize_language_strings
+	hookable_for_languages
 
 	language_menu
 }
@@ -3124,6 +3126,10 @@ function read_timeout() {
 			min_max_timeout="10-100"
 			timeout_shown="${timeout_capture_pmkid}"
 		;;
+		"capture_identities")
+			min_max_timeout="10-300"
+			timeout_shown="${timeout_capture_identities}"
+		;;
 	esac
 
 	language_strings "${language}" 393 "green"
@@ -3148,6 +3154,9 @@ function ask_timeout() {
 		"capture_pmkid")
 			local regexp="^[1-9][0-9]$|^100$|^$"
 		;;
+		"capture_identities")
+			local regexp="^([1-9][0-9]|[12][0-9][0-9]|300)$|^$"
+		;;
 	esac
 
 	timeout=0
@@ -3158,16 +3167,19 @@ function ask_timeout() {
 	if [ "${timeout}" = "" ]; then
 		case ${1} in
 			"wps_standard")
-				timeout=${timeout_secs_per_pin}
+				timeout="${timeout_secs_per_pin}"
 			;;
 			"wps_pixiedust")
-				timeout=${timeout_secs_per_pixiedust}
+				timeout="${timeout_secs_per_pixiedust}"
 			;;
 			"capture_handshake_decloak")
-				timeout=${timeout_capture_handshake_decloak}
+				timeout="${timeout_capture_handshake_decloak}"
 			;;
 			"capture_pmkid")
-				timeout=${timeout_capture_pmkid}
+				timeout="${timeout_capture_pmkid}"
+			;;
+			"capture_identities")
+				timeout="${timeout_capture_identities}"
 			;;
 		esac
 	fi
@@ -3175,16 +3187,19 @@ function ask_timeout() {
 	echo
 	case ${1} in
 		"wps_standard")
-			timeout_secs_per_pin=${timeout}
+			timeout_secs_per_pin="${timeout}"
 		;;
 		"wps_pixiedust")
-			timeout_secs_per_pixiedust=${timeout}
+			timeout_secs_per_pixiedust="${timeout}"
 		;;
 		"capture_handshake_decloak")
-			timeout_capture_handshake_decloak=${timeout}
+			timeout_capture_handshake_decloak="${timeout}"
 		;;
 		"capture_pmkid")
-			timeout_capture_pmkid=${timeout}
+			timeout_capture_pmkid="${timeout}"
+		;;
+		"capture_identities")
+			timeout_capture_identities="${timeout}"
 		;;
 	esac
 
@@ -3570,6 +3585,89 @@ function read_certificates_data() {
 			custom_certificates_cn="${custom_certificates_cn,,}"
 		;;
 	esac
+}
+
+#Prepare enterprise identities capture
+function enterprise_identities() {
+
+	debug_print
+
+	if [[ -z ${bssid} ]] || [[ -z ${essid} ]] || [[ -z ${channel} ]] || [[ "${essid}" = "(Hidden Network)" ]]; then
+		echo
+		language_strings "${language}" 125 "yellow"
+		language_strings "${language}" 115 "read"
+		if ! explore_for_targets_option "WPA" "enterprise"; then
+			return 1
+		fi
+	fi
+
+	if ! check_monitor_enabled "${interface}"; then
+		echo
+		language_strings "${language}" 14 "red"
+		language_strings "${language}" 115 "read"
+		return 1
+	fi
+
+	if [ "${channel}" -gt 14 ]; then
+		if [ "${interfaces_band_info['main_wifi_interface','5Ghz_allowed']}" -eq 0 ]; then
+			echo
+			language_strings "${language}" 515 "red"
+			language_strings "${language}" 115 "read"
+			return 1
+		fi
+	fi
+
+	if ! validate_network_encryption_type "WPA"; then
+		return 1
+	fi
+
+	launch_identity_capture
+}
+
+#Launch enterprise identities capture
+function launch_identity_capture() {
+
+	debug_print
+
+	ask_timeout "capture_identities"
+
+	echo
+	language_strings "${language}" 743 "yellow"
+	language_strings "${language}" 115 "read"
+
+	echo
+	language_strings "${language}" 325 "blue"
+
+	rm -rf "${tmpdir}identities"* > /dev/null 2>&1
+	recalculate_windows_sizes
+	manage_output "+j -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g1_topright_window} -T \"Capturing Identities\"" "timeout -s SIGTERM ${timeout_capture_identities} airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}identities ${interface}" "Capturing Identities" "active"
+	wait_for_process "timeout -s SIGTERM ${timeout_capture_identities} airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}identities ${interface}" "Capturing Identities"
+
+	echo
+	language_strings "${language}" 744 "blue"
+	identities_check "${tmpdir}identities"*.cap "${bssid}"
+	language_strings "${language}" 115 "read"
+}
+
+#Search for enterprise identities in a given capture file for a specific BSSID
+function identities_check() {
+
+	debug_print
+
+	declare -ga identities_array
+	readarray -t identities_array < <(tshark -r "${1}" -Y "(eap && wlan.ra == ${2}) && (eap.identity)" -T fields -e eap.identity 2> /dev/null | sort -u)
+
+	echo
+	if [ "${#identities_array[@]}" -eq 0 ]; then
+		language_strings "${language}" 745 "red"
+	else
+		language_strings "${language}" 746 "yellow"
+		echo
+		for identity in "${identities_array[@]}"; do
+			echo "${identity}"
+		done
+	fi
+	echo
 }
 
 #Validate if selected network has the needed type of encryption
@@ -5718,6 +5816,7 @@ function initialize_menu_options_dependencies() {
 	wep_attack_allinone_dependencies=("${optional_tools_names[2]}" "${optional_tools_names[18]}")
 	wep_attack_besside_dependencies=("${optional_tools_names[27]}")
 	enterprise_attack_dependencies=("${optional_tools_names[19]}" "${optional_tools_names[20]}" "${optional_tools_names[22]}")
+	enterprise_identities_dependencies=("${optional_tools_names[25]}")
 	asleap_attacks_dependencies=("${optional_tools_names[20]}")
 	john_attacks_dependencies=("${optional_tools_names[21]}")
 	johncrunch_attacks_dependencies=("${optional_tools_names[21]}" "${optional_tools_names[1]}")
@@ -5963,6 +6062,7 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}bl.txt" > /dev/null 2>&1
 		rm -rf "${tmpdir}target.txt" > /dev/null 2>&1
 		rm -rf "${tmpdir}handshake"* > /dev/null 2>&1
+		rm -rf "${tmpdir}identities"* > /dev/null 2>&1
 		rm -rf "${tmpdir}decloak"* > /dev/null 2>&1
 		rm -rf "${tmpdir}pmkid"* > /dev/null 2>&1
 		rm -rf "${tmpdir}nws"* > /dev/null 2>&1
@@ -6565,6 +6665,8 @@ function enterprise_attacks_menu() {
 	language_strings "${language}" 260 enterprise_attack_dependencies[@]
 	language_strings "${language}" 248 "separator"
 	language_strings "${language}" 307 enterprise_attack_dependencies[@]
+	language_strings "${language}" 740 "separator"
+	language_strings "${language}" 741 enterprise_identities_dependencies[@]
 	print_hint ${current_menu}
 
 	read -rp "> " enterprise_option
@@ -6585,9 +6687,13 @@ function enterprise_attacks_menu() {
 			explore_for_targets_option "WPA" "enterprise"
 		;;
 		5)
-			custom_certificates_questions
-			create_certificates_config_files
-			create_custom_certificates
+			if contains_element "${enterprise_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				custom_certificates_questions
+				create_certificates_config_files
+				create_custom_certificates
+			fi
 		;;
 		6)
 			if contains_element "${enterprise_option}" "${forbidden_options[@]}"; then
@@ -6643,6 +6749,13 @@ function enterprise_attacks_menu() {
 					language_strings "${language}" 281 "red"
 					language_strings "${language}" 115 "read"
 				fi
+			fi
+		;;
+		8)
+			if contains_element "${enterprise_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				enterprise_identities
 			fi
 		;;
 		*)
@@ -17233,6 +17346,7 @@ function remove_warnings() {
 	echo "${wep_attack_allinone_dependencies[@]}" > /dev/null 2>&1
 	echo "${wep_attack_besside_dependencies[@]}" > /dev/null 2>&1
 	echo "${enterprise_attack_dependencies[@]}" > /dev/null 2>&1
+	echo "${enterprise_identities_dependencies[@]}" > /dev/null 2>&1
 	echo "${asleap_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${john_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${johncrunch_attacks_dependencies[@]}" > /dev/null 2>&1
@@ -17412,6 +17526,7 @@ function main() {
 	fi
 
 	remap_colors
+	hookable_for_languages
 
 	clear
 	current_menu="pre_main_menu"

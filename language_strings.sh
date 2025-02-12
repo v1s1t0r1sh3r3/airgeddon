@@ -14,7 +14,7 @@ function set_language_strings_version() {
 }
 
 #Set different language text strings
-#shellcheck disable=SC2154,SC2034
+#shellcheck disable=SC2154,SC2034,SC1111
 function initialize_language_strings() {
 
 	debug_print
@@ -11420,6 +11420,104 @@ function initialize_language_strings() {
 	arr["TURKISH",739]="Profesyonel kablosuz ağ değerlendirmelerinin nasıl yapılacağını öğrenmek istiyorsanız, airgeddon'un baş yazarı CWP (Certified WifiChallenge Professional) sertifikasını öneriyor: \${normal_color}https://academy.wifichallenge.com/courses/certified-wifichallenge-professional-cwp?ref=c02137"
 	arr["ARABIC",739]="\${normal_color}https://academy.wifichallenge.com/courses/certified-wifichallenge-professional-cwp?ref=c02137 \${pink_color}:(Certified WifiChallenge Professional) CWP يرشح بشهادةال airgeddon اذا كنت تريد أن تتعلم كيفية إجراء تقييمات احترافية للشبكات اللاسلكية، فإن المؤلف الرئيسي لـ\${normal_color}"
 	arr["CHINESE",739]="如果你想学习如何进行专业的无线网络评估，airgeddon 的主要作者推荐 CWP（Certified WifiChallenge Professional）认证：\${normal_color}https://academy.wifichallenge.com/courses/certified-wifichallenge-professional-cwp?ref=c02137"
+
+	arr["ENGLISH",740]="information gathering"
+	arr["SPANISH",740]="recopilación de información"
+	arr["FRENCH",740]="\${pending_of_translation} collecte d'informations"
+	arr["CATALAN",740]="\${pending_of_translation} recollida d'informació"
+	arr["PORTUGUESE",740]="\${pending_of_translation} coleta de informações"
+	arr["RUSSIAN",740]="\${pending_of_translation} Сбор информации"
+	arr["GREEK",740]="\${pending_of_translation} συλλογή πληροφοριών"
+	arr["ITALIAN",740]="\${pending_of_translation} raccolta di informazioni"
+	arr["POLISH",740]="\${pending_of_translation} gromadzenie informacji"
+	arr["GERMAN",740]="\${pending_of_translation} Informationssammlung"
+	arr["TURKISH",740]="\${pending_of_translation} bilgi toplama"
+	arr["ARABIC",740]="\${pending_of_translation} جمع المعلومات"
+	arr["CHINESE",740]="\${pending_of_translation} 信息收集"
+
+	arr["ENGLISH",741]="8.  Collect enterprise identities"
+	arr["SPANISH",741]="8.  Recopilar identidades enterprise"
+	arr["FRENCH",741]="\${pending_of_translation} 8.  Recueillir les identités d'entreprise"
+	arr["CATALAN",741]="\${pending_of_translation} 8.  Recopileu identitats enterprise"
+	arr["PORTUGUESE",741]="\${pending_of_translation} 8.  Colete identidades enterprise"
+	arr["RUSSIAN",741]="\${pending_of_translation} 8.  Собирать enterprise идентичности"
+	arr["GREEK",741]="\${pending_of_translation} 8.  Συλλέξτε ταυτότητες enterprise"
+	arr["ITALIAN",741]="\${pending_of_translation} 8.  Raccogli identità enterprise"
+	arr["POLISH",741]="\${pending_of_translation} 8.  Zbieraj tożsamości enterprise"
+	arr["GERMAN",741]="\${pending_of_translation} 8.  Sammeln Sie Enterprise -Identitäten"
+	arr["TURKISH",741]="\${pending_of_translation} 8.  Enterprise kimlikleri toplayın"
+	arr["ARABIC",741]="\${pending_of_translation} 8.  جمع هويات enterprise"
+	arr["CHINESE",741]="\${pending_of_translation} 8.  收集企业身份"
+
+	arr["ENGLISH",742]="There are several types of identities in enterprise networks. Standard identities, such as the simple username (\${normal_color}\"user\"\${pink_color}), the User Principal Name (UPN) that combines the user and domain (\${normal_color}\"user@domain.com\"\${pink_color}), the SAMAccountName in domain and user format (\${normal_color}\"domain\user\"\${pink_color}), and the email address (\${normal_color}\"email@domain.com\"\${pink_color}). In addition, in certain configurations personalized attributes such as the number of employees or other attributes on platforms such as Azure can be used in the case of integrations with the Microsoft cloud. There are also anonymous identities where sometimes the domain name can be extracted (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} or \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["SPANISH",742]="Existen varios tipos de identidades en las redes enterprise. Identidades estándar, como el nombre de usuario simple (\${normal_color}\"usuario\"\${pink_color}), el User Principal Name (UPN) que combina el usuario y dominio (\${normal_color}\"usuario@dominio.com\"\${pink_color}), el SAMAccountName en formato de dominio y usuario (\${normal_color}\"dominio\usuario\"\${pink_color}), y la dirección de correo electrónico (\${normal_color}\"correo@dominio.com\"\${pink_color}). Además, en ciertas configuraciones pueden usarse atributos personalizados como el número de empleado u otros atributos en plataformas como Azure en el caso de integraciones con la nube de Microsoft. También hay identidades anónimas donde a veces se puede extraer el nombre de dominio (\${normal_color}\"dominio\\\\\\\\\\\\\anonymous\"\${pink_color} o \${normal_color}\"anonymous@dominio.local\"\${pink_color})"
+	arr["FRENCH",742]="\${pending_of_translation} Il existe plusieurs types d'identités dans les réseaux d'entreprise. Identités standard, telles que le nom d'utilisateur simple (\${normal_color}\"user\"\${pink_color}), le User Principal Name (UPN) qui combine l'utilisateur et le domaine (\${normal_color}\"user@domain.com\"\${pink_color}), le SAMAccountName dans le domaine et le format utilisateur (\${normal_color}\"domain\user\"\${pink_color}) et l'adresse e-mail (\${normal_color}\"email@domain.com\"\${pink_color}). De plus, dans certaines configurations, des attributs personnalisés tels que le nombre d'employés ou d'autres attributs sur des plates-formes telles que Azure peuvent être utilisées dans le cas des intégrations avec le cloud Microsoft. Il existe également des identités anonymes où parfois le nom de domaine peut être extrait (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} ou \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["CATALAN",742]="\${pending_of_translation} Hi ha diversos tipus d’identitats a les xarxes empresarials. Identitats estàndard, com ara el nom d'usuari senzill (\${normal_color}\"user\"\${pink_color}), el User Principal Name (UPN) que combina l'usuari i el domini (\${normal_color}\"user@domain.com\"\${pink_color}), el SAMAccountName en domini i format d'usuari (\${normal_color}\"domain\user\"\${pink_color}) , i l'adreça de correu electrònic (\${normal_color}\"email@domain.com\"\${pink_color}). A més, en determinades configuracions atributs personalitzats com el nombre d’empleats o altres atributs en plataformes com Azure es poden utilitzar en el cas d’integracions amb el núvol de Microsoft. També hi ha identitats anònimes on de vegades es pot extreure el nom de domini (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} o \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["PORTUGUESE",742]="\${pending_of_translation} Existem vários tipos de identidades nas redes corporativas. Identidades padrão, como o nome de usuário simples (\${normal_color}\"user\"\${pink_color}), o User Principal Name (UPN) que combina o usuário e o domínio (\${normal_color}\"user@domain.com\"\${pink_color}), o SAMAccountName no domínio e formato do usuário (\${normal_color}\"domain\user\"\${pink_color}) e o endereço de e -mail (\${normal_color}\"email@domain.com\"\${pink_color}). Além disso, em certas configurações, atributos personalizados, como o número de funcionários ou outros atributos em plataformas como o Azure, podem ser usados no caso de integrações com a Microsoft Cloud. Há também identidades anônimas em que às vezes o nome de domínio pode ser extraído (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} ou \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["RUSSIAN",742]="\${pending_of_translation} Есть несколько типов идентификаторов в корпоративных сетях. Стандартные идентификации, такие как простое имя пользователя (\${normal_color}\"user\"\${pink_color}), User Principal Name (UPN), которое объединяет пользователь и домен (\${normal_color}\"user@domain.com\"\${pink_color}), SAMAccountName в домене и формате пользователя (\${normal_color}\"domain\user\"\${pink_color}) и адрес электронной почты (\${normal_color}\"email@domain.com\"\${pink_color}). Кроме того, в определенных конфигурациях персонализированные атрибуты, такие как количество сотрудников или другие атрибуты на платформах, таких как Azure, могут использоваться в случае интеграции с Microsoft Cloud. Существуют также анонимные идентичности, где иногда можно извлечь доменное имя (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} или \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["GREEK",742]="\${pending_of_translation} Υπάρχουν διάφοροι τύποι ταυτότητας σε δίκτυα επιχειρήσεων. Οι τυποποιημένες ταυτότητες, όπως το απλό όνομα χρήστη (\${normal_color}\"user\"\${pink_color}), το User Principal Name (UPN) που συνδυάζει τον χρήστη και τον τομέα (\${normal_color}\"user@domain.com\"\${pink_color}), το SAMAccountName σε μορφή τομέα και χρήστη (\${normal_color}\"domain\user\"\${pink_color}) , και τη διεύθυνση ηλεκτρονικού ταχυδρομείου (\${normal_color}\"email@domain.com\"\${pink_color}). Επιπλέον, σε ορισμένες διαμορφώσεις εξατομικευμένα χαρακτηριστικά όπως ο αριθμός των εργαζομένων ή άλλων χαρακτηριστικών σε πλατφόρμες όπως το Azure μπορεί να χρησιμοποιηθεί σε περίπτωση ενσωμάτωσης με το Microsoft Cloud. Υπάρχουν επίσης ανώνυμες ταυτότητες όπου μερικές φορές το όνομα τομέα μπορεί να εξαχθεί (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} ή \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["ITALIAN",742]="\${pending_of_translation} Esistono diversi tipi di identità nelle reti aziendali. Identità standard, come il nome utente semplice (\${normal_color}\"user\"\${pink_color}), il User Principal Name (UPN) che combina l'utente e il dominio (\${normal_color}\"user@domain.com\"\${pink_color}), il SAMAccountName in domain e formato utente (\${normal_color}\"domain\user\"\${pink_color}) e l'indirizzo e -mail (\${normal_color}\"email@domain.com\"\${pink_color}). Inoltre, in alcune configurazioni attributi personalizzati come il numero di dipendenti o altri attributi su piattaforme come Azure possono essere utilizzati in caso di integrazioni con Microsoft Cloud. Esistono anche identità anonime in cui a volte può essere estratto il nome di dominio (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} o \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["POLISH",742]="\${pending_of_translation} Istnieje kilka rodzajów tożsamości w sieciach korporacyjnych. Standardowe tożsamości, takie jak prosta nazwa użytkownika (\${normal_color}\"user\"\${pink_color}), User Principal Name (UPN), która łączy użytkownika i domenę (\${normal_color}\"user@domain.com\"\${pink_color}), SAMAccountName w domenach i formatach użytkownika (\${normal_color}\"domain\user\"\${pink_color}) oraz adres e -mail (\${normal_color}\"email@domain.com\"\${pink_color}). Ponadto w niektórych konfiguracjach spersonalizowane atrybuty, takie jak liczba pracowników lub inne atrybuty na platformach takich jak Azure w przypadku integracji z chmurą Microsoft. Istnieją również anonimowe tożsamości, w których czasami można wyodrębnić nazwę domeny (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} lub \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["GERMAN",742]="\${pending_of_translation} In Unternehmensnetzwerken gibt es verschiedene Arten von Identitäten. Standardidentitäten wie der einfache Benutzername (\${normal_color}\"user\"\${pink_color}), der User Principal Name (UPN), der den Benutzer und die Domäne (\${normal_color}\"user@domain.com\"\${pink_color}), den SAMAccountName in Domain- und Benutzerformat (\${normal_color}\"domain\user\"\${pink_color}), kombiniert. und die E -Mail -Adresse (\${normal_color}\"email@domain.com\"\${pink_color}). Darüber hinaus können in bestimmten Konfigurationen personalisierte Attribute wie die Anzahl der Mitarbeiter oder andere Attribute auf Plattformen wie Azure bei Integrationen mit der Microsoft Cloud verwendet werden. Es gibt auch anonyme Identitäten, bei denen manchmal der Domänenname extrahiert werden kann (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} oder \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["TURKISH",742]="\${pending_of_translation} Kurumsal ağlarda çeşitli kimlik türleri vardır. Basit kullanıcı adı (\${normal_color}\"user\"\${pink_color}), kullanıcı ve etki alanını (\${normal_color}\"user@domain.com\"\${pink_color}) birleştiren User Principal Name (UPN), alan adında ve kullanıcı SAMAccountName (\${normal_color}\"domain\user\"\${pink_color}) gibi standart kimlikler ve e -posta adresi (\${normal_color}\"email@domain.com\"\${pink_color}). Ayrıca, bazı yapılandırmalarda, Azure gibi platformlardaki çalışan sayısı veya diğer özellikler gibi kişiselleştirilmiş özellikler, Microsoft Cloud ile entegrasyonlarda kullanılabilir. Bazen alan adının çıkarılabileceği anonim kimlikler de vardır (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} veya \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["ARABIC",742]="\${pending_of_translation} هناك عدة أنواع من الهويات في شبكات المؤسسات. الهويات القياسية ، مثل اسم المستخدم البسيط (\${normal_color}\"user\"\${pink_color}) ، User Principal Name (UPN) الذي يجمع بين المستخدم والمجال (\${normal_color}\"user@domain.com\"\${pink_color}) ، SAMAccountName في تنسيق المجال وتنسيق المستخدم (\${normal_color}\"domain\user\"\${pink_color}) وعنوان البريد الإلكتروني (\${normal_color}\"email@domain.com\"\${pink_color}). بالإضافة إلى ذلك ، في تكوينات معينة ، يمكن استخدام سمات شخصية مثل عدد الموظفين أو السمات الأخرى على منصات مثل Azure في حالة التكامل مع Microsoft Cloud. هناك أيضًا هويات مجهولة حيث يمكن استخراج اسم المجال أحيانًا (\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} أو \${normal_color}\"anonymous@domain.local\"\${pink_color})"
+	arr["CHINESE",742]="\${pending_of_translation} 企业网络中有几种类型的身份。标准身份，例如简单的用户名（\${normal_color}\"user\"\${pink_color}），该名称 User Principal Name (UPN) 结合了用户和域（\${normal_color}\"user@domain.com\"\${pink_color}），SAMAccountName in域和用户格式（\${normal_color}\"domain\user\"\${pink_color}） ，以及电子邮件地址（\${normal_color}\"email@domain.com\"\${pink_color}）。此外，在某些配置中，在与Microsoft Cloud集成的情况下，可以使用诸如Azure等平台上的员工数量或其他属性的属性。还有一些匿名身份，有时可以提取域名（\${normal_color}\"domain\\\\\\\\\\\\\anonymous\"\${pink_color} 或 \${normal_color}\"anonymous@domain.local\"\${pink_color}）"
+
+	arr["ENGLISH",743]="The enterprise identities capture process is about to begin. Do not close the capture window. Wait for it to close by itself due to the timeout you set"
+	arr["SPANISH",743]="El proceso de captura de identidades enterprise está a punto de comenzar. No cierres la ventana de captura. Espera a que se cierre sola debido al tiempo de espera que estableciste"
+	arr["FRENCH",743]="\${pending_of_translation} Le processus de capture des identités d'entreprise est sur le point de commencer. Ne fermez pas la fenêtre de capture. Attendez qu'elle se ferme d'elle-même en raison du délai d'expiration que vous avez défini"
+	arr["CATALAN",743]="\${pending_of_translation} El procés de captura d'identitats entreprise està a punt de començar. No tanqueu la finestra de captura. Espereu que es tanqui per si mateix a causa del temps d'espera que heu establert"
+	arr["PORTUGUESE",743]="\${pending_of_translation} O processo de captura de identidades entreprise está prestes a começar. Não feche a janela de captura. Aguarde até que ela feche sozinha devido ao tempo limite definido"
+	arr["RUSSIAN",743]="\${pending_of_translation} Процесс захвата entreprise идентификаторов вот-вот начнется. Не закрывайте окно захвата. Подождите, пока оно само закроется из-за установленного вами тайм-аута"
+	arr["GREEK",743]="\${pending_of_translation} Η διαδικασία καταγραφής entreprise ταυτοτήτων πρόκειται να ξεκινήσει. Μην κλείνετε το παράθυρο λήψης. Περιμένετε να κλείσει μόνο του λόγω του χρονικού ορίου που έχετε ορίσει"
+	arr["ITALIAN",743]="\${pending_of_translation} Il processo di acquisizione delle identità entreprise sta per iniziare. Non chiudere la finestra di acquisizione. Attendi che si chiuda da sola a causa del timeout impostato"
+	arr["POLISH",743]="\${pending_of_translation} Proces przechwytywania tożsamości entreprise ma się rozpocząć. Nie zamykaj okna przechwytywania. Poczekaj, aż zamknie się samo z powodu ustawionego limitu czasu"
+	arr["GERMAN",743]="\${pending_of_translation} Der Erfassungsprozess für Identitäten enterprise wird gleich beginnen. Schließen Sie das Erfassungsfenster nicht. Warten Sie, bis es sich aufgrund des von Ihnen festgelegten Timeouts von selbst schließt"
+	arr["TURKISH",743]="\${pending_of_translation} Enterprise kimlik yakalama işlemi başlamak üzere. Yakalama penceresini kapatmayın. Ayarladığınız zaman aşımı nedeniyle kendiliğinden kapanmasını bekleyin"
+	arr["ARABIC",743]="\${pending_of_translation} عملية التقاط هويات المؤسسة على وشك البدء. لا تغلق نافذة الالتقاط. انتظر حتى تغلق تلقائيًا بسبب مهلة الانتظار التي حددتها"
+	arr["CHINESE",743]="\${pending_of_translation} 企业身份捕获过程即将开始。请勿关闭捕获窗口。由于您设置的超时，请等待它自行关闭"
+
+	arr["ENGLISH",744]="Searching for enterprise identities in the capture file. Please be patient..."
+	arr["SPANISH",744]="Buscando identidades enterprise en el fichero de captura. Por favor, tenga paciencia..."
+	arr["FRENCH",744]="\${pending_of_translation} Recherche d'identités d'entreprise dans le fichier de capture. S'il vous plaît soyez patient..."
+	arr["CATALAN",744]="\${pending_of_translation} Buscant identitats enterprise al fitxer de captura. Si us plau, tingui paciència..."
+	arr["PORTUGUESE",744]="\${pending_of_translation} Procurando identidades corporativas no arquivo de captura. Por favor, seja paciente..."
+	arr["RUSSIAN",744]="\${pending_of_translation} Поиск корпоративных идентификаторов в файле захвата. Пожалуйста, будьте терпеливы..."
+	arr["GREEK",744]="\${pending_of_translation} Αναζήτηση εταιρικών ταυτοτήτων στο αρχείο καταγραφής. Παρακαλώ υπομονή..."
+	arr["ITALIAN",744]="\${pending_of_translation} Ricerca di identità aziendali nel file di acquisizione. Per favore, sii paziente..."
+	arr["POLISH",744]="\${pending_of_translation} Wyszukiwanie tożsamości przedsiębiorstwa w pliku przechwytywania. Proszę o cierpliwość..."
+	arr["GERMAN",744]="\${pending_of_translation} Suche nach Unternehmensidentitäten in der Erfassungsdatei. Bitte haben Sie etwas Geduld..."
+	arr["TURKISH",744]="\${pending_of_translation} Yakalama dosyasında kurumsal kimlikler aranıyor. Lütfen sabırlı olun..."
+	arr["ARABIC",744]="\${pending_of_translation} البحث عن هويات المؤسسة في ملف الالتقاط. من فضلك كن صبورا..."
+	arr["CHINESE",744]="\${pending_of_translation} 在捕获文件中搜索企业身份。请耐心等待..."
+
+	arr["ENGLISH",745]="No enterprise identities found. Either there are no clients connected, or you need to increase the timeout to be able to capture them"
+	arr["SPANISH",745]="No se ha encontrado ninguna identidad enterprise. O bien no hay clientes conectados, o bien has de aumentar el timeout para poder capturarlas"
+	arr["FRENCH",745]="\${pending_of_translation} Aucune identité d'entreprise trouvée. Soit il n'y a pas de clients connectés, soit vous devez augmenter le délai d'attente pour pouvoir les capturer"
+	arr["CATALAN",745]="\${pending_of_translation} No enterprise identities found. Either there are no clients connected, or you need to increase the timeout to be able to capture them"
+	arr["PORTUGUESE",745]="\${pending_of_translation} Nenhuma identidade enterprise encontrada. Ou não há clientes conectados ou você precisa aumentar o tempo limite para poder capturá-los"
+	arr["RUSSIAN",745]="\${pending_of_translation} Идентификаторы enterprise не найдены. Либо нет подключенных клиентов, либо вам нужно увеличить тайм-аут, чтобы иметь возможность их перехватить"
+	arr["GREEK",745]="\${pending_of_translation} Δεν βρέθηκαν enterprise ταυτότητες. Είτε δεν υπάρχουν συνδεδεμένοι πελάτες είτε πρέπει να αυξήσετε το χρονικό όριο για να μπορέσετε να τους καταγράψετε"
+	arr["ITALIAN",745]="\${pending_of_translation} Nessuna identità enterprise trovata. O non ci sono client connessi oppure è necessario aumentare il timeout per poterli acquisire"
+	arr["POLISH",745]="\${pending_of_translation} Nie znaleziono tożsamości enterprise. Albo nie ma podłączonych klientów, albo trzeba zwiększyć limit czasu, aby móc ich przechwycić"
+	arr["GERMAN",745]="\${pending_of_translation} Keine Unternehmensidentitäten gefunden. Entweder sind keine Clients verbunden oder Sie müssen das Timeout erhöhen, um sie erfassen zu können"
+	arr["TURKISH",745]="\${pending_of_translation} Hiçbir enterprise kimlik bulunamadı. Ya bağlı istemci yok ya da onları yakalayabilmek için zaman aşımını artırmanız gerekiyor"
+	arr["ARABIC",745]="\${pending_of_translation} لم يتم العثور على هويات المؤسسة. إما أنه لا يوجد عملاء متصلون، أو أنك بحاجة إلى زيادة مهلة الانتظار لتتمكن من التقاطهم"
+	arr["CHINESE",745]="\${pending_of_translation} 未找到企业身份。要么没有客户端连接，要么你需要增加超时时间才能捕获它们"
+
+	arr["ENGLISH",746]="Congratulations!! enterprise identities have been found. Make a note of them before pressing the [Enter] key"
+	arr["SPANISH",746]="Enhourabuena!! se han encontrado identidades enterprise. Anótalas antes de pulsar la tecla [Enter]"
+	arr["FRENCH",746]="\${pending_of_translation} Félicitations!! Des identités d’entreprise ont été trouvées. Notez-les avant d'appuyer sur la touche [Enter]"
+	arr["CATALAN",746]="\${pending_of_translation} Enhourabona!! s'han trobat identitats enterprise. Anota-les abans de prémer la tecla [Enter]"
+	arr["PORTUGUESE",746]="\${pending_of_translation} Parabéns!! identidades enterprise foram encontradas. Anote-os antes de pressionar a tecla [Enter]"
+	arr["RUSSIAN",746]="\${pending_of_translation} Поздравляю!! найдены идентификационные данные enterprise. Запишите их, прежде чем нажать клавишу [Enter]"
+	arr["GREEK",746]="\${pending_of_translation} Συγχαρητήρια!! ταυτότητες enterprise έχουν βρεθεί. Σημειώστε τα πριν πατήσετε το πλήκτρο [Enter]"
+	arr["ITALIAN",746]="\${pending_of_translation} Congratulazioni!! sono state trovate identità enterprise. Annotarli prima di premere il tasto [Enter]"
+	arr["POLISH",746]="\${pending_of_translation} Gratulacje!! znaleziono tożsamości enterprise. Zapisz je przed naciśnięciem klawisza [Enter]"
+	arr["GERMAN",746]="\${pending_of_translation} Glückwunsch!! es wurden Unternehmensidentitäten gefunden. Notieren Sie sie, bevor Sie die [Enter]-Taste drücken"
+	arr["TURKISH",746]="\${pending_of_translation} Tebrikler!! enterprise kimlikleri bulundu. [Enter] tuşuna basmadan önce bunları yazın"
+	arr["ARABIC",746]="\${pending_of_translation} مبروك!! تم العثور على هويات المؤسسة. اكتبها قبل الضغط على مفتاح [Enter]"
+	arr["CHINESE",746]="\${pending_of_translation} 恭喜！！企业身份已经找到。在按下 [Enter] 键之前记下来"
 }
 
 #Expand escaped variables in language strings with their current values
@@ -11497,4 +11595,12 @@ function language_strings() {
 			fi
 		;;
 	esac
+}
+
+#Function created empty intentionally to be hooked from plugins to modify language strings easily
+function hookable_for_languages() {
+
+	debug_print
+
+	:
 }
