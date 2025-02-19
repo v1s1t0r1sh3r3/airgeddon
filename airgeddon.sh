@@ -2988,6 +2988,10 @@ function ask_bssid() {
 			ask_yesno 439 "no"
 			if [ "${yesno}" = "n" ]; then
 				return 1
+			else
+				enterprise_network_selected=0
+				personal_network_selected=1
+				set_personal_enterprise_text
 			fi
 		fi
 
@@ -3001,6 +3005,15 @@ function ask_bssid() {
 			ask_yesno 439 "no"
 			if [ "${yesno}" = "n" ]; then
 				return 1
+			else
+				if [ -n "${enterprise_mode}" ]; then
+					enterprise_network_selected=1
+					personal_network_selected=0
+				else
+					enterprise_network_selected=0
+					personal_network_selected=1
+				fi
+				set_personal_enterprise_text
 			fi
 		fi
 
@@ -3010,6 +3023,7 @@ function ask_bssid() {
 		echo
 		language_strings "${language}" 28 "blue"
 	fi
+
 	return 0
 }
 
@@ -3621,6 +3635,10 @@ function enterprise_identities() {
 		return 1
 	fi
 
+	if ! validate_network_type "enterprise"; then
+		return 1
+	fi
+
 	launch_identity_capture
 }
 
@@ -3668,6 +3686,33 @@ function identities_check() {
 		done
 	fi
 	echo
+}
+
+#Validate if selected network is the needed type (enterprise or personal)
+function validate_network_type() {
+
+	debug_print
+
+	case ${1} in
+		"personal")
+			if [ "${personal_network_selected}" -eq 0 ]; then
+				echo
+				language_strings "${language}" 747 "red"
+				language_strings "${language}" 115 "read"
+				return 1
+			fi
+		;;
+		"enterprise")
+			if [ "${enterprise_network_selected}" -eq 0 ]; then
+				echo
+				language_strings "${language}" 747 "red"
+				language_strings "${language}" 115 "read"
+				return 1
+			fi
+		;;
+	esac
+
+	return 0
 }
 
 #Validate if selected network has the needed type of encryption
@@ -5351,6 +5396,10 @@ function wep_attack_option() {
 		return 1
 	fi
 
+	if ! validate_network_type "personal"; then
+		return 1
+	fi
+
 	echo
 	language_strings "${language}" 425 "yellow"
 	language_strings "${language}" 115 "read"
@@ -5388,6 +5437,12 @@ function wps_attacks_parameters() {
 
 	if ! ask_channel "wps"; then
 		return 1
+	fi
+
+	if [ "${1}" != "no_monitor_check" ]; then
+		if ! validate_network_type "personal"; then
+			return 1
+		fi
 	fi
 
 	if [ "${1}" != "no_monitor_check" ]; then
@@ -5790,6 +5845,23 @@ function print_enterprise_decrypt_vars() {
 
 	if [ -n "${RULES}" ]; then
 		language_strings "${language}" 243 "blue"
+	fi
+}
+
+#Set the correct text to show if a selected network is enterprise or personal
+function set_personal_enterprise_text() {
+
+	debug_print
+
+	if [ "${enterprise_network_selected}" -eq 1 ]; then
+		selected_network_type_text="enterprise"
+		unselected_network_type_text="personal"
+	elif [ "${personal_network_selected}" -eq 1 ]; then
+		selected_network_type_text="personal"
+		unselected_network_type_text="enterprise"
+	else
+		selected_network_type_text=""
+		unselected_network_type_text=""
 	fi
 }
 
@@ -6831,7 +6903,6 @@ function evil_twin_attacks_menu() {
 						ports_needed["tcp"]=""
 						ports_needed["udp"]="${dhcp_port}"
 						if check_busy_ports; then
-
 							et_mode="et_onlyap"
 							et_dos_menu
 						fi
@@ -6864,7 +6935,6 @@ function evil_twin_attacks_menu() {
 						ports_needed["tcp"]=""
 						ports_needed["udp"]="${dhcp_port}"
 						if check_busy_ports; then
-
 							et_mode="et_sniffing"
 							et_dos_menu
 						fi
@@ -6903,7 +6973,6 @@ function evil_twin_attacks_menu() {
 							ports_needed["tcp"]="${bettercap_proxy_port}"
 							ports_needed["udp"]="${dhcp_port} ${bettercap_dns_port}"
 							if check_busy_ports; then
-
 								et_mode="et_sniffing_sslstrip2"
 								et_dos_menu
 							fi
@@ -6940,7 +7009,6 @@ function evil_twin_attacks_menu() {
 						ports_needed["tcp"]="${dns_port} ${www_port}"
 						ports_needed["udp"]="${dns_port} ${dhcp_port}"
 						if check_busy_ports; then
-
 							et_mode="et_captive_portal"
 							echo
 							language_strings "${language}" 316 "yellow"
@@ -8231,6 +8299,9 @@ function select_wpa_bssid_target_from_captured_file() {
 
 			if [ "${yesno}" = "y" ]; then
 				bssid=${targetbssid}
+				enterprise_network_selected=0
+				personal_network_selected=1
+				set_personal_enterprise_text
 				return 0
 			fi
 			break
@@ -8273,6 +8344,9 @@ function select_wpa_bssid_target_from_captured_file() {
 	fi
 
 	bssid=${bssids_detected[${target_network_on_file}]}
+	enterprise_network_selected=0
+	personal_network_selected=1
+	set_personal_enterprise_text
 
 	if [ "${bssid_autoselected}" -eq 1 ]; then
 		language_strings "${language}" 217 "blue"
@@ -12967,6 +13041,10 @@ function capture_pmkid_handshake() {
 		return 1
 	fi
 
+	if ! validate_network_type "personal"; then
+		return 1
+	fi
+
 	echo
 	language_strings "${language}" 126 "yellow"
 	language_strings "${language}" 115 "read"
@@ -13853,40 +13931,40 @@ function explore_for_targets_option() {
 				case ${cypher_filter} in
 					"WEP")
 						#Only WEP
-						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc}" >> "${tmpdir}nws.txt"
+						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 					;;
 					"WPA1")
 						#Only WPA including WPA/WPA2 in Mixed mode
 						#Not used yet in airgeddon
-						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc}" >> "${tmpdir}nws.txt"
+						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 					;;
 					"WPA2")
 						#Only WPA2 including WPA/WPA2 and WPA2/WPA3 in Mixed mode
 						#Not used yet in airgeddon
-						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc}" >> "${tmpdir}nws.txt"
+						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 					;;
 					"WPA3")
 						#Only WPA3 including WPA2/WPA3 in Mixed mode
 						#Not used yet in airgeddon
-						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc}" >> "${tmpdir}nws.txt"
+						echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 					;;
 					"WPA")
 						#All, WPA, WPA2 and WPA3 including all Mixed modes
 						if [[ -n "${2}" ]] && [[ "${2}" = "enterprise" ]]; then
 							if [[ "${exp_auth}" =~ "MGT" ]]; then
 								enterprise_network_counter=$((enterprise_network_counter + 1))
-								echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc}" >> "${tmpdir}nws.txt"
+								echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 							fi
 						else
 							[[ ${exp_auth} =~ ^[[:blank:]](SAE)$ ]] && pure_wpa3="${BASH_REMATCH[1]}"
 							if [ "${pure_wpa3}" != "SAE" ]; then
-								echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc}" >> "${tmpdir}nws.txt"
+								echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 							fi
 						fi
 					;;
 				esac
 			else
-				echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc}" >> "${tmpdir}nws.txt"
+				echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 			fi
 		fi
 	done < "${tmpdir}nws.csv"
@@ -14100,6 +14178,9 @@ function explore_for_wps_targets_option() {
 	wps_channel=${wps_channels[${selected_wps_target_network}]}
 	wps_bssid=${wps_macs[${selected_wps_target_network}]}
 	wps_locked=${wps_lockeds[${selected_wps_target_network}]}
+	enterprise_network_selected=0
+	personal_network_selected=1
+	set_personal_enterprise_text
 }
 
 #Create a menu to select target from the parsed data
@@ -14113,7 +14194,7 @@ function select_target() {
 	language_strings "${language}" 69 "green"
 	print_large_separator
 	local i=0
-	while IFS=, read -r exp_mac exp_channel exp_power exp_essid exp_enc; do
+	while IFS=, read -r exp_mac exp_channel exp_power exp_essid exp_enc exp_auth; do
 
 		i=$((i + 1))
 
@@ -14170,6 +14251,7 @@ function select_target() {
 		channels["${i}"]=${exp_channel}
 		macs["${i}"]=${exp_mac}
 		encs["${i}"]=${exp_enc}
+		types["${i}"]=${exp_auth}
 		echo -e "${airodump_color} ${sp1}${i})${client}  ${sp5}${exp_mac}  ${sp2}${exp_channel}    ${sp4}${exp_power}%   ${exp_enc}${sp6}   ${exp_essid}"
 	done < "${tmpdir}wnws.txt"
 
@@ -14198,6 +14280,16 @@ function select_target() {
 	channel=${channels[${selected_target_network}]}
 	bssid=${macs[${selected_target_network}]}
 	enc=${encs[${selected_target_network}]}
+
+	if [[ "${types[${selected_target_network}]}" =~ "MGT" ]]; then
+		enterprise_network_selected=1
+		personal_network_selected=0
+	else
+		enterprise_network_selected=0
+		personal_network_selected=1
+	fi
+
+	set_personal_enterprise_text
 }
 
 #Perform a test to determine if fcs parameter is needed on wash scanning
@@ -14441,6 +14533,18 @@ function et_prerequisites() {
 			fi
 		fi
 		ask_essid "noverify"
+	fi
+
+	if [ -n "${enterprise_mode}" ]; then
+		if ! validate_network_type "enterprise"; then
+			return_to_enterprise_main_menu=1
+			return
+		fi
+	else
+		if ! validate_network_type "personal"; then
+			return_to_et_main_menu=1
+			return
+		fi
 	fi
 
 	if [ -n "${enterprise_mode}" ]; then
@@ -16224,6 +16328,10 @@ function initialize_script_settings() {
 	right_arping=0
 	right_arping_command="arping"
 	capture_traps_in_progress=""
+	enterprise_network_selected=0
+	personal_network_selected=0
+	selected_network_type_text=""
+	unselected_network_type_text=""
 }
 
 #Detect graphics system
