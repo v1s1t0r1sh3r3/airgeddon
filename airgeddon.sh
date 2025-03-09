@@ -6149,7 +6149,7 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}${hostapd_wpe_log}" > /dev/null 2>&1
 		rm -rf "${scriptfolder}${hostapd_wpe_default_log}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
-		rm -rf "${tmpdir}${dnsmasq_file}" >/dev/null 2>&1
+		rm -rf "${tmpdir}${dnsmasq_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_et_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_enterprise_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}parsed_file" > /dev/null 2>&1
@@ -6628,7 +6628,7 @@ function is_last_airgeddon_instance() {
 	for item in "${AIRGEDDON_PIDS[@]}"; do
 		[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && agpid="${BASH_REMATCH[2]}"
 
-		if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" >/dev/null 2>&1; then
+		if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
 			return 1
 		fi
 	done
@@ -17069,7 +17069,7 @@ function apply_plugin_functions_rewriting() {
 			original_function=$(echo ${current_function} | sed "s/^${plugin}_\(override\)*\(prehook\)*\(posthook\)*_//")
 			action=$(echo ${current_function} | sed "s/^${plugin}_\(override\)*\(prehook\)*\(posthook\)*_.*$/\1\2\3/")
 
-			if ! declare -F ${original_function} &>/dev/null; then
+			if ! declare -F ${original_function} &> /dev/null; then
 				echo
 				language_strings "${language}" 659 "red"
 				exit_code=1
@@ -17427,6 +17427,7 @@ function detect_rtl_language() {
 			break
 		else
 			is_rtl_language=0
+			printf "\e[8l"
 		fi
 	done
 }
@@ -17487,7 +17488,7 @@ function check_pending_of_translation() {
 	if [[ "${1}" =~ ^${escaped_pending_of_translation}([[:space:]])(.*)$ ]]; then
 		text="${cyan_color}${pending_of_translation} ${2}${BASH_REMATCH[2]}"
 		return 1
-	elif [[ "${1}" =~ ^${escaped_hintvar}[[:space:]](\\033\[[0-9];[0-9]{1,2}m)?(${escaped_pending_of_translation})[[:space:]](.*) ]]; then
+	elif [[ "${1}" =~ ^${hintvar}[[:space:]](\\033\[[0-9];[0-9]{1,2}m)?(${escaped_pending_of_translation})[[:space:]](.*) ]]; then
 		text="${cyan_color}${pending_of_translation} ${brown_color}${hintvar} ${pink_color}${BASH_REMATCH[3]}"
 		return 1
 	elif [[ "${1}" =~ ^(\*+)[[:space:]]${escaped_pending_of_translation}[[:space:]]([^\*]+)(\*+)$ ]]; then
