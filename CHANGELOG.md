@@ -2,7 +2,7 @@
  - Added 6Ghz partial support (some scans, some attacks, capable adapter detection, etc.)
 
 ### 11.50
- - 
+ - Enterprise certificate analysis feature
 
 ### 11.41
  - Added a function to simplify hooking language strings from plugins

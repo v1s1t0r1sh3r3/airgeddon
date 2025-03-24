@@ -11443,7 +11443,7 @@ function initialize_language_strings() {
 	arr["GREEK",741]="8.  Συλλέξτε enterprise ταυτότητες"
 	arr["ITALIAN",741]="8.  Raccogliere identità enterprise"
 	arr["POLISH",741]="8.  Zbieranie tożsamości enterprise"
-	arr["GERMAN",741]="\${pending_of_translation} 8.  Sammeln Sie Enterprise -Identitäten"
+	arr["GERMAN",741]="\${pending_of_translation} 8.  Sammeln Sie Enterprise Identitäten"
 	arr["TURKISH",741]="8.  Enterprise kimlikleri toplayın"
 	arr["ARABIC",741]=" 8.  enterpriseجمع هويات شبكات ال"
 	arr["CHINESE",741]="8.  收集企业身份信息"
@@ -11531,6 +11531,20 @@ function initialize_language_strings() {
 	arr["TURKISH",747]="Seçilen ağın türü geçersizdir. Bu eylem \${selected_network_type_text} ağlarında gerçekleştirilemez. Yalnızca \${unselected_network_type_text} ağlarına izin verilir"
 	arr["ARABIC",747]="\${unselected_network_type_text} يُسمح به فقط على \${selected_network_type_text} نوع الشبكة المحددة غير صالح. لا يمكن تنفيذ هذا الإجراء على"
 	arr["CHINESE",747]="所选网络的类型无效。此操作无法在\${selected_network_type_text}网络上执行。它仅在\${unselected_network_type_text}网络上允许"
+
+	arr["ENGLISH",748]="9.  Analyze enterprise certificate"
+	arr["SPANISH",748]="9.  Analizar certificado enterprise"
+	arr["FRENCH",748]="\${pending_of_translation} 9.  Analyser le certificat d'entreprise"
+	arr["CATALAN",748]="\${pending_of_translation} 9.  Analitzeu el certificat entreprise"
+	arr["PORTUGUESE",748]="\${pending_of_translation} 9.  Analise o certificado entreprise"
+	arr["RUSSIAN",748]="\${pending_of_translation} 9.  Проанализируйте сертификат entreprise"
+	arr["GREEK",748]="\${pending_of_translation} 9.  Αναλύστε το πιστοποιητικό entreprise"
+	arr["ITALIAN",748]="\${pending_of_translation} 9.  Analizzare il certificato entreprise"
+	arr["POLISH",748]="\${pending_of_translation} 9.  Przeanalizuj certyfikat entreprise"
+	arr["GERMAN",748]="\${pending_of_translation} 9.  Analysieren Sie das enterprise Zertifikat"
+	arr["TURKISH",748]="\${pending_of_translation} 9.  Entreprise sertifikayı analiz et"
+	arr["ARABIC",748]="\${pending_of_translation} 9.  تحليل شهادة enterprise"
+	arr["CHINESE",748]="\${pending_of_translation} 9.  分析企业证书"
 }
 
 #Expand escaped variables in language strings with their current values

@@ -5889,6 +5889,7 @@ function initialize_menu_options_dependencies() {
 	wep_attack_besside_dependencies=("${optional_tools_names[27]}")
 	enterprise_attack_dependencies=("${optional_tools_names[19]}" "${optional_tools_names[20]}" "${optional_tools_names[22]}")
 	enterprise_identities_dependencies=("${optional_tools_names[25]}")
+	enterprise_certificate_analysis_dependencies=("${optional_tools_names[22]}" "${optional_tools_names[25]}")
 	asleap_attacks_dependencies=("${optional_tools_names[20]}")
 	john_attacks_dependencies=("${optional_tools_names[21]}")
 	johncrunch_attacks_dependencies=("${optional_tools_names[21]}" "${optional_tools_names[1]}")
@@ -6739,6 +6740,7 @@ function enterprise_attacks_menu() {
 	language_strings "${language}" 307 enterprise_attack_dependencies[@]
 	language_strings "${language}" 740 "separator"
 	language_strings "${language}" 741 enterprise_identities_dependencies[@]
+	language_strings "${language}" 748 "under_construction" #enterprise_certificate_analysis_dependencies[@]
 	print_hint ${current_menu}
 
 	read -rp "> " enterprise_option
@@ -6829,6 +6831,14 @@ function enterprise_attacks_menu() {
 			else
 				enterprise_identities
 			fi
+		;;
+		9)
+			under_construction_message
+			#if contains_element "${enterprise_option}" "${forbidden_options[@]}"; then
+			#	forbidden_menu_option
+			#else
+			#	enterprise_certificate_analysis
+			#fi
 		;;
 		*)
 			invalid_menu_option
@@ -17456,6 +17466,7 @@ function remove_warnings() {
 	echo "${wep_attack_besside_dependencies[@]}" > /dev/null 2>&1
 	echo "${enterprise_attack_dependencies[@]}" > /dev/null 2>&1
 	echo "${enterprise_identities_dependencies[@]}" > /dev/null 2>&1
+	echo "${enterprise_certificate_analysis_dependencies[@]}" > /dev/null 2>&1
 	echo "${asleap_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${john_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${johncrunch_attacks_dependencies[@]}" > /dev/null 2>&1
