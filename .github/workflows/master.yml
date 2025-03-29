@@ -1,4 +1,4 @@
-https://sourceforge.net/p/enigmail/bugs/1035/#d2fa#Workflow for docker autobuild in master branch
+[![.github/workflows/master.yml](https://github.com/DAKADI40/airgeddon/actions/workflows/master.yml/badge.svg)](https://github.com/DAKADI40/airgeddon/actions/workflows/master.yml)
 
 name: 'Docker CI master'
 
