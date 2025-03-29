@@ -1,4 +1,4 @@
-#Workflow for docker autobuild in master branch
+https://sourceforge.net/p/enigmail/bugs/1035/#d2fa#Workflow for docker autobuild in master branch
 
 name: 'Docker CI master'
 
