@@ -133,6 +133,7 @@ standardpmkidcap_filename="pmkid.cap"
 timeout_capture_handshake_decloak="20"
 timeout_capture_pmkid="15"
 timeout_capture_identities="30"
+timeout_certificates_analysis="30"
 osversionfile_dir="/etc/"
 plugins_dir="plugins/"
 ag_orchestrator_file="ag.orchestrator.txt"
@@ -359,6 +360,7 @@ declare main_hints=(128 134 163 437 438 442 445 516 590 626 660 697 699 712 739)
 declare dos_hints=(129 131 133 697 699)
 declare handshake_pmkid_decloaking_hints=(127 130 132 664 665 697 699 728 729)
 declare dos_handshake_decloak_hints=(142 697 699 733 739)
+declare dos_info_gathering_enterprise_hints=(697 699 733 739)
 declare decrypt_hints=(171 179 208 244 163 697 699)
 declare personal_decrypt_hints=(171 178 179 208 244 163 697 699)
 declare enterprise_decrypt_hints=(171 179 208 244 163 610 697 699)
@@ -844,7 +846,7 @@ function check_to_set_managed() {
 			language_strings "${language}" 115 "read"
 			return 1
 		;;
-		"(Non wifi card)")
+		"(Non wifi adapter)")
 			echo
 			language_strings "${language}" 1 "red"
 			language_strings "${language}" 115 "read"
@@ -867,7 +869,7 @@ function check_to_set_monitor() {
 			language_strings "${language}" 115 "read"
 			return 1
 		;;
-		"(Non wifi card)")
+		"(Non wifi adapter)")
 			echo
 			language_strings "${language}" 13 "red"
 			language_strings "${language}" 115 "read"
@@ -892,7 +894,7 @@ function check_monitor_enabled() {
 	return 0
 }
 
-#Check if an interface is a wifi card or not
+#Check if an interface is a wifi adapter or not
 function check_interface_wifi() {
 
 	debug_print
@@ -1413,7 +1415,7 @@ ip_dec_to_hex() {
 	echo "${hex}"
 }
 
-#Validate if a wireless card is supporting VIF (Virtual Interface)
+#Validate if a wireless adapter is supporting VIF (Virtual Interface Functionality)
 function check_vif_support() {
 
 	debug_print
@@ -1430,10 +1432,10 @@ function check_interface_wifi_longname() {
 
 	debug_print
 
-	wifi_card=${1}
+	wifi_adapter="${1}"
 	longname_patterns=("wlx[0-9a-fA-F]{12}")
 	for pattern in "${longname_patterns[@]}"; do
-		if [[ "$wifi_card" =~ $pattern ]]; then
+		if [[ ${wifi_adapter} =~ $pattern ]]; then
 			echo
 			language_strings "${language}" 708 "yellow"
 			echo
@@ -1446,7 +1448,7 @@ function check_interface_wifi_longname() {
 	return 0
 }
 
-#Find the physical interface for a card
+#Find the physical interface for an adapter
 function physical_interface_finder() {
 
 	debug_print
@@ -1456,7 +1458,38 @@ function physical_interface_finder() {
 	echo "${phy_iface}"
 }
 
-#Check the bands supported by a given physical card
+#Check the wireless stamdards supported by a given physical adapter
+function check_supported_standards() {
+
+	debug_print
+
+	if iw phy "${1}" info | grep -Eq 'HT20/HT40' 2> /dev/null; then
+		standard_80211n=1
+	else
+		standard_80211n=0
+	fi
+
+	if iw phy "${1}" info | grep -Eq 'VHT' 2> /dev/null; then
+		standard_80211ac=1
+	else
+		standard_80211ac=0
+	fi
+
+	if iw phy "${1}" info | grep -Eq 'HE40/HE80' 2> /dev/null; then
+		standard_80211ax=1
+	else
+		standard_80211ax=0
+	fi
+
+	#TODO test this as soon as a working WiFi7 adapter is available and tested on Linux
+	if iw phy "${1}" info | grep -Eq 'EHT20/EHT40/EHT80/EHT160/EHT320' 2> /dev/null; then
+		standard_80211be=1
+	else
+		standard_80211be=0
+	fi
+}
+
+#Check the bands supported by a given physical adapter
 function check_interface_supported_bands() {
 
 	debug_print
@@ -1850,7 +1883,7 @@ function check_interface_mode() {
 
 	current_iface_on_messages="${1}"
 	if ! check_interface_wifi "${1}"; then
-		ifacemode="(Non wifi card)"
+		ifacemode="(Non wifi adapter)"
 		return 0
 	fi
 
@@ -1951,7 +1984,7 @@ function option_menu() {
 		language_strings "${language}" 689
 	fi
 	language_strings "${language}" 447
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " option_selected
 	case ${option_selected} in
@@ -2323,7 +2356,7 @@ function language_menu() {
 	language_strings "${language}" 519
 	language_strings "${language}" 687
 	language_strings "${language}" 717
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " language_selected
 	echo
@@ -2715,7 +2748,7 @@ function select_secondary_interface() {
 	if [ ${option_counter: -1} -eq 9 ]; then
 		spaceiface+=" "
 	fi
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " secondary_iface
 	if [ "${secondary_iface}" -eq 0 ] 2> /dev/null; then
@@ -2802,7 +2835,7 @@ function select_interface() {
 			fi
 		fi
 	done
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " iface
 	if [[ ! ${iface} =~ ^[[:digit:]]+$ ]] || ((iface < 1 || iface > option_counter)); then
@@ -2814,14 +2847,23 @@ function select_interface() {
 			if [ "${iface}" = "${option_counter2}" ]; then
 				interface=${item2}
 				phy_interface=$(physical_interface_finder "${interface}")
-				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 				interface_mac=$(ip link show "${interface}" | awk '/ether/ {print $2}')
-				if ! check_vif_support; then
-					card_vif_support=0
+				if [ -n "${phy_interface}" ]; then
+					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+					check_supported_standards "${phy_interface}"
+					if ! check_vif_support; then
+						adapter_vif_support=0
+					else
+						adapter_vif_support=1
+					fi
+					check_interface_wifi_longname "${interface}"
 				else
-					card_vif_support=1
+					adapter_vif_support=0
+					standard_80211n=0
+					standard_80211ac=0
+					standard_80211ax=0
+					standard_80211be=0
 				fi
-				check_interface_wifi_longname "${interface}"
 				break
 			fi
 		done
@@ -3141,8 +3183,12 @@ function read_timeout() {
 			timeout_shown="${timeout_capture_pmkid}"
 		;;
 		"capture_identities")
-			min_max_timeout="10-300"
+			min_max_timeout="10-100"
 			timeout_shown="${timeout_capture_identities}"
+		;;
+		"certificates_analysis")
+			min_max_timeout="10-100"
+			timeout_shown="${timeout_certificates_analysis}"
 		;;
 	esac
 
@@ -3169,7 +3215,10 @@ function ask_timeout() {
 			local regexp="^[1-9][0-9]$|^100$|^$"
 		;;
 		"capture_identities")
-			local regexp="^([1-9][0-9]|[12][0-9][0-9]|300)$|^$"
+			local regexp="^[1-9][0-9]$|^100$|^$"
+		;;
+		"certificates_analysis")
+			local regexp="^[1-9][0-9]$|^100$|^$"
 		;;
 	esac
 
@@ -3195,6 +3244,9 @@ function ask_timeout() {
 			"capture_identities")
 				timeout="${timeout_capture_identities}"
 			;;
+			"certificates_analysis")
+				timeout="${timeout_certificates_analysis}"
+			;;
 		esac
 	fi
 
@@ -3215,9 +3267,60 @@ function ask_timeout() {
 		"capture_identities")
 			timeout_capture_identities="${timeout}"
 		;;
+		"certificates_analysis")
+			timeout_certificates_analysis="${timeout}"
+		;;
 	esac
 
 	language_strings "${language}" 391 "blue"
+}
+
+#Handle the proccess of checking enterprise certificates capture
+function enterprise_certificates_check() {
+
+	debug_print
+
+	local time_counter=0
+	while true; do
+		sleep 5
+		if check_certificates_in_capture_file; then
+			break
+		fi
+
+		time_counter=$((time_counter + 5))
+		if [ "${time_counter}" -ge "${timeout_certificates_analysis}" ]; then
+			break
+		fi
+	done
+
+	kill "${processidenterpriseidentitiescertificatescapture}" &> /dev/null
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		tmux kill-window -t "${session_name}:Certificates Analysis"
+	fi
+}
+
+#Handle the proccess of checking enterprise identities capture
+function enterprise_identities_check() {
+
+	debug_print
+
+	local time_counter=0
+	while true; do
+		sleep 5
+		if check_identities_in_capture_file; then
+			break
+		fi
+
+		time_counter=$((time_counter + 5))
+		if [ "${time_counter}" -ge "${timeout_capture_identities}" ]; then
+			break
+		fi
+	done
+
+	kill "${processidenterpriseidentitiescertificatescapture}" &> /dev/null
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		tmux kill-window -t "${session_name}:Capturing Identities"
+	fi
 }
 
 #Handle the proccess of checking decloak capture
@@ -3601,8 +3704,8 @@ function read_certificates_data() {
 	esac
 }
 
-#Prepare enterprise identities capture
-function enterprise_identities() {
+#Prepare enterprise identities capture and certificates analysis
+function enterprise_identities_and_certitifcates_analysis() {
 
 	debug_print
 
@@ -3639,32 +3742,7 @@ function enterprise_identities() {
 		return 1
 	fi
 
-	launch_identity_capture
-}
-
-#Launch enterprise identities capture
-function launch_identity_capture() {
-
-	debug_print
-
-	ask_timeout "capture_identities"
-
-	echo
-	language_strings "${language}" 743 "yellow"
-	language_strings "${language}" 115 "read"
-
-	echo
-	language_strings "${language}" 325 "blue"
-
-	rm -rf "${tmpdir}identities"* > /dev/null 2>&1
-	recalculate_windows_sizes
-	manage_output "+j -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g1_topright_window} -T \"Capturing Identities\"" "timeout -s SIGTERM ${timeout_capture_identities} airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}identities ${interface}" "Capturing Identities" "active"
-	wait_for_process "timeout -s SIGTERM ${timeout_capture_identities} airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}identities ${interface}" "Capturing Identities"
-
-	echo
-	language_strings "${language}" 744 "blue"
-	identities_check "${tmpdir}identities"*.cap "${bssid}"
-	language_strings "${language}" 115 "read"
+	dos_info_gathering_enterprise_menu "${1}"
 }
 
 #Search for enterprise identities in a given capture file for a specific BSSID
@@ -3677,15 +3755,13 @@ function identities_check() {
 
 	echo
 	if [ "${#identities_array[@]}" -eq 0 ]; then
-		language_strings "${language}" 745 "red"
+		return 1
 	else
-		language_strings "${language}" 746 "yellow"
-		echo
 		for identity in "${identities_array[@]}"; do
 			echo "${identity}"
 		done
+		return 0
 	fi
-	echo
 }
 
 #Validate if selected network is the needed type (enterprise or personal)
@@ -4587,7 +4663,7 @@ function launch_dos_pursuit_mode_attack() {
 			dos_delay=1
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${interface}"
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${essid} -c ${channel} -s 1000 -h" "${1} (DoS Pursuit mode)"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} b -n '${essid}' -c ${channel} -s 1000 -h" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${essid} -c ${channel} -s 1000 -h"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
@@ -4598,7 +4674,7 @@ function launch_dos_pursuit_mode_attack() {
 			dos_delay=10
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${interface}"
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}" "${1} (DoS Pursuit mode)"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e '${essid}' -c ${channel}" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
@@ -4841,7 +4917,7 @@ function exec_wdsconfusion() {
 		language_strings "${language}" 33 "yellow"
 		language_strings "${language}" 4 "read"
 		recalculate_windows_sizes
-		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack" "active"
+		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e '${essid}' -c ${channel}" "wids / wips / wds confusion attack" "active"
 		wait_for_process "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack"
 	fi
 }
@@ -4869,7 +4945,7 @@ function exec_beaconflood() {
 		language_strings "${language}" 33 "yellow"
 		language_strings "${language}" 4 "read"
 		recalculate_windows_sizes
-		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"beacon flood attack\"" "${mdk_command} ${interface} b -n ${essid} -c ${channel} -s 1000 -h" "beacon flood attack" "active"
+		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"beacon flood attack\"" "${mdk_command} ${interface} b -n '${essid}' -c ${channel} -s 1000 -h" "beacon flood attack" "active"
 		wait_for_process "${mdk_command} ${interface} b -n ${essid} -c ${channel} -s 1000 -h" "beacon flood attack"
 	fi
 }
@@ -5566,7 +5642,7 @@ function print_iface_selected() {
 		select_interface
 	else
 		check_interface_mode "${interface}"
-		if [ "${ifacemode}" = "(Non wifi card)" ]; then
+		if [ "${ifacemode}" = "(Non wifi adapter)" ]; then
 			language_strings "${language}" 42 "blue"
 		else
 			language_strings "${language}" 514 "blue"
@@ -5889,7 +5965,7 @@ function initialize_menu_options_dependencies() {
 	wep_attack_besside_dependencies=("${optional_tools_names[27]}")
 	enterprise_attack_dependencies=("${optional_tools_names[19]}" "${optional_tools_names[20]}" "${optional_tools_names[22]}")
 	enterprise_identities_dependencies=("${optional_tools_names[25]}")
-	enterprise_certificate_analysis_dependencies=("${optional_tools_names[22]}" "${optional_tools_names[25]}")
+	enterprise_certificates_analysis_dependencies=("${optional_tools_names[22]}" "${optional_tools_names[25]}")
 	asleap_attacks_dependencies=("${optional_tools_names[20]}")
 	john_attacks_dependencies=("${optional_tools_names[21]}")
 	johncrunch_attacks_dependencies=("${optional_tools_names[21]}" "${optional_tools_names[1]}")
@@ -5990,6 +6066,10 @@ function initialize_menu_and_print_selections() {
 			print_iface_selected
 			print_all_target_vars
 		;;
+		"dos_info_gathering_enterprise_menu")
+			print_iface_selected
+			print_all_target_vars
+		;;
 		"language_menu")
 			print_iface_selected
 		;;
@@ -6055,10 +6135,20 @@ function initialize_menu_and_print_selections() {
 			print_options
 		;;
 		*)
-			print_iface_selected
-			print_all_target_vars
+			if ! hookable_for_menus; then
+				print_iface_selected
+				print_all_target_vars
+			fi
 		;;
 	esac
+}
+
+#Function created intentionally to be hooked from plugins to modify menus easily
+function hookable_for_menus() {
+
+	debug_print
+
+	return 1
 }
 
 #Clean environment vars
@@ -6135,7 +6225,7 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}bl.txt" > /dev/null 2>&1
 		rm -rf "${tmpdir}target.txt" > /dev/null 2>&1
 		rm -rf "${tmpdir}handshake"* > /dev/null 2>&1
-		rm -rf "${tmpdir}identities"* > /dev/null 2>&1
+		rm -rf "${tmpdir}identities_certificates"* > /dev/null 2>&1
 		rm -rf "${tmpdir}decloak"* > /dev/null 2>&1
 		rm -rf "${tmpdir}pmkid"* > /dev/null 2>&1
 		rm -rf "${tmpdir}nws"* > /dev/null 2>&1
@@ -6345,7 +6435,7 @@ function print_hint() {
 
 	declare -A hints
 
-	case ${1} in
+	case "${current_menu}" in
 		"main_menu")
 			store_array hints main_hints "${main_hints[@]}"
 			hintlength=${#main_hints[@]}
@@ -6373,6 +6463,13 @@ function print_hint() {
 			((hintlength--))
 			randomhint=$(shuf -i 0-"${hintlength}" -n 1)
 			strtoprint=${hints[dos_handshake_decloak_hints|${randomhint}]}
+		;;
+		"dos_info_gathering_enterprise_menu")
+			store_array hints dos_info_gathering_enterprise_hints "${dos_info_gathering_enterprise_hints[@]}"
+			hintlength=${#dos_info_gathering_enterprise_hints[@]}
+			((hintlength--))
+			randomhint=$(shuf -i 0-"${hintlength}" -n 1)
+			strtoprint=${hints[dos_info_gathering_enterprise_hints|${randomhint}]}
 		;;
 		"decrypt_menu")
 			store_array hints decrypt_hints "${decrypt_hints[@]}"
@@ -6460,11 +6557,22 @@ function print_hint() {
 		;;
 	esac
 
+	hookable_for_hints
+
 	if "${AIRGEDDON_PRINT_HINTS:-true}"; then
 		print_simple_separator
 		language_strings "${language}" "${strtoprint}" "hint"
 	fi
+
 	print_simple_separator
+}
+
+#Function created empty intentionally to be hooked from plugins to modify hints easily
+function hookable_for_hints() {
+
+	debug_print
+
+	:
 }
 
 #Initialize instances related actions
@@ -6664,7 +6772,7 @@ function main_menu() {
 	print_simple_separator
 	language_strings "${language}" 60
 	language_strings "${language}" 444
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " main_option
 	case ${main_option} in
@@ -6740,8 +6848,8 @@ function enterprise_attacks_menu() {
 	language_strings "${language}" 307 enterprise_attack_dependencies[@]
 	language_strings "${language}" 740 "separator"
 	language_strings "${language}" 741 enterprise_identities_dependencies[@]
-	language_strings "${language}" 748 "under_construction" #enterprise_certificate_analysis_dependencies[@]
-	print_hint ${current_menu}
+	language_strings "${language}" 748 enterprise_certificates_analysis_dependencies[@]
+	print_hint
 
 	read -rp "> " enterprise_option
 	case ${enterprise_option} in
@@ -6775,7 +6883,7 @@ function enterprise_attacks_menu() {
 			else
 				current_iface_on_messages="${interface}"
 				if check_interface_wifi "${interface}"; then
-					if [ "${card_vif_support}" -eq 0 ]; then
+					if [ "${adapter_vif_support}" -eq 0 ]; then
 						ask_yesno 696 "no"
 						if [ "${yesno}" = "y" ]; then
 							et_enterprise_attack_adapter_prerequisites_ok=1
@@ -6803,7 +6911,7 @@ function enterprise_attacks_menu() {
 			else
 				current_iface_on_messages="${interface}"
 				if check_interface_wifi "${interface}"; then
-					if [ "${card_vif_support}" -eq 0 ]; then
+					if [ "${adapter_vif_support}" -eq 0 ]; then
 						ask_yesno 696 "no"
 						if [ "${yesno}" = "y" ]; then
 							et_enterprise_attack_adapter_prerequisites_ok=1
@@ -6829,16 +6937,15 @@ function enterprise_attacks_menu() {
 			if contains_element "${enterprise_option}" "${forbidden_options[@]}"; then
 				forbidden_menu_option
 			else
-				enterprise_identities
+				enterprise_identities_and_certitifcates_analysis "identities"
 			fi
 		;;
 		9)
-			under_construction_message
-			#if contains_element "${enterprise_option}" "${forbidden_options[@]}"; then
-			#	forbidden_menu_option
-			#else
-			#	enterprise_certificate_analysis
-			#fi
+			if contains_element "${enterprise_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				enterprise_identities_and_certitifcates_analysis "certificates"
+			fi
 		;;
 		*)
 			invalid_menu_option
@@ -6873,7 +6980,7 @@ function evil_twin_attacks_menu() {
 	language_strings "${language}" 396
 	language_strings "${language}" 262 "separator"
 	language_strings "${language}" 263 et_captive_portal_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " et_option
 	case ${et_option} in
@@ -6898,7 +7005,7 @@ function evil_twin_attacks_menu() {
 			else
 				current_iface_on_messages="${interface}"
 				if check_interface_wifi "${interface}"; then
-					if [ "${card_vif_support}" -eq 0 ]; then
+					if [ "${adapter_vif_support}" -eq 0 ]; then
 						ask_yesno 696 "no"
 						if [ "${yesno}" = "y" ]; then
 							et_attack_adapter_prerequisites_ok=1
@@ -6930,7 +7037,7 @@ function evil_twin_attacks_menu() {
 			else
 				current_iface_on_messages="${interface}"
 				if check_interface_wifi "${interface}"; then
-					if [ "${card_vif_support}" -eq 0 ]; then
+					if [ "${adapter_vif_support}" -eq 0 ]; then
 						ask_yesno 696 "no"
 						if [ "${yesno}" = "y" ]; then
 							et_attack_adapter_prerequisites_ok=1
@@ -6968,7 +7075,7 @@ function evil_twin_attacks_menu() {
 						language_strings "${language}" 174 "red"
 						language_strings "${language}" 115 "read"
 					else
-						if [ "${card_vif_support}" -eq 0 ]; then
+						if [ "${adapter_vif_support}" -eq 0 ]; then
 							ask_yesno 696 "no"
 							if [ "${yesno}" = "y" ]; then
 								et_attack_adapter_prerequisites_ok=1
@@ -7004,7 +7111,7 @@ function evil_twin_attacks_menu() {
 			else
 				current_iface_on_messages="${interface}"
 				if check_interface_wifi "${interface}"; then
-					if [ "${card_vif_support}" -eq 0 ]; then
+					if [ "${adapter_vif_support}" -eq 0 ]; then
 						ask_yesno 696 "no"
 						if [ "${yesno}" = "y" ]; then
 							et_attack_adapter_prerequisites_ok=1
@@ -7078,7 +7185,7 @@ function beef_pre_menu() {
 
 	print_simple_separator
 	language_strings "${language}" 410
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " beef_option
 	case ${beef_option} in
@@ -7099,7 +7206,7 @@ function beef_pre_menu() {
 						return
 					fi
 
-					if [ "${card_vif_support}" -eq 0 ]; then
+					if [ "${adapter_vif_support}" -eq 0 ]; then
 						ask_yesno 696 "no"
 						if [ "${yesno}" = "y" ]; then
 							et_attack_adapter_prerequisites_ok=1
@@ -7174,7 +7281,7 @@ function wps_attacks_menu() {
 	language_strings "${language}" 622 reaver_attacks_dependencies[@]
 	print_simple_separator
 	language_strings "${language}" 494
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " wps_option
 	case ${wps_option} in
@@ -7406,7 +7513,7 @@ function offline_pin_generation_menu() {
 	echo "6.  ComputePIN"
 	echo "7.  EasyBox"
 	echo "8.  Arcadyan"
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " offline_pin_generation_option
 	case ${offline_pin_generation_option} in
@@ -7591,7 +7698,7 @@ function wep_attacks_menu() {
 	language_strings "${language}" 50 "separator"
 	language_strings "${language}" 423 wep_attack_allinone_dependencies[@]
 	language_strings "${language}" 723 wep_attack_besside_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " wep_option
 	case ${wep_option} in
@@ -7647,7 +7754,7 @@ function decrypt_menu() {
 	language_strings "${language}" 59
 	language_strings "${language}" 534
 	language_strings "${language}" 535
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " decrypt_option
 	case ${decrypt_option} in
@@ -7691,7 +7798,7 @@ function personal_decrypt_menu() {
 	language_strings "${language}" 668 hashcat_attacks_dependencies[@]
 	language_strings "${language}" 669 hashcat_attacks_dependencies[@]
 	language_strings "${language}" 670 hashcat_attacks_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " personal_decrypt_option
 	case ${personal_decrypt_option} in
@@ -7823,7 +7930,7 @@ function enterprise_decrypt_menu() {
 	language_strings "${language}" 552 hashcat_attacks_dependencies[@]
 	language_strings "${language}" 548 "separator"
 	language_strings "${language}" 549 asleap_attacks_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " enterprise_decrypt_option
 	case ${enterprise_decrypt_option} in
@@ -8131,6 +8238,43 @@ function check_essid_in_capture_file() {
 	fi
 }
 
+#Check if enterprise certificates are present on a capture file
+#shellcheck disable=SC2059
+function check_certificates_in_capture_file() {
+
+	debug_print
+
+	local cert
+	declare -ga certificates_array
+
+	while read -r hexcert; do
+		cert=$(printf "${hexcert}" 2> /dev/null | openssl x509 -inform DER -outform PEM 2>/dev/null)
+		[[ -z "${cert}" ]] && continue
+		certificates_array+=("$cert")
+	done < <(tshark -r "${tmpdir}identities_certificates"*.cap -Y "(tls.handshake.certificate && wlan.ra == ${bssid})" -T fields -e tls.handshake.certificate 2>/dev/null | sort -u | tr -d ':' | sed 's/../\\x&/g')
+
+	if [ "${#certificates_array[@]}" -eq 0 ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
+#Check if enterprise identities are present on a capture file
+function check_identities_in_capture_file() {
+
+	debug_print
+
+	declare -ga identities_array
+	readarray -t identities_array < <(tshark -r "${tmpdir}identities_certificates"*.cap -Y "(eap && wlan.ra == ${bssid}) && (eap.identity)" -T fields -e eap.identity 2> /dev/null | sort -u)
+
+	if [ "${#identities_array[@]}" -eq 0 ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
 #Check if a bssid is present on a capture file to know if there is a Handshake/PMKID with that bssid
 function check_bssid_in_captured_file() {
 
@@ -8339,7 +8483,7 @@ function select_wpa_bssid_target_from_captured_file() {
 				echo -en " ${item} "
 			fi
 		done
-		print_hint ${current_menu}
+		print_hint
 
 		target_network_on_file=0
 		while [[ ! ${target_network_on_file} =~ ^[[:digit:]]+$ ]] || ((target_network_on_file < 1 || target_network_on_file > option_counter)); do
@@ -9014,7 +9158,7 @@ function manage_wep_besside_pot() {
 		sed -ri '1,/Got key/{/Got key/!d; s/.*(Got key)/\1/}' "${tmpdir}${wep_besside_log}" 2> /dev/null
 		readarray -t LINES_TO_PARSE < <(cat < "${tmpdir}${wep_besside_log}" 2> /dev/null)
 		for item in "${LINES_TO_PARSE[@]}"; do
-			if [[ "${item}" =~ Got[[:blank:]]key[[:blank:]]for.*\[([0-9A-F:]+)\].*IVs ]]; then
+			if [[ "${item}" =~ Got[[:blank:]]key[[:blank:]]for.*\[([0-9A-Fa-f:]+)\].*IVs ]]; then
 				wep_hex_key="${BASH_REMATCH[1]}"
 				wep_ascii_key=$(echo "${wep_hex_key}" | awk 'RT{printf "%c", strtonum("0x"RT)}' RS='[0-9A-Fa-f]{2}')
 				wep_besside_pass_cracked=1
@@ -9365,7 +9509,7 @@ function set_captive_portal_language() {
 	language_strings "${language}" 519
 	language_strings "${language}" 687
 	language_strings "${language}" 717
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " captive_portal_language_selected
 	echo
@@ -9495,7 +9639,7 @@ function set_charset() {
 	language_strings "${language}" 205
 	language_strings "${language}" 206
 	language_strings "${language}" 207
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " charset_option
 	case ${1} in
@@ -10136,8 +10280,15 @@ function set_hostapd_config() {
 	rm -rf "${tmpdir}${hostapd_file}" > /dev/null 2>&1
 
 	local digit_to_change
+	local orig_digit
 	digit_to_change="${bssid:10:1}"
-	((different_mac_digit=("16#${digit_to_change}" + 1 + RANDOM % 15) % 16))
+	orig_digit=$((16#${digit_to_change}))
+
+	while true; do
+		((different_mac_digit=(orig_digit + 1 + RANDOM % 15) % 16))
+		[[ "${different_mac_digit}" -ne "${orig_digit}" ]] && break
+	done
+
 	et_bssid=$(printf %s%X%s\\n "${bssid::10}" "${different_mac_digit}" "${bssid:11}")
 
 	{
@@ -10163,6 +10314,31 @@ function set_hostapd_config() {
 		echo -e "country_code=${country_code}"
 		} >> "${tmpdir}${hostapd_file}"
 	fi
+
+	if [ "${standard_80211n}" -eq 1 ]; then
+		{
+		echo -e "ieee80211n=1"
+		} >> "${tmpdir}${hostapd_file}"
+	fi
+
+	if [ "${standard_80211ac}" -eq 1 ]; then
+		{
+		echo -e "ieee80211ac=1"
+		} >> "${tmpdir}${hostapd_file}"
+	fi
+
+	if [ "${standard_80211ax}" -eq 1 ]; then
+		{
+		echo -e "ieee80211ax=1"
+		} >> "${tmpdir}${hostapd_file}"
+	fi
+
+	#TODO uncomment this as soon as this option is implemented in hostapd for Wifi7
+	#if [ "${standard_80211be}" -eq 1 ]; then
+	#	{
+	#	echo -e "ieee80211be=1"
+	#	} >> "${tmpdir}${hostapd_file}"
+	#fi
 }
 
 #Create configuration file for hostapd
@@ -10218,6 +10394,31 @@ function set_hostapd_wpe_config() {
 		echo -e "country_code=${country_code}"
 		} >> "${tmpdir}${hostapd_wpe_file}"
 	fi
+
+	if [ "${standard_80211n}" -eq 1 ]; then
+		{
+		echo -e "ieee80211n=1"
+		} >> "${tmpdir}${hostapd_wpe_file}"
+	fi
+
+	if [ "${standard_80211ac}" -eq 1 ]; then
+		{
+		echo -e "ieee80211ac=1"
+		} >> "${tmpdir}${hostapd_wpe_file}"
+	fi
+
+	if [ "${standard_80211ax}" -eq 1 ]; then
+		{
+		echo -e "ieee80211ax=1"
+		} >> "${tmpdir}${hostapd_wpe_file}"
+	fi
+
+	#TODO uncomment this as soon as this option is implemented in hostapd-wpe for Wifi7
+	#if [ "${standard_80211be}" -eq 1 ]; then
+	#	{
+	#	echo -e "ieee80211be=1"
+	#	} >> "${tmpdir}${hostapd_wpe_file}"
+	#fi
 }
 
 #Launch hostapd and hostapd-wpe fake Access Point
@@ -11634,22 +11835,6 @@ function set_webserver_config() {
 	echo -e "url.redirect = ( \"^/index.htm$\" => \"/\")"
 	echo -e "url.redirect-code = 302"
 	echo -e "}"
-	echo -e "\$HTTP[\"host\"] =~ \"gstatic.com\" {"
-	echo -e "url.redirect = ( \"^/(.*)$\" => \"http://connectivitycheck.google.com/\")"
-	echo -e "url.redirect-code = 302"
-	echo -e "}"
-	echo -e "\$HTTP[\"host\"] =~ \"captive.apple.com\" {"
-	echo -e "url.redirect = ( \"^/(.*)$\" => \"http://connectivitycheck.apple.com/\")"
-	echo -e "url.redirect-code = 302"
-	echo -e "}"
-	echo -e "\$HTTP[\"host\"] =~ \"msftconnecttest.com\" {"
-	echo -e "url.redirect = ( \"^/(.*)$\" => \"http://connectivitycheck.microsoft.com/\")"
-	echo -e "url.redirect-code = 302"
-	echo -e "}"
-	echo -e "\$HTTP[\"host\"] =~ \"msftncsi.com\" {"
-	echo -e "url.redirect = ( \"^/(.*)$\" => \"http://connectivitycheck.microsoft.com/\")"
-	echo -e "url.redirect-code = 302"
-	echo -e "}"
 	echo -e "server.bind = \"${et_ip_router}\""
 	echo -e "server.port = ${www_port}\n"
 	echo -e "index-file.names = (\"${indexfile}\")"
@@ -12645,7 +12830,7 @@ function handshake_pmkid_decloaking_tools_menu() {
 	language_strings "${language}" 727 "separator"
 	language_strings "${language}" 725
 	language_strings "${language}" 726 mdk_attack_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " handshake_option
 	case ${handshake_option} in
@@ -12783,7 +12968,7 @@ function dos_attacks_menu() {
 	language_strings "${language}" 62 mdk_attack_dependencies[@]
 	language_strings "${language}" 53 mdk_attack_dependencies[@]
 	language_strings "${language}" 64 mdk_attack_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " dos_option
 	case ${dos_option} in
@@ -13001,8 +13186,8 @@ function exec_decloak_by_dictionary() {
 
 	rm -rf "${tmpdir}decloak.log" > /dev/null 2>&1
 	recalculate_windows_sizes
-	manage_output "+j -bg \"#000000\" -fg \"#FFFF00\" -geometry ${g1_topright_window} -T \"decloack by dictionary\"" "${unbuffer}${mdk_command} ${interface} p -t ${bssid} -f ${DICTIONARY} | tee ${tmpdir}decloak.log ${colorize}" "decloack by dictionary" "active"
-	wait_for_process "${mdk_command} ${interface} p -t ${bssid} -f ${DICTIONARY}" "decloack by dictionary"
+	manage_output "+j -bg \"#000000\" -fg \"#FFFF00\" -geometry ${g1_topright_window} -T \"decloak by dictionary\"" "${unbuffer}${mdk_command} ${interface} p -t ${bssid} -f ${DICTIONARY} | tee ${tmpdir}decloak.log ${colorize}" "decloak by dictionary" "active"
+	wait_for_process "${mdk_command} ${interface} p -t ${bssid} -f ${DICTIONARY}" "decloak by dictionary"
 
 	if check_essid_in_mdk_decloak_log; then
 		echo
@@ -13477,6 +13662,126 @@ function read_path() {
 	return "${validpath}"
 }
 
+#Launch the DoS selection menu before capture enterprise information gathering
+function dos_info_gathering_enterprise_menu() {
+
+	debug_print
+
+	if [ "${return_to_enterprise_main_menu}" -eq 1 ]; then
+		return
+	fi
+
+	clear
+	language_strings "${language}" 749 "title"
+
+	current_menu="dos_info_gathering_enterprise_menu"
+	initialize_menu_and_print_selections
+	echo
+	language_strings "${language}" 47 "green"
+	print_simple_separator
+	language_strings "${language}" 521
+	print_simple_separator
+	language_strings "${language}" 139 mdk_attack_dependencies[@]
+	language_strings "${language}" 140 aireplay_attack_dependencies[@]
+	language_strings "${language}" 141 mdk_attack_dependencies[@]
+	print_hint
+
+	read -rp "> " attack_info_gathering_enterprise_option
+
+	case ${attack_info_gathering_enterprise_option} in
+		0)
+			return
+		;;
+		1)
+			if contains_element "${attack_info_gathering_enterprise_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				if [ "${1}" = "identities" ]; then
+					ask_timeout "capture_identities"
+				else
+					ask_timeout "certificates_analysis"
+				fi
+				identities_certificates_capture_window "${1}"
+
+				rm -rf "${tmpdir}bl.txt" > /dev/null 2>&1
+				echo "${bssid}" > "${tmpdir}bl.txt"
+				recalculate_windows_sizes
+				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"${mdk_command} amok attack\"" "${mdk_command} ${interface} d -b ${tmpdir}bl.txt -c ${channel}" "${mdk_command} amok attack"
+				if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+					get_tmux_process_id "${mdk_command} ${interface} d -b ${tmpdir}bl.txt -c ${channel}"
+					processidattack="${global_process_pid}"
+					global_process_pid=""
+				fi
+				sleeptimeattack=12
+				if [ "${1}" = "identities" ]; then
+					launch_identities_capture
+				else
+					launch_certificates_analysis
+				fi
+			fi
+		;;
+		2)
+			if contains_element "${attack_info_gathering_enterprise_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				if [ "${1}" = "identities" ]; then
+					ask_timeout "capture_identities"
+				else
+					ask_timeout "certificates_analysis"
+				fi
+				identities_certificates_capture_window "${1}"
+
+				${airmon} start "${interface}" "${channel}" > /dev/null 2>&1
+				recalculate_windows_sizes
+				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"aireplay deauth attack\"" "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface}" "aireplay deauth attack"
+				if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+					get_tmux_process_id "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface}"
+					processidattack="${global_process_pid}"
+					global_process_pid=""
+				fi
+				sleeptimeattack=12
+				if [ "${1}" = "identities" ]; then
+					launch_identities_capture
+				else
+					launch_certificates_analysis
+				fi
+			fi
+		;;
+		3)
+			if contains_element "${attack_info_gathering_enterprise_option}" "${forbidden_options[@]}"; then
+				forbidden_menu_option
+			else
+				if [ "${1}" = "identities" ]; then
+					ask_timeout "capture_identities"
+				else
+					ask_timeout "certificates_analysis"
+				fi
+				identities_certificates_capture_window "${1}"
+
+				${airmon} start "${interface}" "${channel}" > /dev/null 2>&1
+				recalculate_windows_sizes
+				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"auth dos attack\"" "${mdk_command} ${interface} a -a ${bssid} -m" "auth dos attack"
+				if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+					get_tmux_process_id "${mdk_command} ${interface} a -a ${bssid} -m"
+					processidattack="${global_process_pid}"
+					global_process_pid=""
+				fi
+				sleeptimeattack=12
+				if [ "${1}" = "identities" ]; then
+					launch_identities_capture
+				else
+					launch_certificates_analysis
+				fi
+			fi
+		;;
+		*)
+			invalid_menu_option
+		;;
+	esac
+
+	dos_info_gathering_enterprise_menu
+}
+
 #Launch the DoS selection menu before capture a Handshake or decloak a network and process the captured file
 function dos_handshake_decloaking_menu() {
 
@@ -13503,7 +13808,7 @@ function dos_handshake_decloaking_menu() {
 	language_strings "${language}" 139 mdk_attack_dependencies[@]
 	language_strings "${language}" 140 aireplay_attack_dependencies[@]
 	language_strings "${language}" 141 mdk_attack_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " attack_handshake_decloak_option
 	case ${attack_handshake_decloak_option} in
@@ -13594,6 +13899,85 @@ function dos_handshake_decloaking_menu() {
 	esac
 
 	dos_handshake_decloaking_menu "${1}"
+}
+
+#Enterprise certificates analysis launcher
+function launch_certificates_analysis() {
+
+	debug_print
+
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+		processidattack=$!
+		sleep "${sleeptimeattack}" && kill "${processidattack}" &> /dev/null
+	else
+		sleep "${sleeptimeattack}" && kill "${processidattack}" && kill_tmux_windows "Certificates Analysis" &> /dev/null
+	fi
+
+	enterprise_certificates_check
+
+	echo
+	language_strings "${language}" 751 "blue"
+
+	if check_certificates_in_capture_file; then
+		echo
+		language_strings "${language}" 162 "yellow"
+		echo
+		language_strings "${language}" 753 "blue"
+		echo
+
+		declare -A unique_fingerprints
+		for certificate in "${certificates_array[@]}"; do
+			fingerprint=$(printf '%s\n' "${certificate}" | openssl x509 -noout -fingerprint | cut -d'=' -f2)
+			if [[ -z "${unique_fingerprints[$fingerprint]}" ]]; then
+				unique_fingerprints[$fingerprint]=1
+				printf '%s\n' "${certificate}" | openssl x509 -noout -serial -issuer -subject -startdate -enddate -fingerprint
+				echo
+			fi
+		done
+
+		language_strings "${language}" 115 "read"
+		return_to_enterprise_main_menu=1
+	else
+		echo
+		language_strings "${language}" 752 "red"
+		language_strings "${language}" 115 "read"
+	fi
+}
+
+#Enterprise identities capture launcher
+function launch_identities_capture() {
+
+	debug_print
+
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+		processidattack=$!
+		sleep "${sleeptimeattack}" && kill "${processidattack}" &> /dev/null
+	else
+		sleep "${sleeptimeattack}" && kill "${processidattack}" && kill_tmux_windows "Capturing Identities" &> /dev/null
+	fi
+
+	enterprise_identities_check
+
+	echo
+	language_strings "${language}" 744 "blue"
+
+	if check_identities_in_capture_file; then
+		echo
+		language_strings "${language}" 162 "yellow"
+		echo
+		language_strings "${language}" 746 "blue"
+		echo
+		for identity in "${identities_array[@]}"; do
+			echo "${identity}"
+		done
+		echo
+		language_strings "${language}" 115 "read"
+		return_to_enterprise_main_menu=1
+	else
+		echo
+		language_strings "${language}" 745 "red"
+		language_strings "${language}" 115 "read"
+	fi
 }
 
 #Decloak capture launcher
@@ -13725,6 +14109,37 @@ function capture_handshake_window() {
 		global_process_pid=""
 	else
 		processidcapture=$!
+	fi
+}
+
+#Launch enterprise identities capture/certificates analysis window
+function identities_certificates_capture_window() {
+
+	debug_print
+
+	local window_title
+
+	echo
+	if [ "${1}" = "identities" ]; then
+		language_strings "${language}" 743 "yellow"
+		window_title="Capturing Identities"
+	else
+		language_strings "${language}" 750 "yellow"
+		window_title="Certificates Analysis"
+	fi
+	language_strings "${language}" 115 "read"
+	echo
+	language_strings "${language}" 325 "blue"
+
+	rm -rf "${tmpdir}identities_certificates"* > /dev/null 2>&1
+	recalculate_windows_sizes
+	manage_output "+j -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g1_topright_window} -T \"${window_title}\"" "airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}identities_certificates ${interface}" "${window_title}" "active"
+	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		get_tmux_process_id "airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}identities_certificates ${interface}"
+		processidenterpriseidentitiescertificatescapture="${global_process_pid}"
+		global_process_pid=""
+	else
+		processidenterpriseidentitiescertificatescapture=$!
 	fi
 }
 
@@ -13961,7 +14376,7 @@ function explore_for_targets_option() {
 					"WPA")
 						#All, WPA, WPA2 and WPA3 including all Mixed modes
 						if [[ -n "${2}" ]] && [[ "${2}" = "enterprise" ]]; then
-							if [[ "${exp_auth}" =~ "MGT" ]]; then
+							if [[ "${exp_auth}" =~ MGT ]] || [[ "${exp_auth}" =~ CMAC && ! "${exp_auth}" =~ PSK ]]; then
 								enterprise_network_counter=$((enterprise_network_counter + 1))
 								echo -e "${exp_mac},${exp_channel},${exp_power},${exp_essid},${exp_enc},${exp_auth}" >> "${tmpdir}nws.txt"
 							fi
@@ -14291,7 +14706,7 @@ function select_target() {
 	bssid=${macs[${selected_target_network}]}
 	enc=${encs[${selected_target_network}]}
 
-	if [[ "${types[${selected_target_network}]}" =~ "MGT" ]]; then
+	if [[ "${types[${selected_target_network}]}" =~ MGT ]] || [[ "${types[${selected_target_network}]}" =~ CMAC && ! "${types[${selected_target_network}]}" =~ PSK ]]; then
 		enterprise_network_selected=1
 		personal_network_selected=0
 	else
@@ -14439,7 +14854,7 @@ function et_prerequisites() {
 	if [ "${dos_pursuit_mode}" -eq 1 ]; then
 		language_strings "${language}" 512 "blue"
 	fi
-	print_hint ${current_menu}
+	print_hint
 	echo
 
 	if [ "${et_mode}" != "et_captive_portal" ]; then
@@ -14730,7 +15145,7 @@ function et_dos_menu() {
 	language_strings "${language}" 139 mdk_attack_dependencies[@]
 	language_strings "${language}" 140 aireplay_attack_dependencies[@]
 	language_strings "${language}" 141 mdk_attack_dependencies[@]
-	print_hint ${current_menu}
+	print_hint
 
 	read -rp "> " et_dos_option
 	case ${et_dos_option} in
@@ -16332,7 +16747,7 @@ function initialize_script_settings() {
 	custom_certificates_organization=""
 	custom_certificates_email=""
 	custom_certificates_cn=""
-	card_vif_support=0
+	adapter_vif_support=0
 	country_code="00"
 	clean_all_iptables_nftables=1
 	right_arping=0
@@ -16342,6 +16757,10 @@ function initialize_script_settings() {
 	personal_network_selected=0
 	selected_network_type_text=""
 	unselected_network_type_text=""
+	standard_80211n=0
+	standard_80211ac=0
+	standard_80211ax=0
+	standard_80211be=0
 }
 
 #Detect graphics system
@@ -17466,7 +17885,7 @@ function remove_warnings() {
 	echo "${wep_attack_besside_dependencies[@]}" > /dev/null 2>&1
 	echo "${enterprise_attack_dependencies[@]}" > /dev/null 2>&1
 	echo "${enterprise_identities_dependencies[@]}" > /dev/null 2>&1
-	echo "${enterprise_certificate_analysis_dependencies[@]}" > /dev/null 2>&1
+	echo "${enterprise_certificates_analysis_dependencies[@]}" > /dev/null 2>&1
 	echo "${asleap_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${john_attacks_dependencies[@]}" > /dev/null 2>&1
 	echo "${johncrunch_attacks_dependencies[@]}" > /dev/null 2>&1

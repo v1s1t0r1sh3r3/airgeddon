@@ -3,6 +3,15 @@
 
 ### 11.50
  - Enterprise certificate analysis feature
+ - Fixed WEP besside-ng attack when hex key contains non-numeric chars
+ - Added DoS to enterprise identities capture process to improve reliability
+ - Added functions to simplify hooking menus and hints from plugins
+ - Added new variables to check support of 802.11n/802.11ac/802.11ax/802.11be standards
+ - Improved Evil Twin fake APs to add 802.11n/802.11ac/802.11ax if supported by the adapter
+ - Added support for detecting enterprise networks that report CMAC as their authentication method
+ - Fixed an issue in some DoS attacks with ESSIDs containing spaces
+ - Improved BSSID digit randomization to prevent fake AP from using the same MAC address as the original one
+ - Enhanced captive portal behaviour to avoid detection as suspicious network on Samsung devices
 
 ### 11.41
  - Added a function to simplify hooking language strings from plugins

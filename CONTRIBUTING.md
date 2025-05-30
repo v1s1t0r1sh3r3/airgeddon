@@ -99,7 +99,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
       <b>BAT</b>: <em>0x1b844e8251Db6A938813466Cf033FAF70c7c94bB</em> <br/>
       <b>Ethereum</b>: <em>0xaEf16Ffbd03A742Ab6DAB8Bd60C6014726099583</em> <br/>
       <b>Litecoin</b>: <em>ltc1q3ncz8gxzvzuekupatpm29k6u3c26cf78tw3zjx</em> <br/>
-      <b>Cardano</b>: <em>addr1qy4sdmjhpsx3z3wh7ryptyt9c3xfcdxrxull33sh9senmcxfeqzunfuzdvas294dmd6d265aep7u87eg8ypwx4flq84q36l5pu</em>
+      <b>Pi</b>: <em>GBWAREEMQJ6VRPXOH2UTXUYSQSKQDJLNKHSDUCBUJVWC2CFIASAZ6I5T</em>
     </td>
   </tr>
 </table>
@@ -145,7 +145,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
         Litecoin QR code:
       </td>
       <td>
-        Cardano QR code:
+        Pi QR code:
       </td>
     </tr>
     <tr>
@@ -156,7 +156,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
         <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/litecoin_qr.png" alt="Litecoin" title="Litecoin"/>
       </td>
       <td>
-        <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/cardano_qr.png" alt="Cardano" title="Cardano"/>
+        <img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/pi_qr.png" alt="Pi" title="Pi"/>
       </td>
     </tr>
   </table>
