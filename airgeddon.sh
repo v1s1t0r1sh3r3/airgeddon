@@ -353,6 +353,7 @@ sponsors=(
 		"Raleigh2016"
 		"hmmlopl"
 		"codythebeast89"
+		"Kaliscandinavia"
 		)
 
 #Hint vars
