@@ -1,0 +1,34 @@
+name: Feature Request
+description: Suggest a new idea to improve this project
+title: "[Feature Request]: "
+labels: ["needs triage", "feature request"]
+projects: ["v1s1t0r1sh3r3/airgeddon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please, consider asking your questions in the very active Discord community before opening an issue here. Issues must be opened in English. Submissions that are incomplete or incorrectly filled out will be automatically closed. For more info, check our [Issue Creation Policy](https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#issue-creation-policy)
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature description
+      description: Please describe your feature request in as much detail as possible so we can properly evaluate it
+      placeholder: Write your idea here...
+    validations:
+      required: true
+  - type: input
+    id: benefits
+    attributes:
+      label: Benefits
+      description: What would be the benefits of implementing this feature?
+      placeholder: e.g., Improves performance, enhances usability
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acceptance of Issue Creation Policy
+      description: By submitting this issue, you agree to follow our [Issue Creation Policy](https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#issue-creation-policy)
+      options:
+        - label: I agree to follow this project's Issue Creation policy
+          required: true

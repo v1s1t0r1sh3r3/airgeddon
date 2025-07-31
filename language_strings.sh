@@ -1994,7 +1994,7 @@ function initialize_language_strings() {
 	arr["POLISH",66]="Wybrany interfejs \${current_iface_on_messages} jest w trybie monitorowania. Można wykonać skanowanie"
 	arr["GERMAN",66]="Das ausgewählte Interface \${current_iface_on_messages} befindet sich im monitor-Modus. Der Scan kann durchgeführt werden"
 	arr["TURKISH",66]="Seçilen arayüz \${current_iface_on_messages} izleme modunda. Tarama gerçekleştirilebilir"
-	arr["ARABIC",66]="يمكن إجراء الاستكشاف .monior mode في وضع \${current_iface_on_messages} الواجهة المختارة"
+	arr["ARABIC",66]="يمكن إجراء الاستكشاف .monitor mode في وضع \${current_iface_on_messages} الواجهة المختارة"
 	arr["CHINESE",66]="所选接口 \${current_iface_on_messages} 已处于监听模式。可以扫描目标"
 
 	arr["ENGLISH",67]="WEP filter enabled in scan. When started, press [Ctrl+C] to stop..."
@@ -2759,7 +2759,7 @@ function initialize_language_strings() {
 	arr["FRENCH",121]="6.  Capture du Handshake"
 	arr["CATALAN",121]="6.  Captura Handshake"
 	arr["PORTUGUESE",121]="6.  Capturar Handshake"
-	arr["RUSSIAN",121]="6.  Захват handshake"
+	arr["RUSSIAN",121]="6.  Захват Handshake"
 	arr["GREEK",121]="6.  Καταγράψτε την Χειραψία"
 	arr["ITALIAN",121]="6.  Catturare Handshake"
 	arr["POLISH",121]="6.  Przechwyć Handshake"
@@ -6200,7 +6200,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",367]="You have bully installed (v\${bully_version}), but not required version. To perform Pixie Dust integrated bully attack you must have at least version v\${minimum_bully_pixiewps_version}"
 	arr["SPANISH",367]="Tienes bully instalado (v\${bully_version}), aunque no la versión requerida. Para realizar el ataque Pixie Dust integrado con bully has de tener al menos la versión v\${minimum_bully_pixiewps_version}"
-	arr["FRENCH",367]="Bully est installé (v\${bully_version}) mais ce n'est pas la bonne version. Vous devez avoir au moins la version v\${minimum_bully_pixiewps_version} pour la compatibilité pixie dust"
+	arr["FRENCH",367]="Bully est installé (v\${bully_version}) mais ce n'est pas la bonne version. Vous devez avoir au moins la version v\${minimum_bully_pixiewps_version} pour la compatibilité Pixie Dust"
 	arr["CATALAN",367]="Tens bully instal·lat (v\${bully_version}), encara que no és la versió requerida. Per realitzar l'atac Pixie Dust integrat amb bully has de tenir almenys la versió v\${minimum_bully_pixiewps_version}"
 	arr["PORTUGUESE",367]="Você tem o bully instalado (v\${bully_version}), mas não a versão necessária. Para fazer o ataque Pixie Dust com bully você precisa ter pelo menos a versão v\${minimum_bully_pixiewps_version}"
 	arr["RUSSIAN",367]="У вас установлен bully (v\${bully_version}), но не та версия, которая требуется. Для выполнения интегрированной в bully атаки Pixie Dust у вас должна быть по крайне мере версия v\${minimum_bully_pixiewps_version}"
@@ -6214,7 +6214,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",368]="You have bully installed (v\${bully_version}). You meet the version requirement to perform Pixie Dust integrated bully attack (minimum version v\${minimum_bully_pixiewps_version}). Script can continue..."
 	arr["SPANISH",368]="Tienes bully instalado (v\${bully_version}). Cumples con el requisito de versión para realizar el ataque Pixie Dust integrado con bully (versión mínima v\${minimum_bully_pixiewps_version}). El script puede continuar..."
-	arr["FRENCH",368]="Bully est installé (v\${bully_version}). Cette version est compatible avec l'attaque pixie dust (version minimale v\${minimum_bully_pixiewps_version}). Le script peut continuer..."
+	arr["FRENCH",368]="Bully est installé (v\${bully_version}). Cette version est compatible avec l'attaque Pixie Dust (version minimale v\${minimum_bully_pixiewps_version}). Le script peut continuer..."
 	arr["CATALAN",368]="Tens bully instal·lat (v\${bully_version}). Compleixes amb el requisit de versió per realitzar l'atac Pixie Dust integrat amb bully (versió mínima v\${minimum_bully_pixiewps_version}). El script pot continuar..."
 	arr["PORTUGUESE",368]="Você tem o bully instalado (v\${bully_version}). Você cumpre a exigência de versão para o ataque Pixie Dust com bully (versão mínima v\${minimum_bully_pixiewps_version}). O script pode continuar..."
 	arr["RUSSIAN",368]="У вас установлен bully (v\${bully_version}). Версия удовлетворяет требованиям для проведения интегрированной в bully атаки Pixie Dust (минимальная версия v\${minimum_bully_pixiewps_version}). Скрипт может продолжить работу..."
@@ -6242,7 +6242,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",370]="You have reaver installed (v\${reaver_version}). You meet the version requirement to perform Pixie Dust integrated reaver attack (minimum version v\${minimum_reaver_pixiewps_version}). Script can continue..."
 	arr["SPANISH",370]="Tienes reaver instalado (v\${reaver_version}). Cumples con el requisito de versión para realizar el ataque Pixie Dust integrado con reaver (versión minima v\${minimum_reaver_pixiewps_version}). El script puede continuar..."
-	arr["FRENCH",370]="Reaver est installé (v\${reaver_version}). Cette version est compatible avec l'attaque pixie dust (version minimale: \${minimum_reaver_pixiewps_version}). Le script peut continuer..."
+	arr["FRENCH",370]="Reaver est installé (v\${reaver_version}). Cette version est compatible avec l'attaque Pixie Dust (version minimale: \${minimum_reaver_pixiewps_version}). Le script peut continuer..."
 	arr["CATALAN",370]="Tens reaver instal·lat (v\${reaver_version}). Compleixes amb el requisit de versió per a realitzar l'atac Pixie Dust integrat amb reaver (versió mínima v\${minimum_reaver_pixiewps_version}). El script pot continuar..."
 	arr["PORTUGUESE",370]="Você tem o reaver instalado (v\${reaver_version}). Você cumpre a exigência de versão para o ataque Pixie Dust com reaver (versão mínima v\${minimum_reaver_pixiewps_version}). O script pode continuar..."
 	arr["RUSSIAN",370]="У вас установлен reaver (v\${reaver_version}). Версия удовлетворяет требованиям для выполнения интегрированной в reaver атаки Pixie Dust (минимальная версия v\${minimum_reaver_pixiewps_version}). Скрипт может продолжить работу..."
@@ -6256,7 +6256,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",371]="You have reaver installed (v\${reaver_version}), but not required version. To perform Pixie Dust integrated reaver attack you must have at least version v\${minimum_reaver_pixiewps_version}"
 	arr["SPANISH",371]="Tienes reaver instalado (v\${reaver_version}), aunque no la versión requerida. Para realizar el ataque Pixie Dust integrado con reaver has de tener al menos la versión v\${minimum_reaver_pixiewps_version}"
-	arr["FRENCH",371]="Reaver est installé (v\${reaver_version}) mais cette version n'est pas compatible avec l'attaque pixie dust. Version minimale requise: v\${minimum_reaver_pixiewps_version}"
+	arr["FRENCH",371]="Reaver est installé (v\${reaver_version}) mais cette version n'est pas compatible avec l'attaque Pixie Dust. Version minimale requise: v\${minimum_reaver_pixiewps_version}"
 	arr["CATALAN",371]="Tens reaver instal·lat (v\${reaver_version}), encara que no és la versió requerida. Per realitzar l'atac Pixie Dust integrat amb reaver has de tenir almenys la versió v\${minimum_reaver_pixiewps_version}"
 	arr["PORTUGUESE",371]="Você tem o reaver instalado (v\${reaver_version}), mas não a versão necessária. Para fazer o ataque Pixie Dust com reaver integrado você precisa ter pelo menos a versão v\${minimum_reaver_pixiewps_version}"
 	arr["RUSSIAN",371]="У вас установлен reaver (v\${reaver_version}), но не та версия, которая требуется. Для выполнения интегрированной в reaver атаки Pixie Dust у вас должна быть по крайней мере v\${minimum_reaver_pixiewps_version}"

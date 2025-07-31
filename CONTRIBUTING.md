@@ -107,7 +107,7 @@ Another way to contribute is buying some merchandising (mugs, T-shirts, etc.). A
 <br/>
 
 <div align="center">
-    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7ELM486P7XKKG"><img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/paypal_donate.png" alt="PayPal" title="PayPal"/></a>
+    <a href="https://www.paypal.com/paypalme/airgeddon"><img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/paypal_donate.png" alt="PayPal" title="PayPal"/></a>
     <a href="https://www.buymeacoffee.com/v1s1t0r"><img src="https://raw.githubusercontent.com/v1s1t0r1sh3r3/airgeddon/master/imgs/banners/buymeacoffee.png" alt="Buy me a coffee" title="Buy me a coffee"/></a>
 </div>
 

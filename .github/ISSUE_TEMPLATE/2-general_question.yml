@@ -1,0 +1,34 @@
+name: General Question
+description: Ask some general question
+title: "[General Question]: "
+labels: ["question"]
+projects: ["v1s1t0r1sh3r3/airgeddon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please, consider asking your questions in the very active Discord community before opening an issue here. Issues must be opened in English. Submissions that are incomplete or incorrectly filled out will be automatically closed. For more info, check our [Issue Creation Policy](https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#issue-creation-policy)
+  - type: input
+    id: technology
+    attributes:
+      label: Related technology
+      description: Is your question related to any specific technology (e.g., chipset, driver, OS)? If not, type N/A
+      placeholder: e.g., Docker, Mediatek chipsets, VMware virtualization
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Issue description
+      description: Please describe your question in as much detail as possible so we can better assist you
+      placeholder: Write your question here...
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acceptance of Issue Creation Policy
+      description: By submitting this issue, you agree to follow our [Issue Creation Policy](https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#issue-creation-policy)
+      options:
+        - label: I agree to follow this project's Issue Creation policy
+          required: true

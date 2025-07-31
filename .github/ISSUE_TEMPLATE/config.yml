@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Get airgeddon's Discord Community Support
+    url: https://discord.gg/sQ9dgt9
+    about: Consider asking your questions in the very active Discord community before opening an issue here.
+  - name: Check the FAQ & Troubleshooting Wiki
+    url: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/FAQ%20&%20Troubleshooting
+    about: Your question might already be answered in our FAQ & Troubleshooting section. Please check it before opening a new issue.

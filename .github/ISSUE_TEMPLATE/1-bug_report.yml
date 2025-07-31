@@ -1,0 +1,65 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[Possible Bug]: "
+labels: ["needs triage", "bug"]
+projects: ["v1s1t0r1sh3r3/airgeddon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please, consider asking your questions in the very active Discord community before opening an issue here. Issues must be opened in English. Submissions that are incomplete or incorrectly filled out will be automatically closed. For more info, check our [Issue Creation Policy](https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#issue-creation-policy)
+  - type: input
+    id: version
+    attributes:
+      label: airgeddon version
+      description: What is your airgeddon version? You can check it at the beginning of the script, in the title on the main menu, and in the "About & Credits / Sponsorship mentions" menu option
+      placeholder: e.g., v11.50
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: O.S. and version
+      description: What is your Linux OS and what version?
+      placeholder: e.g., Kali Linux 2025.1, Ubuntu 22.04
+    validations:
+      required: true
+  - type: dropdown
+    id: virtualization
+    attributes:
+      label: Virtualization
+      description: Is your O.S. running in native mode or is a virtualized system?
+      options:
+        - Native mode, no virtualization (Default)
+        - VMware
+        - VirtualBox
+        - Hyper-V
+        - Parallels Desktop
+        - Other
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: chipset
+    attributes:
+      label: Adapter and chipset
+      description: What is the chipset of your wireless adapter? check "lsusb" command's output or launch "airmon-ng --verbose" command to check it
+      placeholder: e.g., Alfa AWUS036AXML, chipset Mediatek MT7921AUN
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue description
+      description: Describe the issue and the steps to reproduce it. Add screenshots if they help us understand your problem
+      placeholder: Tell us what it's about!
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acceptance of Issue Creation Policy
+      description: By submitting this issue, you agree to follow our [Issue Creation Policy](https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#issue-creation-policy)
+      options:
+        - label: I agree to follow this project's Issue Creation policy
+          required: true
