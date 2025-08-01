@@ -267,7 +267,7 @@ beef_pass="airgeddon"
 beef_db="beef.db"
 beef_default_cfg_file="config.yaml"
 beef_needed_brackets_version="0.4.7.2"
-beef_installation_url="https://github.com/beefproject/beef/wiki/Installation"
+beef_installation_url="https://${repository_hostname}/beefproject/beef/wiki/Installation"
 hostapd_file="ag.hostapd.conf"
 hostapd_wpe_file="ag.hostapd_wpe.conf"
 hostapd_wpe_log="ag.hostapd_wpe.log"
@@ -357,6 +357,7 @@ sponsors=(
 		"codythebeast89"
 		"Kaliscandinavia"
 		"Furrycoder"
+		"Jonathon Coy"
 		)
 
 #Hint vars
