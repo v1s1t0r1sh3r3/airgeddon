@@ -4571,14 +4571,12 @@ function analyze_wpa3_mfp_status() {
 	fi
 
 	mfp_analysis_capture_file="${tmpdir}mfp_analysis-01.cap"
-	# Filtere gezielt nach Paketen, die RSN Capabilities enthalten und nehme die erste gültige Zeile
 	mfp_fields=$(tshark -r "${mfp_analysis_capture_file}" -Y "wlan.sa == ${bssid} && wlan.fc.type_subtype == 0x08 && wlan.rsn.capabilities.mfpc" -T fields -e wlan.rsn.capabilities.mfpc -e wlan.rsn.capabilities.mfpr 2> /dev/null | grep -E "True|False|1|0" | head -n 1)
 
 	if [ -n "${mfp_fields}" ]; then
 		mfpc=$(echo "${mfp_fields}" | awk '{print $1}' | cut -d',' -f1)
 		mfpr=$(echo "${mfp_fields}" | awk '{print $2}' | cut -d',' -f1)
 
-		# Normalisiere True/False zu 1/0 für einheitliche Abfragen
 		[ "${mfpc}" = "True" ] && mfpc="1"
 		[ "${mfpc}" = "False" ] && mfpc="0"
 		[ "${mfpr}" = "True" ] && mfpr="1"
