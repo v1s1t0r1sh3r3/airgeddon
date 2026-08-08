@@ -2203,7 +2203,7 @@ function hookable_wpa3_attacks_menu() {
 			fi
 		;;
 		*)
-			if ! ([[ "${wpa3_option}" =~ ^[0-9]+$ ]] && exec_wpa3_plugin_menu_option "${wpa3_option}"); then
+			if ! { [[ "${wpa3_option}" =~ ^[0-9]+$ ]] && exec_wpa3_plugin_menu_option "${wpa3_option}"; }; then
 				invalid_menu_option
 			fi
 		;;
