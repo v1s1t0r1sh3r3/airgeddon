@@ -11157,7 +11157,7 @@ function exec_hashcat_dictionary_attack() {
 	if [ "${1}" = "personal_handshake_pmkid_capture" ]; then
 		hashcat_cmd="hashcat -m ${hashcat_handshake_cracking_plugin} -a 0 \"${tmpdir}${hashcat_tmp_file}\" \"${DICTIONARY}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
 	elif [ "${1}" = "personal_handshake_pmkid_hash" ]; then
-		hashcat_cmd="hashcat -m ${hashcat_handshake_cracking_plugin} -a 0 \"${tmpdir}${hashcat_tmp_file}\" \"${DICTIONARY}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
+		hashcat_cmd="hashcat -m ${hashcat_pmkid_cracking_plugin} -a 0 \"${tmpdir}${hashcat_tmp_file}\" \"${DICTIONARY}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
 	else
 		rm -rf "${tmpdir}hctmp"* > /dev/null 2>&1
 		hashcat_cmd="hashcat -m ${hashcat_enterprise_cracking_plugin} -a 0 \"${hashcatenterpriseenteredpath}\" \"${DICTIONARY}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
@@ -11174,7 +11174,7 @@ function exec_hashcat_bruteforce_attack() {
 	if [ "${1}" = "personal_handshake_pmkid_capture" ]; then
 		hashcat_cmd="hashcat -m ${hashcat_handshake_cracking_plugin} -a 3 \"${tmpdir}${hashcat_tmp_file}\" ${charset} --increment --increment-min=${minlength} --increment-max=${maxlength} --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
 	elif [ "${1}" = "personal_handshake_pmkid_hash" ]; then
-		hashcat_cmd="hashcat -m ${hashcat_handshake_cracking_plugin} -a 3 \"${tmpdir}${hashcat_tmp_file}\" ${charset} --increment --increment-min=${minlength} --increment-max=${maxlength} --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
+		hashcat_cmd="hashcat -m ${hashcat_pmkid_cracking_plugin} -a 3 \"${tmpdir}${hashcat_tmp_file}\" ${charset} --increment --increment-min=${minlength} --increment-max=${maxlength} --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
 	else
 		rm -rf "${tmpdir}hctmp"* > /dev/null 2>&1
 		hashcat_cmd="hashcat -m ${hashcat_enterprise_cracking_plugin} -a 3 \"${hashcatenterpriseenteredpath}\" ${charset} --increment --increment-min=${minlength} --increment-max=${maxlength} --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
@@ -11191,7 +11191,7 @@ function exec_hashcat_rulebased_attack() {
 	if [ "${1}" = "personal_handshake_pmkid_capture" ]; then
 		hashcat_cmd="hashcat -m ${hashcat_handshake_cracking_plugin} -a 0 \"${tmpdir}${hashcat_tmp_file}\" \"${DICTIONARY}\" -r \"${RULES}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
 	elif [ "${1}" = "personal_handshake_pmkid_hash" ]; then
-		hashcat_cmd="hashcat -m ${hashcat_handshake_cracking_plugin} -a 0 \"${tmpdir}${hashcat_tmp_file}\" \"${DICTIONARY}\" -r \"${RULES}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
+		hashcat_cmd="hashcat -m ${hashcat_pmkid_cracking_plugin} -a 0 \"${tmpdir}${hashcat_tmp_file}\" \"${DICTIONARY}\" -r \"${RULES}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
 	else
 		rm -rf "${tmpdir}hctmp"* > /dev/null 2>&1
 		hashcat_cmd="hashcat -m ${hashcat_enterprise_cracking_plugin} -a 0 \"${hashcatenterpriseenteredpath}\" \"${DICTIONARY}\" -r \"${RULES}\" --potfile-disable -o \"${tmpdir}${hashcat_pot_tmp}\"${hashcat_cmd_fix} | tee \"${tmpdir}${hashcat_output_file}\" ${colorize}"
@@ -14328,9 +14328,19 @@ function convert_cap_to_hashcat_format() {
 		echo "1" | timeout -s SIGTERM 3 aircrack-ng "${enteredpath}" -J "${tmpdir}${hashcat_tmp_simple_name_file}" -b "${bssid}" > /dev/null 2>&1
 		return 0
 	else
+		local use_hcx_conversion=0
 		if [ "${hcx_conversion_needed}" -eq 1 ]; then
+			use_hcx_conversion=1
+		elif validate_hashcat_pmkid_version; then
+			if [ "${pmkid_detected_for_offline_decryption}" -eq 1 ]; then
+				use_hcx_conversion=1
+			fi
+		fi
+
+		if [ "${use_hcx_conversion}" -eq 1 ]; then
 			if hash hcxpcapngtool 2> /dev/null; then
 				hcxpcapngtool -o "${tmpdir}${hashcat_tmp_file}" "${enteredpath}" > /dev/null 2>&1
+				hashcat_handshake_cracking_plugin="${hashcat_pmkid_cracking_plugin}"
 				return 0
 			else
 				echo

@@ -1,5 +1,6 @@
 ### 12.02
  - Added 5GHz band hopping support to DoS pursuit mode
+ - Fixed PMKID cracking from hash and capture files on older Hashcat versions
 
 ### 12.01
  - Added official website links
