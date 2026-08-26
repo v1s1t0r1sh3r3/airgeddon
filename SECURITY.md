@@ -16,4 +16,4 @@ If the vulnerability is confirmed, the maintainers may use GitHub Security Advis
 
 ## Supported Versions
 
-Security fixes are only provided for the latest stable release available from the master branch. Development, beta, testing, legacy, or otherwise modified versions are not covered.
+Security fixes are provided only for the latest stable release available from the `master` branch. Development, beta, testing, legacy, or otherwise modified versions are not supported. Issues introduced by plugins are also not covered.
