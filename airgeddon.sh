@@ -7362,6 +7362,18 @@ function restore_iptables_nftables() {
 	fi
 }
 
+#Check NAT support
+function check_iptables_nftables_nat_support() {
+
+	debug_print
+
+	if [ "${iptables_nftables}" -eq 1 ]; then
+		printf '%s\n' "add table ip nat_airgeddon_check_${$}" "add chain ip nat_airgeddon_check_${$} prerouting_airgeddon_check { type nat hook prerouting priority -100; }" | "${iptables_cmd}" --check -f - > /dev/null 2>&1
+	else
+		"${iptables_cmd}" -t nat -L -n > /dev/null 2>&1
+	fi
+}
+
 #Prepare iptables/nftables after a clean to avoid errors
 function prepare_iptables_nftables() {
 
@@ -16638,6 +16650,15 @@ function et_prerequisites() {
 				language_strings "${language}" 293 "title"
 			;;
 		esac
+	fi
+
+	if [[ -z "${enterprise_mode}" ]] && ! check_iptables_nftables_nat_support; then
+		echo
+		language_strings "${language}" 848 "red"
+		language_strings "${language}" 115 "read"
+		return_to_et_main_menu=1
+		return_to_et_main_menu_from_beef=1
+		return
 	fi
 
 	print_iface_selected

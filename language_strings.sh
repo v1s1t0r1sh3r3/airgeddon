@@ -12972,6 +12972,20 @@ function initialize_language_strings() {
 	arr["TURKISH",847]="'MFP capable', yalnızca uyumlu cihazların korumayı kullanacağı anlamına gelir. Bazı istemciler geleneksel DoS saldırısına karşı savunmasız olabilir"
 	arr["ARABIC",847]="التقليدي Dos يعني أن الأجهزة المتوافقة فقط ستستخدم الحماية. قد يكون بعض العملاء عرضة لهجوم MFP capable"
 	arr["CHINESE",847]="\${pending_of_translation} MFP capable 表示只有兼容的设备才会使用该保护机制。某些客户端可能容易受到传统 DoS 攻击的影响"
+
+	arr["ENGLISH",848]="Despite having iptables/nftables installed, the system does not support NAT. Therefore, the attack cannot be started. Install the required kernel modules or use a kernel with NAT support"
+	arr["SPANISH",848]="A pesar de tener instaladas iptables/nftables, el sistema no soporta NAT. Por lo tanto, el ataque no puede iniciarse. Debes instalar los módulos necesarios del kernel o utilizar un kernel con soporte NAT"
+	arr["FRENCH",848]="\${pending_of_translation} Bien qu'iptables/nftables soient installés, le système ne prend pas en charge NAT. Par conséquent, l'attaque ne peut pas être lancée. Tu dois installer les modules nécessaires du kernel ou utiliser un kernel prenant en charge NAT"
+	arr["CATALAN",848]="\${pending_of_translation} Tot i tenir iptables/nftables instal·lades, el sistema no suporta NAT. Per tant, l'atac no es pot iniciar. Has d'instal·lar els mòduls necessaris del kernel o utilitzar un kernel amb suport NAT"
+	arr["PORTUGUESE",848]="\${pending_of_translation} Apesar de ter o iptables/nftables instalado, o sistema não suporta NAT. Portanto, o ataque não pode ser iniciado. Você deve instalar os módulos necessários do kernel ou usar um kernel com suporte a NAT"
+	arr["RUSSIAN",848]="\${pending_of_translation} Несмотря на установленные iptables/nftables, система не поддерживает NAT. Поэтому атака не может быть запущена. Необходимо установить требуемые модули ядра или использовать ядро с поддержкой NAT"
+	arr["GREEK",848]="\${pending_of_translation} Παρόλο που τα iptables/nftables είναι εγκατεστημένα, το σύστημα δεν υποστηρίζει NAT. Επομένως, η επίθεση δεν μπορεί να ξεκινήσει. Πρέπει να εγκαταστήσεις τα απαιτούμενα modules του kernel ή να χρησιμοποιήσεις kernel με υποστήριξη NAT"
+	arr["ITALIAN",848]="\${pending_of_translation} Nonostante iptables/nftables siano installati, il sistema non supporta NAT. Pertanto, l'attacco non può essere avviato. Devi installare i moduli necessari del kernel o utilizzare un kernel con supporto NAT"
+	arr["POLISH",848]="\${pending_of_translation} Pomimo zainstalowanych iptables/nftables system nie obsługuje NAT. Dlatego atak nie może zostać uruchomiony. Należy zainstalować wymagane moduły jądra lub użyć jądra z obsługą NAT"
+	arr["GERMAN",848]="\${pending_of_translation} Obwohl iptables/nftables installiert sind, unterstützt das System NAT nicht. Daher kann der Angriff nicht gestartet werden. Du musst die erforderlichen Kernelmodule installieren oder einen Kernel mit NAT-Unterstützung verwenden"
+	arr["TURKISH",848]="\${pending_of_translation} iptables/nftables yüklü olmasına rağmen sistem NAT desteğine sahip değil. Bu nedenle saldırı başlatılamıyor. Gerekli kernel modüllerini yüklemeli veya NAT destekli bir kernel kullanmalısın"
+	arr["ARABIC",848]="\${pending_of_translation} NAT يدعم kernel أو استخدام NAT اللازمة أو kernel modules يجب تثبيت .لا يمكن بدء الهجوم لذلك .NAT فإن النظام لا يدعم iptables/nftables على الرغم من تثبيت"
+	arr["CHINESE",848]="\${pending_of_translation} 尽管已安装 iptables/nftables，但系统不支持 NAT。因此，无法启动攻击。你必须安装所需的 kernel modules，或使用支持 NAT 的 kernel"
 }
 
 #Expand escaped variables in language strings with their current values
