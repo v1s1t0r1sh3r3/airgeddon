@@ -18566,20 +18566,6 @@ function general_checkings() {
 	exit_script_option
 }
 
-#Check if system is running under Windows Subsystem for Linux
-check_wsl() {
-
-	debug_print
-
-	if [ "${distro}" = "Microsoft" ]; then
-		echo
-		language_strings "${language}" 701 "red"
-		language_strings "${language}" 115 "read"
-		exit_code=1
-		exit_script_option
-	fi
-}
-
 #Check if the user is root
 function check_root_permissions() {
 
@@ -20622,7 +20608,6 @@ function main() {
 
 		check_bash_version
 		check_root_permissions
-		check_wsl
 
 		if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
 			echo
