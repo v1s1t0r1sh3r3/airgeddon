@@ -9,7 +9,7 @@ plugin_author="v1s1t0r"
 
 plugin_enabled=1
 
-plugin_minimum_ag_affected_version="11.61"
+plugin_minimum_ag_affected_version="12.02"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("Kali" "Parrot" "BlackArch")
 
@@ -43,7 +43,7 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["mdk4"]="mdk4"
 			commands_to_packages_correspondence["hashcat"]="hashcat"
 			commands_to_packages_correspondence["hostapd"]="hostapd"
-			commands_to_packages_correspondence["dhcpd"]="isc-dhcp-server"
+			commands_to_packages_correspondence["kea-dhcp4"]="kea-dhcp4-server"
 			commands_to_packages_correspondence["nft"]="nftables"
 			commands_to_packages_correspondence["iptables"]="iptables"
 			commands_to_packages_correspondence["ettercap"]="ettercap-text-only"
@@ -99,7 +99,7 @@ function commands_to_packages() {
 			commands_to_packages_correspondence["mdk4"]="mdk4"
 			commands_to_packages_correspondence["hashcat"]="hashcat"
 			commands_to_packages_correspondence["hostapd"]="hostapd"
-			commands_to_packages_correspondence["dhcpd"]="dhcp"
+			commands_to_packages_correspondence["kea-dhcp4"]="kea"
 			commands_to_packages_correspondence["nft"]="nftables"
 			commands_to_packages_correspondence["iptables"]="iptables"
 			commands_to_packages_correspondence["ettercap"]="ettercap"
