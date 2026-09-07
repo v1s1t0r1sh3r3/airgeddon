@@ -52,7 +52,7 @@ optional_tools_names=(
 						"mdk4"
 						"hashcat"
 						"hostapd"
-						"dhcpd"
+						"kea-dhcp4"
 						"nft"
 						"ettercap"
 						"etterlog"
@@ -97,7 +97,7 @@ declare -A possible_package_names=(
 									[${optional_tools_names[3]}]="mdk4" #mdk4
 									[${optional_tools_names[4]}]="hashcat" #hashcat
 									[${optional_tools_names[5]}]="hostapd" #hostapd
-									[${optional_tools_names[6]}]="isc-dhcp-server / dhcp-server / dhcp" #dhcpd
+									[${optional_tools_names[6]}]="kea-dhcp4-server / kea" #kea-dhcp4
 									[${optional_tools_names[7]}]="nftables" #nft
 									[${optional_tools_names[8]}]="ettercap / ettercap-text-only / ettercap-graphical" #ettercap
 									[${optional_tools_names[9]}]="ettercap / ettercap-text-only / ettercap-graphical" #etterlog
@@ -252,7 +252,7 @@ wpa3_online_attack_plugin_repo="https://${repository_hostname}/OscarAkaElvis/air
 wpa3_dragon_drain_plugin_repo="https://${repository_hostname}/Janek79ax/dragon-drain-wpa3-airgeddon-plugin"
 wpa3_cookie_guzzler_plugin_repo="https://${repository_hostname}/OscarAkaElvis/airgeddon-plugins"
 
-#Dhcpd, Hostapd, Hostapd-wpe, Hostapd-mana and misc Evil Twin vars
+#Dhcp server, Hostapd, Hostapd-wpe, Hostapd-mana and misc Evil Twin vars
 loopback_ip="127.0.0.1"
 loopback_ipv6="::1/128"
 loopback_interface="lo"
