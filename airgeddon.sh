@@ -258,7 +258,7 @@ loopback_ipv6="::1/128"
 loopback_interface="lo"
 routing_tmp_file="ag.iptables_nftables"
 dhcpd_file="ag.dhcpd.conf"
-dhcpd_pid_file="dhcpd.pid"
+kea_leases_file="ag.kea-leases4.csv"
 dnsmasq_file="ag.dnsmasq.conf"
 internet_dns1="8.8.8.8"
 internet_dns2="8.8.4.4"
@@ -322,11 +322,6 @@ asleap_pot_tmp="ag.asleap_tmp.txt"
 channelfile="ag.et_channel.txt"
 bandfile="ag.et_band.txt"
 customportals_php_as_cgi=1
-possible_dhcp_leases_files=(
-								"/var/lib/dhcp/dhcpd.leases"
-								"/var/state/dhcp/dhcpd.leases"
-								"/var/lib/dhcpd/dhcpd.leases"
-							)
 possible_beef_known_locations=(
 									"/usr/share/beef/"
 									"/usr/share/beef-xss/"
@@ -7245,10 +7240,6 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}" > /dev/null 2>&1
 		rm -rf "${scriptfolder}${hostapd_wpe_default_log}" > /dev/null 2>&1
 
-		if [ "${dhcpd_path_changed}" -eq 1 ]; then
-			rm -rf "${dhcp_path}" > /dev/null 2>&1
-		fi
-
 		if [ "${beef_found}" -eq 1 ]; then
 			rm -rf "${beef_path}${beef_file}" > /dev/null 2>&1
 		fi
@@ -7313,10 +7304,6 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}agwpa3"* > /dev/null 2>&1
 		rm -rf "${tmpdir}cookie_guzzler"* > /dev/null 2>&1
 		rm -rf "${tmpdir}mfp_analysis"* > /dev/null 2>&1
-	fi
-
-	if [ "${dhcpd_path_changed}" -eq 1 ]; then
-		rm -rf "${dhcp_path}" > /dev/null 2>&1
 	fi
 
 	if [ "${beef_found}" -eq 1 ]; then
@@ -11973,70 +11960,55 @@ function set_network_interface_data() {
 	et_range_stop="${first_octet}.${second_octet}.${third_octet}.100"
 }
 
-#Create configuration file for dhcpd
+#Create configuration file for DHCP server
 function set_dhcp_config() {
 
 	debug_print
 
 	rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
+	rm -rf "${tmpdir}${kea_leases_file}" > /dev/null 2>&1
 	rm -rf "${tmpdir}clts.txt" > /dev/null 2>&1
 	ip link set "${interface}" up > /dev/null 2>&1
 
 	{
-	echo -e "authoritative;"
-	echo -e "default-lease-time 600;"
-	echo -e "max-lease-time 7200;"
-	echo -e "subnet ${et_ip_range} netmask ${std_c_mask} {"
-	echo -e "\toption broadcast-address ${et_broadcast_ip};"
-	echo -e "\toption routers ${et_ip_router};"
-	echo -e "\toption subnet-mask ${std_c_mask};"
+	echo -e "{"
+	echo -e "\t\"Dhcp4\": {"
+	echo -e "\t\t\"interfaces-config\": {"
+	echo -e "\t\t\t\"interfaces\": [ \"${interface}\" ]"
+	echo -e "\t\t},"
+	echo -e "\t\t\"lease-database\": {"
+	echo -e "\t\t\t\"type\": \"memfile\","
+	echo -e "\t\t\t\"persist\": true,"
+	echo -e "\t\t\t\"name\": \"${kea_leases_file}\","
+	echo -e "\t\t\t\"lfc-interval\": 0"
+	echo -e "\t\t},"
+	echo -e "\t\t\"authoritative\": true,"
+	echo -e "\t\t\"valid-lifetime\": 600,"
+	echo -e "\t\t\"max-valid-lifetime\": 7200,"
+	echo -e "\t\t\"subnet4\": ["
+	echo -e "\t\t\t{"
+	echo -e "\t\t\t\t\"subnet\": \"${et_ip_range}/${std_c_mask_cidr}\","
+	echo -e "\t\t\t\t\"pools\": [ { \"pool\": \"${et_range_start} - ${et_range_stop}\" } ],"
+	echo -e "\t\t\t\t\"option-data\": ["
+	echo -e "\t\t\t\t\t{ \"name\": \"broadcast-address\", \"data\": \"${et_broadcast_ip}\", \"always-send\": true },"
+	echo -e "\t\t\t\t\t{ \"name\": \"routers\", \"data\": \"${et_ip_router}\" },"
 	} >> "${tmpdir}${dhcpd_file}"
 
 	if [ "${et_mode}" != "et_captive_portal" ]; then
-		echo -e "\toption domain-name-servers ${internet_dns1}, ${internet_dns2};" >> "${tmpdir}${dhcpd_file}"
+		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${internet_dns1}, ${internet_dns2}\" }" >> "${tmpdir}${dhcpd_file}"
 	else
-		echo -e "\toption domain-name-servers ${et_ip_router};" >> "${tmpdir}${dhcpd_file}"
+		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${et_ip_router}\" }" >> "${tmpdir}${dhcpd_file}"
 	fi
 
 	{
-	echo -e "\trange ${et_range_start} ${et_range_stop};"
+	echo -e "\t\t\t\t]"
+	echo -e "\t\t\t}"
+	echo -e "\t\t]"
+	echo -e "\t}"
 	echo -e "}"
 	} >> "${tmpdir}${dhcpd_file}"
 
-	leases_found=0
-	for item in "${!possible_dhcp_leases_files[@]}"; do
-		if [ -f "${possible_dhcp_leases_files[${item}]}" ]; then
-			leases_found=1
-			key_leases_found=${item}
-			break
-		fi
-	done
-
-	if [ "${leases_found}" -eq 1 ]; then
-		echo -e "lease-file-name \"${possible_dhcp_leases_files[${key_leases_found}]}\";" >> "${tmpdir}${dhcpd_file}"
-		chmod a+w "${possible_dhcp_leases_files[${key_leases_found}]}" > /dev/null 2>&1
-	else
-		touch "${possible_dhcp_leases_files[0]}" > /dev/null 2>&1
-		echo -e "lease-file-name \"${possible_dhcp_leases_files[0]}\";" >> "${tmpdir}${dhcpd_file}"
-		chmod a+w "${possible_dhcp_leases_files[0]}" > /dev/null 2>&1
-	fi
-
 	dhcp_path="${tmpdir}${dhcpd_file}"
-	if hash apparmor_status 2> /dev/null; then
-		if apparmor_status 2> /dev/null | grep dhcpd > /dev/null; then
-			if [ -d /etc/dhcpd ]; then
-				cp "${tmpdir}${dhcpd_file}" /etc/dhcpd/ 2> /dev/null
-				dhcp_path="/etc/dhcpd/${dhcpd_file}"
-			elif [ -d /etc/dhcp ]; then
-				cp "${tmpdir}${dhcpd_file}" /etc/dhcp/ 2> /dev/null
-				dhcp_path="/etc/dhcp/${dhcpd_file}"
-			else
-				cp "${tmpdir}${dhcpd_file}" /etc/ 2> /dev/null
-				dhcp_path="/etc/${dhcpd_file}"
-			fi
-			dhcpd_path_changed=1
-		fi
-	fi
 }
 
 #Change MAC address of desired interface
@@ -12147,7 +12119,7 @@ function set_std_internet_routing_rules() {
 	sleep 2
 }
 
-#Launch dhcpd server
+#Launch DHCP server
 function launch_dhcp_server() {
 
 	debug_print
@@ -12165,12 +12137,11 @@ function launch_dhcp_server() {
 		;;
 	esac
 
-	rm -rf "/var/run/${dhcpd_pid_file}" 2> /dev/null
-	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "dhcpd -d -cf \"${dhcp_path}\" ${interface} 2>&1 | tee -a ${tmpdir}clts.txt 2>&1" "DHCP"
+	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${tmpdir}\" KEA_PIDFILE_DIR=\"${tmpdir}\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1 | tee -a ${tmpdir}clts.txt 2>&1" "DHCP"
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
-		get_tmux_process_id "dhcpd -d -cf \"${dhcp_path}\" ${interface}"
+		get_tmux_process_id "${optional_tools_names[6]} -c \"${dhcp_path}\""
 		et_processes+=("${global_process_pid}")
 		global_process_pid=""
 	fi
@@ -19076,7 +19047,6 @@ function initialize_script_settings() {
 	routing_modified=0
 	spoofed_mac=0
 	mac_spoofing_desired=0
-	dhcpd_path_changed=0
 	xratio=6.2
 	yratio=13.9
 	ywindow_edge_lines=2
