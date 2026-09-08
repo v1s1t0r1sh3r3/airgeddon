@@ -11967,7 +11967,6 @@ function set_dhcp_config() {
 
 	rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
 	rm -rf "${tmpdir}${kea_leases_file}" > /dev/null 2>&1
-	rm -rf "${tmpdir}clts.txt" > /dev/null 2>&1
 	ip link set "${interface}" up > /dev/null 2>&1
 
 	{
@@ -12141,7 +12140,7 @@ function launch_dhcp_server() {
 		;;
 	esac
 
-	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${tmpdir}\" KEA_PIDFILE_DIR=\"${tmpdir}\" KEA_LOCKFILE_DIR=\"${tmpdir%/}\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1 | tee -a ${tmpdir}clts.txt 2>&1" "DHCP"
+	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${tmpdir}\" KEA_PIDFILE_DIR=\"${tmpdir}\" KEA_LOCKFILE_DIR=\"${tmpdir%/}\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1" "DHCP"
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
@@ -13152,7 +13151,7 @@ function set_et_control_script() {
 			fi
 
 			echo -e "\t${green_color}${et_misc_texts[${language},3]}${normal_color}"
-			readarray -t DHCPCLIENTS < <(grep DHCPACK < "${tmpdir}clts.txt")
+			readarray -t DHCPCLIENTS < <(tail -n +2 "${tmpdir}${kea_leases_file}" 2> /dev/null)
 			client_ips=()
 
 			#shellcheck disable=SC2199
@@ -13160,14 +13159,15 @@ function set_et_control_script() {
 				echo -e "\t${et_misc_texts[${language},7]}"
 			else
 				for client in "\${DHCPCLIENTS[@]}"; do
-					[[ \${client} =~ ^DHCPACK[[:space:]]on[[:space:]]([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})[[:space:]]to[[:space:]](([a-fA-F0-9]{2}:?){5,6}).* ]] && client_ip="\${BASH_REMATCH[1]}" && client_mac="\${BASH_REMATCH[2]}"
+					IFS=',' read -r client_ip client_mac client_id client_valid_lifetime client_expire client_subnet_id client_fqdn_fwd client_fqdn_rev client_hostname client_data <<< "\${client}"
+					if [[ ! \${client_ip} =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]] || [[ ! \${client_mac} =~ ^([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}$ ]]; then
+						continue
+					fi
 					if [[ " \${client_ips[*]} " != *" \${client_ip} "* ]]; then
-						client_hostname=""
-						[[ \${client} =~ .*(\(.+\)).* ]] && client_hostname="\${BASH_REMATCH[1]}"
 						if [[ -z "\${client_hostname}" ]]; then
 							echo -ne "\t\${client_ip} \${client_mac}"
 						else
-							echo -ne "\t\${client_ip} \${client_mac} \${client_hostname}"
+							echo -ne "\t\${client_ip} \${client_mac} (\${client_hostname})"
 						fi
 
 						if [[ ! " \${sounded_ips[*]} " =~ \${client_ip} ]]; then
