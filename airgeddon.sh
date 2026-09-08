@@ -11976,6 +11976,9 @@ function set_dhcp_config() {
 	echo -e "\t\t\"interfaces-config\": {"
 	echo -e "\t\t\t\"interfaces\": [ \"${interface}\" ]"
 	echo -e "\t\t},"
+	echo -e "\t\t\"multi-threading\": {"
+	echo -e "\t\t\t\"enable-multi-threading\": false"
+	echo -e "\t\t},"
 	echo -e "\t\t\"lease-database\": {"
 	echo -e "\t\t\t\"type\": \"memfile\","
 	echo -e "\t\t\t\"persist\": true,"
@@ -11987,6 +11990,7 @@ function set_dhcp_config() {
 	echo -e "\t\t\"max-valid-lifetime\": 7200,"
 	echo -e "\t\t\"subnet4\": ["
 	echo -e "\t\t\t{"
+	echo -e "\t\t\t\t\"id\": 1,"
 	echo -e "\t\t\t\t\"subnet\": \"${et_ip_range}/${std_c_mask_cidr}\","
 	echo -e "\t\t\t\t\"pools\": [ { \"pool\": \"${et_range_start} - ${et_range_stop}\" } ],"
 	echo -e "\t\t\t\t\"option-data\": ["
@@ -12137,7 +12141,7 @@ function launch_dhcp_server() {
 		;;
 	esac
 
-	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${tmpdir}\" KEA_PIDFILE_DIR=\"${tmpdir}\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1 | tee -a ${tmpdir}clts.txt 2>&1" "DHCP"
+	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${tmpdir}\" KEA_PIDFILE_DIR=\"${tmpdir}\" KEA_LOCKFILE_DIR=\"${tmpdir%/}\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1 | tee -a ${tmpdir}clts.txt 2>&1" "DHCP"
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
