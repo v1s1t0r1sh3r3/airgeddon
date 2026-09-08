@@ -11993,8 +11993,8 @@ function prepare_kea_runtime_dir() {
 		kea_runtime_ownership_changed=1
 	fi
 
-	touch "${kea_runtime_dir}${kea_leases_file}" "${kea_runtime_dir}${kea_pid_file}" > /dev/null 2>&1
-	chmod 600 "${kea_runtime_dir}${kea_leases_file}" "${kea_runtime_dir}${kea_pid_file}" > /dev/null 2>&1
+	touch "${kea_runtime_dir}${kea_pid_file}" > /dev/null 2>&1
+	chmod 600 "${kea_runtime_dir}${kea_pid_file}" > /dev/null 2>&1
 	kea_placeholder_pid=$(($(cat < /proc/sys/kernel/pid_max) + 1))
 	echo "${kea_placeholder_pid}" > "${kea_runtime_dir}${kea_pid_file}"
 }
@@ -12039,7 +12039,7 @@ function set_dhcp_config() {
 	echo -e "\t\t\"lease-database\": {"
 	echo -e "\t\t\t\"type\": \"memfile\","
 	echo -e "\t\t\t\"persist\": true,"
-	echo -e "\t\t\t\"name\": \"${kea_leases_file}\","
+	echo -e "\t\t\t\"name\": \"${kea_runtime_dir}${kea_leases_file}\","
 	echo -e "\t\t\t\"lfc-interval\": 0"
 	echo -e "\t\t},"
 	echo -e "\t\t\"authoritative\": true,"
@@ -12199,7 +12199,7 @@ function launch_dhcp_server() {
 	esac
 
 	prepare_kea_runtime_dir
-	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dhcp_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${kea_runtime_dir%/}\" KEA_PIDFILE_DIR=\"${kea_runtime_dir%/}\" KEA_LOCKFILE_DIR=\"none\" ${optional_tools_names[6]} -c \"${dhcp_config_path}\" 2>&1" "DHCP"
+	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dhcp_scr_window_position} -T \"DHCP\"" "KEA_PIDFILE_DIR=\"${kea_runtime_dir%/}\" KEA_LOCKFILE_DIR=\"none\" ${optional_tools_names[6]} -c \"${dhcp_config_path}\" 2>&1" "DHCP"
 	for _ in {1..20}; do
 		[ "$(cat "${kea_runtime_dir}${kea_pid_file}" 2> /dev/null)" != "${kea_placeholder_pid}" ] && break
 		sleep 0.1
