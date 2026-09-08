@@ -7271,6 +7271,9 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}${hostapd_wpe_log}" > /dev/null 2>&1
 		rm -rf "${scriptfolder}${hostapd_wpe_default_log}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
+		rm -rf "${tmpdir}${kea_leases_file}" > /dev/null 2>&1
+		rm -rf "${tmpdir}"*.kea-dhcp4.pid > /dev/null 2>&1
+		rm -rf "${tmpdir}logger_lockfile" > /dev/null 2>&1
 		rm -rf "${tmpdir}${dnsmasq_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_et_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_enterprise_file}" > /dev/null 2>&1
@@ -11967,6 +11970,8 @@ function set_dhcp_config() {
 
 	rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
 	rm -rf "${tmpdir}${kea_leases_file}" > /dev/null 2>&1
+	rm -rf "${tmpdir}"*.kea-dhcp4.pid > /dev/null 2>&1
+	rm -rf "${tmpdir}logger_lockfile" > /dev/null 2>&1
 	ip link set "${interface}" up > /dev/null 2>&1
 
 	{
