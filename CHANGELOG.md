@@ -2,6 +2,7 @@
  - Added 5GHz band hopping support to DoS pursuit mode
  - Fixed PMKID cracking from hash and capture files on older Hashcat versions
  - Added iptables/nftables NAT support validation
+ - Fixed tmux errors shown when closing already terminated windows
  - Replaced ISC DHCP server dependency with Kea DHCP server
 
 ### 12.01

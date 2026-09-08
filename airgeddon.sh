@@ -4885,7 +4885,7 @@ function set_wep_key_script() {
 							continue
 						fi
 					fi
-					tmux kill-window -t "${session_name}:\${current_window_name}"
+					tmux kill-window -t "${session_name}:\${current_window_name}" 2> /dev/null
 				done
 			}
 		EOF
@@ -12828,7 +12828,7 @@ function set_enterprise_control_script() {
 							continue
 						fi
 					fi
-					tmux kill-window -t "${session_name}:\${current_window_name}"
+					tmux kill-window -t "${session_name}:\${current_window_name}" 2> /dev/null
 				done
 			}
 		EOF
@@ -13069,7 +13069,7 @@ function set_et_control_script() {
 							continue
 						fi
 					fi
-					tmux kill-window -t "${session_name}:\${current_window_name}"
+					tmux kill-window -t "${session_name}:\${current_window_name}" 2> /dev/null
 				done
 			}
 		EOF
@@ -19781,7 +19781,7 @@ function kill_tmux_windows() {
 				continue
 			fi
 		fi
-		tmux kill-window -t "${session_name}:${current_window_name}"
+		tmux kill-window -t "${session_name}:${current_window_name}" 2> /dev/null
 	done
 }
 
