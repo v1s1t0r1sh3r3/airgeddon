@@ -257,8 +257,9 @@ loopback_ip="127.0.0.1"
 loopback_ipv6="::1/128"
 loopback_interface="lo"
 routing_tmp_file="ag.iptables_nftables"
-dhcpd_file="ag.dhcpd.conf"
-kea_leases_file="ag.kea-leases4.csv"
+dhcp_config_file=""
+kea_file_prefix=""
+kea_leases_file=""
 kea_runtime_dir="/var/lib/kea/"
 kea_runtime_lock_dir="${system_tmpdir}ag.kea_runtime_lock"
 kea_runtime_original_owner=""
@@ -7243,6 +7244,9 @@ function clean_tmpfiles() {
 	debug_print
 
 	restore_kea_runtime_dir
+	if [ -n "${kea_file_prefix}" ]; then
+		rm -rf "${kea_runtime_dir}${kea_file_prefix}"* > /dev/null 2>&1
+	fi
 
 	if [ "${1}" = "exit_script" ]; then
 		rm -rf "${tmpdir}" > /dev/null 2>&1
@@ -7278,8 +7282,6 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}${hostapd_wpe_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${hostapd_wpe_log}" > /dev/null 2>&1
 		rm -rf "${scriptfolder}${hostapd_wpe_default_log}" > /dev/null 2>&1
-		rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
-		rm -rf "${kea_runtime_dir}${kea_leases_file}"* > /dev/null 2>&1
 		rm -rf "${tmpdir}${dnsmasq_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_et_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_enterprise_file}" > /dev/null 2>&1
@@ -12017,11 +12019,12 @@ function set_dhcp_config() {
 
 	debug_print
 
-	dhcpd_file="kea-leases4.csv.${airgeddon_instance_name}.conf"
-	kea_leases_file="kea-leases4.csv.${airgeddon_instance_name}"
-	kea_pid_file="${kea_leases_file}.kea-dhcp4.pid"
+	kea_file_prefix="kea-leases4.csv.${airgeddon_instance_name}"
+	dhcp_config_file="${kea_file_prefix}.conf"
+	kea_leases_file="${kea_file_prefix}"
+	kea_pid_file="${kea_file_prefix}.kea-dhcp4.pid"
 	mkdir -p "${kea_runtime_dir}" > /dev/null 2>&1
-	rm -rf "${kea_runtime_dir}${kea_leases_file}"* > /dev/null 2>&1
+	rm -rf "${kea_runtime_dir}${kea_file_prefix}"* > /dev/null 2>&1
 	ip link set "${interface}" up > /dev/null 2>&1
 
 	{
@@ -12050,12 +12053,12 @@ function set_dhcp_config() {
 	echo -e "\t\t\t\t\"option-data\": ["
 	echo -e "\t\t\t\t\t{ \"name\": \"broadcast-address\", \"data\": \"${et_broadcast_ip}\", \"always-send\": true },"
 	echo -e "\t\t\t\t\t{ \"name\": \"routers\", \"data\": \"${et_ip_router}\" },"
-	} >> "${kea_runtime_dir}${dhcpd_file}"
+	} >> "${kea_runtime_dir}${dhcp_config_file}"
 
 	if [ "${et_mode}" != "et_captive_portal" ]; then
-		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${internet_dns1}, ${internet_dns2}\" }" >> "${kea_runtime_dir}${dhcpd_file}"
+		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${internet_dns1}, ${internet_dns2}\" }" >> "${kea_runtime_dir}${dhcp_config_file}"
 	else
-		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${et_ip_router}\" }" >> "${kea_runtime_dir}${dhcpd_file}"
+		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${et_ip_router}\" }" >> "${kea_runtime_dir}${dhcp_config_file}"
 	fi
 
 	{
@@ -12064,9 +12067,9 @@ function set_dhcp_config() {
 	echo -e "\t\t]"
 	echo -e "\t}"
 	echo -e "}"
-	} >> "${kea_runtime_dir}${dhcpd_file}"
+	} >> "${kea_runtime_dir}${dhcp_config_file}"
 
-	dhcp_path="${kea_runtime_dir}${dhcpd_file}"
+	dhcp_config_path="${kea_runtime_dir}${dhcp_config_file}"
 }
 
 #Change MAC address of desired interface
@@ -12185,18 +12188,18 @@ function launch_dhcp_server() {
 	recalculate_windows_sizes
 	case ${et_mode} in
 		"et_onlyap")
-			dchcpd_scr_window_position=${g1_bottomleft_window}
+			dhcp_scr_window_position=${g1_bottomleft_window}
 		;;
 		"et_sniffing"|"et_captive_portal"|"et_sniffing_sslstrip2_beef")
-			dchcpd_scr_window_position=${g3_middleleft_window}
+			dhcp_scr_window_position=${g3_middleleft_window}
 		;;
 		"et_sniffing_sslstrip2")
-			dchcpd_scr_window_position=${g4_middleleft_window}
+			dhcp_scr_window_position=${g4_middleleft_window}
 		;;
 	esac
 
 	prepare_kea_runtime_dir
-	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${kea_runtime_dir%/}\" KEA_PIDFILE_DIR=\"${kea_runtime_dir%/}\" KEA_LOCKFILE_DIR=\"none\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1" "DHCP"
+	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dhcp_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${kea_runtime_dir%/}\" KEA_PIDFILE_DIR=\"${kea_runtime_dir%/}\" KEA_LOCKFILE_DIR=\"none\" ${optional_tools_names[6]} -c \"${dhcp_config_path}\" 2>&1" "DHCP"
 	for _ in {1..20}; do
 		[ "$(cat "${kea_runtime_dir}${kea_pid_file}" 2> /dev/null)" != "${kea_placeholder_pid}" ] && break
 		sleep 0.1
@@ -12205,7 +12208,7 @@ function launch_dhcp_server() {
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
-		get_tmux_process_id "${optional_tools_names[6]} -c \"${dhcp_path}\""
+		get_tmux_process_id "${optional_tools_names[6]} -c \"${dhcp_config_path}\""
 		et_processes+=("${global_process_pid}")
 		global_process_pid=""
 	fi
