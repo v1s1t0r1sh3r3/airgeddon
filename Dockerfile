@@ -78,7 +78,7 @@ RUN \
 	nftables \
 	ettercap-text-only \
 	bettercap \
-	isc-dhcp-server \
+	kea-dhcp4-server \
 	dnsmasq \
 	reaver \
 	bully \
