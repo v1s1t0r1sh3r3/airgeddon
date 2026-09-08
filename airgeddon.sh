@@ -259,6 +259,12 @@ loopback_interface="lo"
 routing_tmp_file="ag.iptables_nftables"
 dhcpd_file="ag.dhcpd.conf"
 kea_leases_file="ag.kea-leases4.csv"
+kea_runtime_dir="/var/lib/kea/"
+kea_runtime_lock_dir="${system_tmpdir}ag.kea_runtime_lock"
+kea_runtime_original_owner=""
+kea_runtime_ownership_changed=0
+kea_pid_file=""
+kea_placeholder_pid=""
 dnsmasq_file="ag.dnsmasq.conf"
 internet_dns1="8.8.8.8"
 internet_dns2="8.8.4.4"
@@ -7236,6 +7242,8 @@ function clean_tmpfiles() {
 
 	debug_print
 
+	restore_kea_runtime_dir
+
 	if [ "${1}" = "exit_script" ]; then
 		rm -rf "${tmpdir}" > /dev/null 2>&1
 		rm -rf "${scriptfolder}${hostapd_wpe_default_log}" > /dev/null 2>&1
@@ -7271,9 +7279,7 @@ function clean_tmpfiles() {
 		rm -rf "${tmpdir}${hostapd_wpe_log}" > /dev/null 2>&1
 		rm -rf "${scriptfolder}${hostapd_wpe_default_log}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
-		rm -rf "${tmpdir}${kea_leases_file}" > /dev/null 2>&1
-		rm -rf "${tmpdir}"*.kea-dhcp4.pid > /dev/null 2>&1
-		rm -rf "${tmpdir}logger_lockfile" > /dev/null 2>&1
+		rm -rf "${kea_runtime_dir}${kea_leases_file}"* > /dev/null 2>&1
 		rm -rf "${tmpdir}${dnsmasq_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_et_file}" > /dev/null 2>&1
 		rm -rf "${tmpdir}${control_enterprise_file}" > /dev/null 2>&1
@@ -11963,15 +11969,59 @@ function set_network_interface_data() {
 	et_range_stop="${first_octet}.${second_octet}.${third_octet}.100"
 }
 
+#Prepare Kea runtime directory
+function prepare_kea_runtime_dir() {
+
+	debug_print
+
+	local lock_owner_pid
+	while ! mkdir "${kea_runtime_lock_dir}" > /dev/null 2>&1; do
+		lock_owner_pid=$(cat "${kea_runtime_lock_dir}/pid" 2> /dev/null)
+		if [[ ! "${lock_owner_pid}" =~ ^[0-9]+$ ]] || ! kill -0 "${lock_owner_pid}" 2> /dev/null; then
+			rm -rf "${kea_runtime_lock_dir}" > /dev/null 2>&1
+			continue
+		fi
+		sleep 0.1
+	done
+	echo "${BASHPID}" > "${kea_runtime_lock_dir}/pid"
+
+	kea_runtime_original_owner=$(stat -c "%u:%g" "${kea_runtime_dir}" 2> /dev/null)
+	if [ "${kea_runtime_original_owner}" != "0:0" ]; then
+		chown 0:0 "${kea_runtime_dir}" > /dev/null 2>&1
+		kea_runtime_ownership_changed=1
+	fi
+
+	touch "${kea_runtime_dir}${kea_leases_file}" "${kea_runtime_dir}${kea_pid_file}" > /dev/null 2>&1
+	chmod 600 "${kea_runtime_dir}${kea_leases_file}" "${kea_runtime_dir}${kea_pid_file}" > /dev/null 2>&1
+	kea_placeholder_pid=$(($(cat < /proc/sys/kernel/pid_max) + 1))
+	echo "${kea_placeholder_pid}" > "${kea_runtime_dir}${kea_pid_file}"
+}
+
+#Restore Kea runtime directory ownership
+function restore_kea_runtime_dir() {
+
+	debug_print
+
+	if [ "${kea_runtime_ownership_changed}" -eq 1 ] && [ -n "${kea_runtime_original_owner}" ]; then
+		chown "${kea_runtime_original_owner}" "${kea_runtime_dir}" > /dev/null 2>&1
+		kea_runtime_ownership_changed=0
+	fi
+
+	if [ "$(cat "${kea_runtime_lock_dir}/pid" 2> /dev/null)" = "${BASHPID}" ]; then
+		rm -rf "${kea_runtime_lock_dir}" > /dev/null 2>&1
+	fi
+}
+
 #Create configuration file for DHCP server
 function set_dhcp_config() {
 
 	debug_print
 
-	rm -rf "${tmpdir}${dhcpd_file}" > /dev/null 2>&1
-	rm -rf "${tmpdir}${kea_leases_file}" > /dev/null 2>&1
-	rm -rf "${tmpdir}"*.kea-dhcp4.pid > /dev/null 2>&1
-	rm -rf "${tmpdir}logger_lockfile" > /dev/null 2>&1
+	dhcpd_file="kea-leases4.csv.${airgeddon_instance_name}.conf"
+	kea_leases_file="kea-leases4.csv.${airgeddon_instance_name}"
+	kea_pid_file="${kea_leases_file}.kea-dhcp4.pid"
+	mkdir -p "${kea_runtime_dir}" > /dev/null 2>&1
+	rm -rf "${kea_runtime_dir}${kea_leases_file}"* > /dev/null 2>&1
 	ip link set "${interface}" up > /dev/null 2>&1
 
 	{
@@ -12000,12 +12050,12 @@ function set_dhcp_config() {
 	echo -e "\t\t\t\t\"option-data\": ["
 	echo -e "\t\t\t\t\t{ \"name\": \"broadcast-address\", \"data\": \"${et_broadcast_ip}\", \"always-send\": true },"
 	echo -e "\t\t\t\t\t{ \"name\": \"routers\", \"data\": \"${et_ip_router}\" },"
-	} >> "${tmpdir}${dhcpd_file}"
+	} >> "${kea_runtime_dir}${dhcpd_file}"
 
 	if [ "${et_mode}" != "et_captive_portal" ]; then
-		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${internet_dns1}, ${internet_dns2}\" }" >> "${tmpdir}${dhcpd_file}"
+		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${internet_dns1}, ${internet_dns2}\" }" >> "${kea_runtime_dir}${dhcpd_file}"
 	else
-		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${et_ip_router}\" }" >> "${tmpdir}${dhcpd_file}"
+		echo -e "\t\t\t\t\t{ \"name\": \"domain-name-servers\", \"data\": \"${et_ip_router}\" }" >> "${kea_runtime_dir}${dhcpd_file}"
 	fi
 
 	{
@@ -12014,9 +12064,9 @@ function set_dhcp_config() {
 	echo -e "\t\t]"
 	echo -e "\t}"
 	echo -e "}"
-	} >> "${tmpdir}${dhcpd_file}"
+	} >> "${kea_runtime_dir}${dhcpd_file}"
 
-	dhcp_path="${tmpdir}${dhcpd_file}"
+	dhcp_path="${kea_runtime_dir}${dhcpd_file}"
 }
 
 #Change MAC address of desired interface
@@ -12145,7 +12195,13 @@ function launch_dhcp_server() {
 		;;
 	esac
 
-	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${tmpdir}\" KEA_PIDFILE_DIR=\"${tmpdir}\" KEA_LOCKFILE_DIR=\"${tmpdir%/}\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1" "DHCP"
+	prepare_kea_runtime_dir
+	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "KEA_DHCP_DATA_DIR=\"${kea_runtime_dir%/}\" KEA_PIDFILE_DIR=\"${kea_runtime_dir%/}\" KEA_LOCKFILE_DIR=\"none\" ${optional_tools_names[6]} -c \"${dhcp_path}\" 2>&1" "DHCP"
+	for _ in {1..20}; do
+		[ "$(cat "${kea_runtime_dir}${kea_pid_file}" 2> /dev/null)" != "${kea_placeholder_pid}" ] && break
+		sleep 0.1
+	done
+	restore_kea_runtime_dir
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
@@ -13156,7 +13212,7 @@ function set_et_control_script() {
 			fi
 
 			echo -e "\t${green_color}${et_misc_texts[${language},3]}${normal_color}"
-			readarray -t DHCPCLIENTS < <(tail -n +2 "${tmpdir}${kea_leases_file}" 2> /dev/null)
+			readarray -t DHCPCLIENTS < <(tail -n +2 "${kea_runtime_dir}${kea_leases_file}" 2> /dev/null)
 			client_ips=()
 
 			#shellcheck disable=SC2199
