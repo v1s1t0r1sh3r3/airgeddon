@@ -25,7 +25,7 @@ Please note we have a [Code of Conduct], please follow it in all your interactio
 1. ALWAYS ask before starting a translation to add a new language. You can do so by contacting us via email at [v1s1t0r.1s.h3r3@gmail.com], through Twitter (X) at [@OscarAkaElvis], via [IRC] channel, or on the [Discord] server. Please reach out to the development team to clarify your intentions. You will then be informed about how to proceed.
 2. Translate the strings located in `language_strings.sh`, the existing strings of _language_strings_handling_messages_ function in `airgeddon.sh` and the strings of _missing_dependencies_text_ function in `missing_dependencies.sh` (this last file is in plugins dir).
 3. If you want to create a pull request with a new language to be added, at least the 80% of the phrases must be translated and the rest must be done with at least _an automatic-translation_ system and marked with PoT (Pending of Translation) mark. Anyway, always ask first.
-4. Remember that pull requests done over master branch will be rejected. Read the git workflow policy first.
+4. Remember that pull requests done over `master` branch will be rejected. Read the git workflow policy first.
 5. After verification of and acceptation of the pull request, you can be added as a collaborator on the project to push directly on the repository instead of submitting pull requests.
 6. Knowledge about `git` is mandatory (at least basic commands) to push directly into the project repository.
 
@@ -43,7 +43,7 @@ Please note we have a [Code of Conduct], please follow it in all your interactio
   - *Y* is a minor release with a new feature for an existing menu or a new submenu for an existing feature
   - *Z* is a minor release with new bug fixes, small modifications or code improvements
 7. Split your commits into parts. Each part represents a unique change on files.
-8. Direct push to [Master] is not allowed. Pull Requests to [Master] are not allowed. Should be done over [Dev] or any other branch. They require revision and approvement. Read the git workflow policy first. 
+8. Direct push to `master` is not allowed. Pull Requests to `master` are not allowed. Should be done over `dev` or any other branch. They require revision and approvement. Read the git workflow policy first.
 9. All the development and coding must be in English.
 
 *Be sure to merge the latest from "upstream" before submitting a pull request!*
@@ -70,17 +70,17 @@ Anything can be also discussed on public [IRC] channel or [Discord] server. More
 
 ## Beta Testers
 
-1. Download the main version from the [Master] branch or the beta testing version from the development branch called [Dev]. Temporary branches may be existing for specific features that can also be tested.
+1. Download the main version from the `master` branch or the beta testing version from the development branch called `dev`. Temporary branches may be existing for specific features that can also be tested.
 2. Report any issues or bugs via [IRC] channel, [Discord] server, or submit GitHub issue requests [here] after reading the Issue Creation Policy.
 
 ## Git Workflow Policy
 
-1. Direct push to [Master] is not allowed.
-2. Pull Requests to [Master] are not allowed.
-3. Usually, commits and pull requests should be done on [Dev] branch. If you have any doubt, don't hesitate to ask first.
+1. Direct push to `master` is not allowed.
+2. Pull Requests to `master` are not allowed.
+3. Usually, commits and pull requests should be done on `dev` branch. If you have any doubt, don't hesitate to ask first.
 4. Temporary branches may be existing for specific features, be pretty sure that the branch you are going to commit on is the right one. Ask first if you have any doubt.
-5. Any branch will be finally merged to [Dev], there it will be reviewed and tested deeply before being merged to [Master].
-6. All merges from [Dev] to [Master] are a new `airgeddon` release. This merges to [Master] will be performed and reviewed exclusively by [v1s1t0r]/[OscarAkaElvis].
+5. Any branch will be finally merged to `dev`, there it will be reviewed and tested deeply before being merged to `master`.
+6. All merges from `dev` to `master` are a new `airgeddon` release. This merges to `master` will be performed and reviewed exclusively by [v1s1t0r]/[OscarAkaElvis].
 
 ---
 
@@ -176,8 +176,6 @@ You can also contribute using your Nitro Boosts on our [Discord] server. After b
 <!-- Github -->
 [Shellcheck]: https://github.com/koalaman/shellcheck "shellcheck.hs"
 [Here]: https://github.com/v1s1t0r1sh3r3/airgeddon/issues/new/choose
-[Master]: https://github.com/v1s1t0r1sh3r3/airgeddon/tree/master
-[Dev]: https://github.com/v1s1t0r1sh3r3/airgeddon/tree/dev
 [xtonousou]: https://github.com/xtonousou "xT"
 [v1s1t0r]: https://github.com/v1s1t0r1sh3r3
 [OscarAkaElvis]: https://github.com/OscarAkaElvis
