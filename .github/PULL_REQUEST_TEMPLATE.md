@@ -1,10 +1,18 @@
-<!--- Please, before sending a pull request read the Git Workflow Policy on Contributing section of the project. Link here: https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#git-workflow-policy -->
-<!--- If you have doubts about how to proceed, consider to contact us on Discord or IRC before doing the PR. More info and Discord invitation link here: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Contact -->
-<!-- Pull requests to the master branch are not allowed. They should usually target the dev branch instead -->
-<!--- Write in English only -->
-<!--- If your pull request is about a plugin, don't do it! airgeddon is not storing plugins. Read this about what to do: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Plugins%20Hall%20of%20Fame -->
-<!--- If the pull request is not matching the policy, it will be closed -->
+<!-- Before submitting, read the Git Workflow Policy in the contribution guidelines: https://github.com/v1s1t0r1sh3r3/airgeddon/blob/master/CONTRIBUTING.md#git-workflow-policy -->
+<!-- If you have any questions about how to proceed, contact us on Discord or IRC before opening the pull request: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Contact -->
+<!-- Contributor pull requests must normally target the dev branch. Pull requests to master are not allowed. -->
+<!-- Pull requests and all associated project content must be written in English. -->
+<!-- Plugin pull requests are not accepted. Plugins must remain external to this repository: https://github.com/v1s1t0r1sh3r3/airgeddon/wiki/Plugins%20Hall%20of%20Fame -->
+<!-- Pull requests that do not follow the contribution policy may be closed. -->
 
-#### Describe the purpose of the pull request
+## Purpose
 
-<!--- Insert answer here -->
+<!-- Describe the problem addressed by this pull request and reference the related issue when applicable. -->
+
+## Changes
+
+<!-- Describe the proposed changes. Keep the pull request focused on one logical change. -->
+
+## Testing
+
+<!-- List the Linux environment, commands, and functional tests used. Include ShellCheck results when applicable and clearly mention anything that was not tested. -->
