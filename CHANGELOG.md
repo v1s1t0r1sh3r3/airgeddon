@@ -1,5 +1,6 @@
 ### 12.10
  - Fixed routing state restoration on forced exit in multi-instance mode
+ - Changed multi-instance orchestrator file to use a colon-delimited format
 
 ### 12.02
  - Added 5GHz band hopping support to DoS pursuit mode

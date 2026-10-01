@@ -7215,39 +7215,45 @@ function control_routing_status() {
 	if [ "${1}" = "start" ]; then
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && etset="${BASH_REMATCH[1]}" && agpid="${BASH_REMATCH[2]}"
-			if [ -z "${saved_routing_status_found}" ]; then
-				[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && saved_routing_status_found="${BASH_REMATCH[3]}"
-			fi
+			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01])$ ]]; then
+				agpid="${BASH_REMATCH[1]}"
+				etset="${BASH_REMATCH[2]}"
+				if [[ -z "${saved_routing_status_found}" ]] && [[ "${BASH_REMATCH[3]}" != "-" ]]; then
+					saved_routing_status_found="${BASH_REMATCH[3]}"
+				fi
 
-			if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" != "et" ]]; then
-				sed -ri "s:^(${agpid}):et\1:" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+				if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" -eq 0 ]]; then
+					sed -ri "s|^(${agpid}:)et0:|\1et1:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+				fi
 			fi
 		done
 
 		if [ -z "${saved_routing_status_found}" ]; then
 			original_routing_status=$(cat /proc/sys/net/ipv4/ip_forward)
-			sed -ri "s:^(et${agpid_to_use})$:\1rs${original_routing_status}:" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+			sed -ri "s|^(${agpid_to_use}:et1:)rs-$|\1rs${original_routing_status}|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
 		fi
 	else
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && etset="${BASH_REMATCH[1]}" && agpid="${BASH_REMATCH[2]}"
-			if [ -z "${saved_routing_status_found}" ]; then
-				[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && saved_routing_status_found="${BASH_REMATCH[3]}"
-			fi
+			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01])$ ]]; then
+				agpid="${BASH_REMATCH[1]}"
+				etset="${BASH_REMATCH[2]}"
+				if [[ -z "${saved_routing_status_found}" ]] && [[ "${BASH_REMATCH[3]}" != "-" ]]; then
+					saved_routing_status_found="${BASH_REMATCH[3]}"
+				fi
 
-			if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" = "et" ]]; then
-				sed -ri "s:^(et${agpid}):${agpid}:" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
-			fi
+				if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" -eq 1 ]]; then
+					sed -ri "s|^(${agpid}:)et1:|\1et0:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+				fi
 
-			if [[ "${agpid_to_use}" != "${agpid}" ]] && [[ "${etset}" = "et" ]]; then
-				et_still_running=1
+				if [[ "${agpid_to_use}" != "${agpid}" ]] && [[ "${etset}" -eq 1 ]]; then
+					et_still_running=1
+				fi
 			fi
 		done
 
 		if [[ -n "${saved_routing_status_found}" ]] && [[ "${et_still_running}" -eq 0 ]]; then
-			original_routing_status="${saved_routing_status_found//[^0-9]/}"
+			original_routing_status="${saved_routing_status_found}"
 			echo "${original_routing_status}" > /proc/sys/net/ipv4/ip_forward 2> /dev/null
 		fi
 	fi
@@ -7733,10 +7739,12 @@ function create_instance_orchestrator_file() {
 
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && agpid="${BASH_REMATCH[2]}"
-			if ps -p "${agpid}" > /dev/null 2>&1; then
-				airgeddon_pid_alive=1
-				break
+			if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01])$ ]]; then
+				agpid="${BASH_REMATCH[1]}"
+				if ps -p "${agpid}" > /dev/null 2>&1; then
+					airgeddon_pid_alive=1
+					break
+				fi
 			fi
 		done
 
@@ -7763,9 +7771,9 @@ function register_instance_pid() {
 	debug_print
 
 	if [ -f "${system_tmpdir}${ag_orchestrator_file}" ]; then
-		if ! grep -q "${agpid_to_use}" "${system_tmpdir}${ag_orchestrator_file}"; then
+		if ! grep -Eq "^${agpid_to_use}:" "${system_tmpdir}${ag_orchestrator_file}"; then
 			{
-			echo "${agpid_to_use}"
+			echo "${agpid_to_use}:et0:rs-"
 			} >> "${system_tmpdir}${ag_orchestrator_file}"
 		fi
 	fi
@@ -7780,9 +7788,11 @@ function detect_running_instances() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && agpid="${BASH_REMATCH[2]}"
-		if [[ "${agpid}" != "${BASHPID}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
-			airgeddon_running_instances_counter=$((airgeddon_running_instances_counter + 1))
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01])$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			if [[ "${agpid}" != "${BASHPID}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				airgeddon_running_instances_counter=$((airgeddon_running_instances_counter + 1))
+			fi
 		fi
 	done
 
@@ -7798,11 +7808,12 @@ function is_first_routing_modifier_airgeddon_instance() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat <"${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)rs[0-1]$ ]] && agpid="${BASH_REMATCH[2]}"
-
-		if [ "${agpid}" = "${BASHPID}" ]; then
-			clean_all_iptables_nftables=0
-			return 0
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs[01]$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			if [ "${agpid}" = "${BASHPID}" ]; then
+				clean_all_iptables_nftables=0
+				return 0
+			fi
 		fi
 	done
 
@@ -7818,10 +7829,11 @@ function is_last_airgeddon_instance() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat <"${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && agpid="${BASH_REMATCH[2]}"
-
-		if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
-			return 1
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01])$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				return 1
+			fi
 		fi
 	done
 
@@ -18567,9 +18579,12 @@ function is_other_evil_twin_instance_running() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && etset="${BASH_REMATCH[1]}" && agpid="${BASH_REMATCH[2]}"
-		if [[ "${agpid}" != "${agpid_to_use}" ]] && [[ "${etset}" = "et" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
-			return 0
+		if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01])$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			etset="${BASH_REMATCH[2]}"
+			if [[ "${agpid}" != "${agpid_to_use}" ]] && [[ "${etset}" -eq 1 ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				return 0
+			fi
 		fi
 	done
 
