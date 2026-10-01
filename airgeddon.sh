@@ -5670,6 +5670,9 @@ function launch_dos_pursuit_mode_attack() {
 	for item in "${dos_pursuit_mode_pids[@]}"; do
 		echo "${item}" >> "${processes_file}"
 	done
+	if [ -n "${dos_pursuit_mode_ap_pid}" ]; then
+		echo "${dos_pursuit_mode_ap_pid}" >> "${processes_file}"
+	fi
 }
 
 #Parse and control pids for DoS pursuit mode attack
@@ -5724,7 +5727,7 @@ pid_control_pursuit_mode() {
 
 						update_dos_pursuit_mode_hostapd_config
 
-						kill_dos_pursuit_mode_processes
+						kill_dos_pursuit_mode_processes "include_ap"
 						launch_dos_pursuit_mode_attack "${1}" "relaunch"
 						dos_pursuit_mode_relaunched=1
 						break
@@ -12069,13 +12072,12 @@ function launch_fake_ap() {
 		et_processes+=($!)
 		if [ "${dos_pursuit_mode}" -eq 1 ]; then
 			dos_pursuit_mode_ap_pid=$!
-			dos_pursuit_mode_pids+=("${dos_pursuit_mode_ap_pid}")
 		fi
 	else
 		get_tmux_process_id "${command}"
 		et_processes+=("${global_process_pid}")
 		if [ "${dos_pursuit_mode}" -eq 1 ]; then
-			dos_pursuit_mode_pids+=("${global_process_pid}")
+			dos_pursuit_mode_ap_pid="${global_process_pid}"
 		fi
 		global_process_pid=""
 	fi
@@ -14462,6 +14464,11 @@ function kill_et_windows() {
 function kill_dos_pursuit_mode_processes() {
 
 	debug_print
+
+	if [[ "${1}" = "include_ap" ]] && [[ -n "${dos_pursuit_mode_ap_pid}" ]]; then
+		kill_pid_and_children_recursive "${dos_pursuit_mode_ap_pid}"
+		dos_pursuit_mode_ap_pid=""
+	fi
 
 	for item in "${dos_pursuit_mode_pids[@]}"; do
 		kill_pid_and_children_recursive "${item}"
