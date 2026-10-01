@@ -1737,6 +1737,7 @@ function prepare_et_interface() {
 					phy_interface=$(physical_interface_finder "${interface}")
 					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 					current_iface_on_messages="${interface}"
+					register_selected_interface "main" "${interface}" "${phy_interface}"
 				fi
 				echo
 				language_strings "${language}" 15 "yellow"
@@ -1794,6 +1795,7 @@ function restore_et_interface() {
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 			fi
 		else
 			if set_mode_without_airmon "${interface}" "monitor"; then
@@ -1826,6 +1828,7 @@ function prepare_wpa3_downgrade_interface() {
 					phy_interface=$(physical_interface_finder "${interface}")
 					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 					current_iface_on_messages="${interface}"
+					register_selected_interface "main" "${interface}" "${phy_interface}"
 				fi
 				echo
 				language_strings "${language}" 15 "yellow"
@@ -1880,6 +1883,7 @@ function restore_wpa3_downgrade_interface() {
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 			fi
 		else
 			if set_mode_without_airmon "${interface}" "monitor"; then
@@ -1937,6 +1941,7 @@ function managed_option() {
 					interface="${new_interface}"
 				fi
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -1955,7 +1960,9 @@ function managed_option() {
 
 			if [ "${1}" != "${new_secondary_interface}" ]; then
 				secondary_wifi_interface=${new_secondary_interface}
+				secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 				current_iface_on_messages="${secondary_wifi_interface}"
+				register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -2019,6 +2026,7 @@ function monitor_option() {
 					interface="${new_interface}"
 				fi
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 21 "yellow"
 			fi
@@ -2050,7 +2058,9 @@ function monitor_option() {
 
 			if [ "${1}" != "${new_secondary_interface}" ]; then
 				secondary_wifi_interface="${new_secondary_interface}"
+				secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 				current_iface_on_messages="${secondary_wifi_interface}"
+				register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}"
 				echo
 				language_strings "${language}" 21 "yellow"
 			fi
@@ -3203,6 +3213,7 @@ function select_secondary_interface() {
 			secondary_wifi_interface="${secondary_ifaces[0]}"
 			secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 			check_interface_supported_bands "${secondary_phy_interface}" "secondary_wifi_interface"
+			register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}" "check_conflicts"
 		elif [ "${1}" = "internet" ]; then
 			internet_interface="${secondary_ifaces[0]}"
 		fi
@@ -3302,6 +3313,7 @@ function select_secondary_interface() {
 					secondary_wifi_interface=${item2}
 					secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 					check_interface_supported_bands "${secondary_phy_interface}" "secondary_wifi_interface"
+					register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}" "check_conflicts"
 				elif [ "${1}" = "internet" ]; then
 					internet_interface=${item2}
 				fi
@@ -3427,6 +3439,11 @@ function select_interface() {
 					standard_80211ax=0
 					standard_80211be=0
 					wifi_standard_short=""
+				fi
+				if check_interface_wifi "${interface}"; then
+					register_selected_interface "main" "${interface}" "${phy_interface}" "check_conflicts"
+				else
+					register_selected_interface "main" "" ""
 				fi
 				break
 			fi
@@ -7106,6 +7123,8 @@ function initialize_menu_and_print_selections() {
 			et_mode=""
 			et_processes=()
 			secondary_wifi_interface=""
+			secondary_phy_interface=""
+			register_selected_interface "secondary" "" ""
 			et_attack_adapter_prerequisites_ok=0
 			advanced_captive_portal=0
 			print_iface_selected
@@ -7118,6 +7137,8 @@ function initialize_menu_and_print_selections() {
 			et_mode=""
 			et_processes=()
 			secondary_wifi_interface=""
+			secondary_phy_interface=""
+			register_selected_interface "secondary" "" ""
 			et_enterprise_attack_adapter_prerequisites_ok=0
 			print_iface_selected
 			print_all_target_vars
@@ -7215,7 +7236,7 @@ function control_routing_status() {
 	if [ "${1}" = "start" ]; then
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01])$ ]]; then
+			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01]):main_iface=([^:]+):main_phy=([^:]+):secondary_iface=([^:]+):secondary_phy=([^:]+)$ ]]; then
 				agpid="${BASH_REMATCH[1]}"
 				etset="${BASH_REMATCH[2]}"
 				if [[ -z "${saved_routing_status_found}" ]] && [[ "${BASH_REMATCH[3]}" != "-" ]]; then
@@ -7230,12 +7251,12 @@ function control_routing_status() {
 
 		if [ -z "${saved_routing_status_found}" ]; then
 			original_routing_status=$(cat /proc/sys/net/ipv4/ip_forward)
-			sed -ri "s|^(${agpid_to_use}:et1:)rs-$|\1rs${original_routing_status}|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+			sed -ri "s|^(${agpid_to_use}:et1:)rs-:|\1rs${original_routing_status}:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
 		fi
 	else
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01])$ ]]; then
+			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01]):main_iface=([^:]+):main_phy=([^:]+):secondary_iface=([^:]+):secondary_phy=([^:]+)$ ]]; then
 				agpid="${BASH_REMATCH[1]}"
 				etset="${BASH_REMATCH[2]}"
 				if [[ -z "${saved_routing_status_found}" ]] && [[ "${BASH_REMATCH[3]}" != "-" ]]; then
@@ -7739,7 +7760,7 @@ function create_instance_orchestrator_file() {
 
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01])$ ]]; then
+			if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
 				agpid="${BASH_REMATCH[1]}"
 				if ps -p "${agpid}" > /dev/null 2>&1; then
 					airgeddon_pid_alive=1
@@ -7773,9 +7794,108 @@ function register_instance_pid() {
 	if [ -f "${system_tmpdir}${ag_orchestrator_file}" ]; then
 		if ! grep -Eq "^${agpid_to_use}:" "${system_tmpdir}${ag_orchestrator_file}"; then
 			{
-			echo "${agpid_to_use}:et0:rs-"
+			echo "${agpid_to_use}:et0:rs-:main_iface=-:main_phy=-:secondary_iface=-:secondary_phy=-"
 			} >> "${system_tmpdir}${ag_orchestrator_file}"
 		fi
+	fi
+}
+
+#Update selected wireless interface data in the orchestrator file
+function update_orchestrator_interface() {
+
+	debug_print
+
+	local interface_role="${1}"
+	local interface_name="${2}"
+	local interface_phy="${3}"
+
+	if [[ -z "${interface_name}" ]] || [[ -z "${interface_phy}" ]]; then
+		interface_name="-"
+		interface_phy="-"
+	fi
+
+	interface_name="${interface_name//\\/\\\\}"
+	interface_name="${interface_name//&/\\&}"
+	interface_name="${interface_name//|/\\|}"
+
+	case "${interface_role}" in
+		"main")
+			sed -ri "s|^(${agpid_to_use}:et[01]:rs[-01]:)main_iface=[^:]+:main_phy=[^:]+:|\1main_iface=${interface_name}:main_phy=${interface_phy}:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+		;;
+		"secondary")
+			sed -ri "s|^(${agpid_to_use}:et[01]:rs[-01]:main_iface=[^:]+:main_phy=[^:]+:)secondary_iface=[^:]+:secondary_phy=[^:]+$|\1secondary_iface=${interface_name}:secondary_phy=${interface_phy}|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+		;;
+	esac
+}
+
+#Warn if a wireless interface is selected in another airgeddon instance
+function check_interface_multi_instance_conflict() {
+
+	debug_print
+
+	local selected_interface_phy="${1}"
+	local conflicting_interface_name=""
+	local conflicting_interface_phy=""
+	local conflicting_interface_role=""
+	local conflicting_instance_found=0
+	local agpid=""
+	local main_interface_name=""
+	local main_interface_phy=""
+	local secondary_interface_name=""
+	local secondary_interface_phy=""
+
+	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
+	for item in "${AIRGEDDON_PIDS[@]}"; do
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=([^:]+):main_phy=([^:]+):secondary_iface=([^:]+):secondary_phy=([^:]+)$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			main_interface_name="${BASH_REMATCH[3]}"
+			main_interface_phy="${BASH_REMATCH[4]}"
+			secondary_interface_name="${BASH_REMATCH[5]}"
+			secondary_interface_phy="${BASH_REMATCH[6]}"
+
+			if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				if [ "${selected_interface_phy}" = "${main_interface_phy}" ]; then
+					conflicting_interface_name="${main_interface_name}"
+					conflicting_interface_phy="${main_interface_phy}"
+					conflicting_interface_role=$(replace_string_vars "${language}" 849)
+					echo
+					language_strings "${language}" 851 "yellow"
+					conflicting_instance_found=1
+				fi
+
+				if [ "${selected_interface_phy}" = "${secondary_interface_phy}" ]; then
+					conflicting_interface_name="${secondary_interface_name}"
+					conflicting_interface_phy="${secondary_interface_phy}"
+					conflicting_interface_role=$(replace_string_vars "${language}" 850)
+					echo
+					language_strings "${language}" 851 "yellow"
+					conflicting_instance_found=1
+				fi
+			fi
+		fi
+	done
+
+	if [ "${conflicting_instance_found}" -eq 1 ]; then
+		echo
+		language_strings "${language}" 852 "yellow"
+		language_strings "${language}" 115 "read"
+	fi
+}
+
+#Register a selected wireless interface and optionally check for multi-instance conflicts
+function register_selected_interface() {
+
+	debug_print
+
+	local interface_role="${1}"
+	local interface_name="${2}"
+	local interface_phy="${3}"
+	local check_conflicts="${4}"
+
+	update_orchestrator_interface "${interface_role}" "${interface_name}" "${interface_phy}"
+
+	if [[ "${check_conflicts}" = "check_conflicts" ]] && [[ -n "${interface_phy}" ]]; then
+		check_interface_multi_instance_conflict "${interface_phy}"
 	fi
 }
 
@@ -7788,7 +7908,7 @@ function detect_running_instances() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01])$ ]]; then
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
 			agpid="${BASH_REMATCH[1]}"
 			if [[ "${agpid}" != "${BASHPID}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
 				airgeddon_running_instances_counter=$((airgeddon_running_instances_counter + 1))
@@ -7808,7 +7928,7 @@ function is_first_routing_modifier_airgeddon_instance() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat <"${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		if [[ "${item}" =~ ^([0-9]+):et[01]:rs[01]$ ]]; then
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs[01]:main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
 			agpid="${BASH_REMATCH[1]}"
 			if [ "${agpid}" = "${BASHPID}" ]; then
 				clean_all_iptables_nftables=0
@@ -7829,7 +7949,7 @@ function is_last_airgeddon_instance() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat <"${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01])$ ]]; then
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
 			agpid="${BASH_REMATCH[1]}"
 			if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
 				return 1
@@ -11307,6 +11427,8 @@ function exec_enterprise_attack() {
 				if [ -n "${tmp_ifacemode}" ]; then
 					ifacemode="${tmp_ifacemode}"
 				fi
+
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 
 				rm -rf "${tmpdir}${enterprisedir}returning_vars.txt" > /dev/null 2>&1
 			fi
@@ -18579,7 +18701,7 @@ function is_other_evil_twin_instance_running() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01])$ ]]; then
+		if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
 			agpid="${BASH_REMATCH[1]}"
 			etset="${BASH_REMATCH[2]}"
 			if [[ "${agpid}" != "${agpid_to_use}" ]] && [[ "${etset}" -eq 1 ]] && ps -p "${agpid}" > /dev/null 2>&1; then
