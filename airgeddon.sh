@@ -17499,11 +17499,11 @@ function hardcore_exit() {
 		eval "${networkmanager_cmd} > /dev/null 2>&1"
 	fi
 
-	clean_tmpfiles "exit_script"
-
 	if [ "${routing_modified}" -eq 1 ]; then
 		clean_routing_rules
 	fi
+
+	clean_tmpfiles "exit_script"
 
 	if [[ "${spoofed_mac}" -eq 1 ]] && [[ "${ifacemode}" = "Managed" ]]; then
 		language_strings "${language}" 418 "multiline"

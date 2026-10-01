@@ -1,5 +1,5 @@
 ### 12.10
- - 
+ - Fixed routing state restoration on forced exit in multi-instance mode
 
 ### 12.02
  - Added 5GHz band hopping support to DoS pursuit mode
