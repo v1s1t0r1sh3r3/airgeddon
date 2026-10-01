@@ -5740,8 +5740,8 @@ pid_control_pursuit_mode() {
 			fi
 		fi
 
-		dos_attack_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_attack_pid}$" 2> /dev/null)
-		if [ -z "${dos_attack_alive}" ]; then
+		dos_scan_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_scan_pid}$" 2> /dev/null)
+		if [ -z "${dos_scan_alive}" ]; then
 			break
 		fi
 	done
@@ -14443,6 +14443,10 @@ function kill_et_windows() {
 
 	if [ "${dos_pursuit_mode}" -eq 1 ]; then
 		kill_dos_pursuit_mode_processes
+		readarray -t DOS_PURSUIT_ET_PROCESSES < <(cat < "${tmpdir}${et_processesfile}" 2> /dev/null)
+		for item in "${DOS_PURSUIT_ET_PROCESSES[@]}"; do
+			kill_pid_and_children_recursive "${item}"
+		done
 	fi
 
 	for item in "${et_processes[@]}"; do
