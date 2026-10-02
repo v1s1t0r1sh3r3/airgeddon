@@ -5745,9 +5745,16 @@ pid_control_pursuit_mode() {
 			fi
 		fi
 
-		dos_scan_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_scan_pid}$" 2> /dev/null)
-		if [ -z "${dos_scan_alive}" ]; then
-			break
+		if [[ -n "${enterprise_mode}" ]] || [[ -n "${et_mode}" ]]; then
+			dos_scan_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_scan_pid}$" 2> /dev/null)
+			if [ -z "${dos_scan_alive}" ]; then
+				break
+			fi
+		else
+			dos_attack_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_attack_pid}$" 2> /dev/null)
+			if [ -z "${dos_attack_alive}" ]; then
+				break
+			fi
 		fi
 	done
 
