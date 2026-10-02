@@ -3,6 +3,7 @@
  - Changed multi-instance orchestrator file to use a colon-delimited format
  - Added multi-instance wireless interface conflict detection
  - Fixed Evil Twin AP termination when manually closing the DoS window in DoS pursuit mode
+ - Fixed security vulnerability - [GHSA-vfg5-33mv-cmrx](https://github.com/v1s1t0r1sh3r3/airgeddon/security/advisories/GHSA-vfg5-33mv-cmrx)
 
 ### 12.02
  - Added 5GHz band hopping support to DoS pursuit mode
