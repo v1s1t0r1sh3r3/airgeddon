@@ -5498,7 +5498,9 @@ function launch_dos_pursuit_mode_attack() {
 	debug_print
 
 	local escaped_essid
+	local grep_escaped_essid
 	printf -v escaped_essid "%q" "${essid}"
+	grep_escaped_essid=$(printf "%s" "${essid}" | sed 's/[][\\.^$*]/\\&/g')
 
 	rm -rf "${tmpdir}dos_pm"* > /dev/null 2>&1
 	rm -rf "${tmpdir}nws"* > /dev/null 2>&1
@@ -5561,7 +5563,7 @@ function launch_dos_pursuit_mode_attack() {
 			iw dev "${interface_pursuit_mode_deauth}" set channel "${channel}" > /dev/null 2>&1
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${escaped_essid} -c ${channel} -s 1000 -h" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${essid} -c ${channel} -s 1000 -h"
+				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${grep_escaped_essid} -c ${channel} -s 1000 -h"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -5573,7 +5575,7 @@ function launch_dos_pursuit_mode_attack() {
 			iw dev "${interface_pursuit_mode_deauth}" set channel "${channel}" > /dev/null 2>&1
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${escaped_essid} -c ${channel}" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
+				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${grep_escaped_essid} -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -5819,7 +5821,9 @@ function exec_wdsconfusion() {
 	debug_print
 
 	local escaped_essid
+	local grep_escaped_essid
 	printf -v escaped_essid "%q" "${essid}"
+	grep_escaped_essid=$(printf "%s" "${essid}" | sed 's/[][\\.^$*]/\\&/g')
 
 	echo
 	language_strings "${language}" 91 "title"
@@ -5841,7 +5845,7 @@ function exec_wdsconfusion() {
 		language_strings "${language}" 4 "read"
 		recalculate_windows_sizes
 		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e ${escaped_essid} -c ${channel}" "wids / wips / wds confusion attack" "active"
-		wait_for_process "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack"
+		wait_for_process "${mdk_command} ${interface} w -e ${grep_escaped_essid} -c ${channel}" "wids / wips / wds confusion attack"
 	fi
 }
 
@@ -5851,7 +5855,9 @@ function exec_beaconflood() {
 	debug_print
 
 	local escaped_essid
+	local grep_escaped_essid
 	printf -v escaped_essid "%q" "${essid}"
+	grep_escaped_essid=$(printf "%s" "${essid}" | sed 's/[][\\.^$*]/\\&/g')
 
 	echo
 	language_strings "${language}" 92 "title"
@@ -5873,7 +5879,7 @@ function exec_beaconflood() {
 		language_strings "${language}" 4 "read"
 		recalculate_windows_sizes
 		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"beacon flood attack\"" "${mdk_command} ${interface} b -n ${escaped_essid} -c ${channel} -s 1000 -h" "beacon flood attack" "active"
-		wait_for_process "${mdk_command} ${interface} b -n ${essid} -c ${channel} -s 1000 -h" "beacon flood attack"
+		wait_for_process "${mdk_command} ${interface} b -n ${grep_escaped_essid} -c ${channel} -s 1000 -h" "beacon flood attack"
 	fi
 }
 
