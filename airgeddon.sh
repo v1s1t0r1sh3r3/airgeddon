@@ -396,16 +396,19 @@ known_arm_compatible_distros=(
 							)
 
 #Sponsors
-sponsors=(
+current_sponsors=(
+		"Matthew Ebert"
+		"SkipTooLow"
+		)
+
+past_sponsors=(
 		"Raleigh2016"
 		"hmmlopl"
 		"codythebeast89"
 		"Kaliscandinavia"
 		"Furrycoder"
 		"Jonathon Coy"
-		"Matthew Ebert"
 		"weedhed4lf"
-		"SkipTooLow"
 		)
 
 #Hint vars
@@ -17429,7 +17432,13 @@ function credits_option() {
 	language_strings "${language}" 227 "pink"
 	echo
 	language_strings "${language}" 702 "blue"
-	for i in "${sponsors[@]}"; do
+	for i in "${current_sponsors[@]}"; do
+		echo -ne "${pink_color}\"${i}\" ${normal_color}"
+	done
+	echo
+	echo
+	language_strings "${language}" 853 "blue"
+	for i in "${past_sponsors[@]}"; do
 		echo -ne "${pink_color}\"${i}\" ${normal_color}"
 	done
 	echo
