@@ -405,6 +405,7 @@ sponsors=(
 		"Jonathon Coy"
 		"Matthew Ebert"
 		"weedhed4lf"
+		"SkipTooLow"
 		)
 
 #Hint vars
