@@ -8,7 +8,7 @@
 plugin_name="EvilQR"
 plugin_description="Generate a WiFi join QR code for the Evil Twin access point so victims can be associated by scanning instead of deauthentication"
 plugin_author="skinnypuppy"
-plugin_enabled=1
+plugin_enabled=0
 
 ###### PLUGIN REQUIREMENTS ######
 
