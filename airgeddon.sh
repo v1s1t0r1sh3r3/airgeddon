@@ -786,6 +786,7 @@ function debug_print() {
 							"read_yesno"
 							"register_instance_pid"
 							"remove_warnings"
+							"resolve_interface_name"
 							"set_absolute_path"
 							"set_script_paths"
 							"special_text_missed_optional_tool"
@@ -1026,6 +1027,84 @@ function check_interface_coherence() {
 	fi
 
 	return ${interface_auto_change}
+}
+
+#Resolve an interface name after a mode change
+function resolve_interface_name() {
+
+	debug_print
+
+	local original_interface="${1}"
+	local parsed_interface="${2}"
+	local expected_mode="${3,,}"
+	local original_phy="${4}"
+	local interface_mac="${5}"
+	local coherent_interface
+	local candidate_interface
+	local candidate_info
+	local candidate_mode
+	local candidate_phy
+	local candidate_mac
+	local candidate_interfaces
+	local phy_candidates=()
+	local mac_candidates=()
+
+	[[ "${original_phy}" =~ ^phy[[:digit:]]+$ ]] || original_phy=""
+
+	if [ "${original_interface}" = "${interface}" ] && declare -F check_interface_coherence > /dev/null; then
+		coherent_interface=$(check_interface_coherence > /dev/null; printf '%s' "${interface}")
+	fi
+
+	for candidate_interface in "${coherent_interface}" "${parsed_interface}" "${original_interface}"; do
+		if [ -z "${candidate_interface}" ]; then
+			continue
+		fi
+		if ! candidate_info=$(iw "${candidate_interface}" info 2> /dev/null); then
+			continue
+		fi
+		candidate_mode=$(awk '$1 == "type" {print $2; exit}' <<< "${candidate_info}")
+		if [ "${candidate_mode}" != "${expected_mode}" ]; then
+			continue
+		fi
+		candidate_phy=$(basename "$(readlink "/sys/class/net/${candidate_interface}/phy80211")" 2> /dev/null)
+		if [ -n "${original_phy}" ] && [ "${candidate_phy}" != "${original_phy}" ]; then
+			continue
+		fi
+		printf '%s' "${candidate_interface}"
+		return 0
+	done
+
+	readarray -t candidate_interfaces < <(iw dev 2> /dev/null | awk '$1 == "Interface" {print $2}')
+	for candidate_interface in "${candidate_interfaces[@]}"; do
+		candidate_phy=$(basename "$(readlink "/sys/class/net/${candidate_interface}/phy80211")" 2> /dev/null)
+		if [ -n "${original_phy}" ] && [ "${candidate_phy}" != "${original_phy}" ]; then
+			continue
+		fi
+		if ! candidate_info=$(iw "${candidate_interface}" info 2> /dev/null); then
+			continue
+		fi
+		candidate_mode=$(awk '$1 == "type" {print $2; exit}' <<< "${candidate_info}")
+		if [ "${candidate_mode}" != "${expected_mode}" ]; then
+			continue
+		fi
+		if [ -n "${original_phy}" ]; then
+			phy_candidates+=("${candidate_interface}")
+		fi
+		candidate_mac=$(cat "/sys/class/net/${candidate_interface}/address" 2> /dev/null)
+		if [ -n "${interface_mac}" ] && [ "${candidate_mac}" = "${interface_mac}" ]; then
+			mac_candidates+=("${candidate_interface}")
+		fi
+	done
+
+	if [ "${#mac_candidates[@]}" -eq 1 ]; then
+		printf '%s' "${mac_candidates[0]}"
+		return 0
+	fi
+	if [ "${#phy_candidates[@]}" -eq 1 ]; then
+		printf '%s' "${phy_candidates[0]}"
+		return 0
+	fi
+	return 1
 }
 
 #Check if an adapter is compatible to airmon
@@ -1725,6 +1804,11 @@ function prepare_et_interface() {
 
 	debug_print
 
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+
 	et_initial_state=${ifacemode}
 
 	if [ "${ifacemode}" != "Managed" ]; then
@@ -1732,17 +1816,33 @@ function prepare_et_interface() {
 		if [ "${interface_airmon_compatible}" -eq 1 ]; then
 
 			new_interface=$(${airmon} stop "${interface}" 2> /dev/null | grep station | head -n 1)
-			ifacemode="Managed"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface=${new_interface}
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-					current_iface_on_messages="${interface}"
-					register_selected_interface "main" "${interface}" "${phy_interface}"
+			if ! new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
 				fi
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+			ifacemode="Managed"
+
+			if [ "${original_interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -1757,12 +1857,19 @@ function prepare_et_interface() {
 			fi
 		fi
 	fi
+	return 0
 }
 
 #Restore the state of the interfaces after Evil Twin or Enterprise attack process
 function restore_et_interface() {
 
 	debug_print
+
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	local restore_failed=0
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 
 	echo
 	language_strings "${language}" 299 "blue"
@@ -1788,18 +1895,31 @@ function restore_et_interface() {
 				echo
 				language_strings "${language}" 435 "red"
 				language_strings "${language}" 115 "read"
-				return
+				control_routing_status "end"
+				return 1
 			fi
 
-			ifacemode="Monitor"
-
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
-			if [ "${interface}" != "${new_interface}" ]; then
-				interface=${new_interface}
+			if new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "monitor" "${original_phy}" "${original_mac}"); then
+				interface="${new_interface}"
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				ifacemode="Monitor"
 				current_iface_on_messages="${interface}"
 				register_selected_interface "main" "${interface}" "${phy_interface}"
+			else
+				restore_failed=1
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
+				fi
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
 			fi
 		else
 			if set_mode_without_airmon "${interface}" "monitor"; then
@@ -1809,12 +1929,21 @@ function restore_et_interface() {
 	fi
 
 	control_routing_status "end"
+	if [ -z "${interface}" ]; then
+		select_interface
+	fi
+	return ${restore_failed}
 }
 
 #Assure the mode of the interface before the WPA3 downgrade attack process
 function prepare_wpa3_downgrade_interface() {
 
 	debug_print
+
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 
 	downgrade_initial_state=${ifacemode}
 
@@ -1823,17 +1952,34 @@ function prepare_wpa3_downgrade_interface() {
 		if [ "${interface_airmon_compatible}" -eq 1 ]; then
 
 			new_interface=$(${airmon} stop "${interface}" 2> /dev/null | grep station | head -n 1)
-			ifacemode="Managed"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface=${new_interface}
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-					current_iface_on_messages="${interface}"
-					register_selected_interface "main" "${interface}" "${phy_interface}"
+			if ! new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
 				fi
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+
+			ifacemode="Managed"
+
+			if [ "${original_interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -1848,12 +1994,19 @@ function prepare_wpa3_downgrade_interface() {
 			fi
 		fi
 	fi
+
+	return 0
 }
 
 #Restore the state of the interfaces after WAP3 downgrade attack process
 function restore_wpa3_downgrade_interface() {
 
 	debug_print
+
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 
 	echo
 	language_strings "${language}" 299 "blue"
@@ -1876,18 +2029,33 @@ function restore_wpa3_downgrade_interface() {
 				echo
 				language_strings "${language}" 435 "red"
 				language_strings "${language}" 115 "read"
-				return
+				return 1
 			fi
 
-			ifacemode="Monitor"
-
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
-			if [ "${interface}" != "${new_interface}" ]; then
-				interface=${new_interface}
+			if new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "monitor" "${original_phy}" "${original_mac}"); then
+				interface="${new_interface}"
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				ifacemode="Monitor"
 				current_iface_on_messages="${interface}"
 				register_selected_interface "main" "${interface}" "${phy_interface}"
+			else
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
+				fi
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
 			fi
 		else
 			if set_mode_without_airmon "${interface}" "monitor"; then
@@ -1912,9 +2080,15 @@ function managed_option() {
 
 	debug_print
 
+	local original_phy
+	local original_mac
+
 	if ! check_to_set_managed "${1}"; then
 		return 1
 	fi
+
+	original_phy=$(physical_interface_finder "${1}")
+	original_mac=$(cat "/sys/class/net/${1}/address" 2> /dev/null)
 
 	disable_rfkill
 
@@ -1933,17 +2107,32 @@ function managed_option() {
 			fi
 		else
 			new_interface=$(${airmon} stop "${1}" 2> /dev/null | grep station | head -n 1)
-			ifacemode="Managed"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface=${new_interface}
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-				else
-					interface="${new_interface}"
+			if ! new_interface=$(resolve_interface_name "${1}" "${new_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
 				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+			ifacemode="Managed"
+
+			if [ "${interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 				current_iface_on_messages="${interface}"
 				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
@@ -1961,6 +2150,19 @@ function managed_option() {
 		else
 			new_secondary_interface=$(${airmon} stop "${1}" 2> /dev/null | grep station | head -n 1)
 			[[ ${new_secondary_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_secondary_interface="${BASH_REMATCH[1]}"
+
+			if ! new_secondary_interface=$(resolve_interface_name "${1}" "${new_secondary_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					secondary_wifi_interface=""
+					secondary_phy_interface=""
+					register_selected_interface "secondary" "" ""
+				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				return 1
+			fi
 
 			if [ "${1}" != "${new_secondary_interface}" ]; then
 				secondary_wifi_interface=${new_secondary_interface}
@@ -1984,17 +2186,15 @@ function monitor_option() {
 
 	debug_print
 
-	local coherent_interface
 	local original_phy
-	local candidate_interface
-	local candidate_interfaces
-	local monitor_candidates=()
+	local original_mac
 
 	if ! check_to_set_monitor "${1}"; then
 		return 1
 	fi
 
 	original_phy=$(physical_interface_finder "${1}")
+	original_mac=$(cat "/sys/class/net/${1}/address" 2> /dev/null)
 
 	disable_rfkill
 
@@ -2028,30 +2228,7 @@ function monitor_option() {
 
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				coherent_interface=$(check_interface_coherence > /dev/null; printf '%s' "${interface}")
-				if [ "${coherent_interface}" != "${interface}" ] && check_monitor_enabled "${coherent_interface}"; then
-					new_interface="${coherent_interface}"
-				fi
-			fi
-
-			if ! check_monitor_enabled "${new_interface}"; then
-				if check_monitor_enabled "${1}"; then
-					new_interface="${1}"
-				elif [[ "${original_phy}" =~ ^phy[[:digit:]]+$ ]]; then
-					readarray -t candidate_interfaces < <(iw dev 2> /dev/null | awk '$1 == "Interface" {print $2}')
-					for candidate_interface in "${candidate_interfaces[@]}"; do
-						if [ "$(physical_interface_finder "${candidate_interface}")" = "${original_phy}" ] && check_monitor_enabled "${candidate_interface}"; then
-							monitor_candidates+=("${candidate_interface}")
-						fi
-					done
-					if [ "${#monitor_candidates[@]}" -eq 1 ]; then
-						new_interface="${monitor_candidates[0]}"
-					fi
-				fi
-			fi
-
-			if ! check_monitor_enabled "${new_interface}"; then
+			if ! new_interface=$(resolve_interface_name "${1}" "${new_interface}" "monitor" "${original_phy}" "${original_mac}"); then
 				if ! ip link show dev "${1}" > /dev/null 2>&1; then
 					interface=""
 					phy_interface=""
@@ -2074,6 +2251,7 @@ function monitor_option() {
 				interface="${new_interface}"
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 				current_iface_on_messages="${interface}"
 				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
@@ -2093,6 +2271,7 @@ function monitor_option() {
 			run_airmon_check_kill "legacy" "show_message"
 
 			secondary_interface_airmon_compatible=1
+			desired_interface_name=""
 			new_secondary_interface=$(${airmon} start "${1}" 2> /dev/null | grep monitor)
 			[[ ${new_secondary_interface} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
 
@@ -2105,23 +2284,7 @@ function monitor_option() {
 
 			[[ ${new_secondary_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_secondary_interface="${BASH_REMATCH[1]}"
 
-			if ! check_monitor_enabled "${new_secondary_interface}"; then
-				if check_monitor_enabled "${1}"; then
-					new_secondary_interface="${1}"
-				elif [[ "${original_phy}" =~ ^phy[[:digit:]]+$ ]]; then
-					readarray -t candidate_interfaces < <(iw dev 2> /dev/null | awk '$1 == "Interface" {print $2}')
-					for candidate_interface in "${candidate_interfaces[@]}"; do
-						if [ "$(physical_interface_finder "${candidate_interface}")" = "${original_phy}" ] && check_monitor_enabled "${candidate_interface}"; then
-							monitor_candidates+=("${candidate_interface}")
-						fi
-					done
-					if [ "${#monitor_candidates[@]}" -eq 1 ]; then
-						new_secondary_interface="${monitor_candidates[0]}"
-					fi
-				fi
-			fi
-
-			if ! check_monitor_enabled "${new_secondary_interface}"; then
+			if ! new_secondary_interface=$(resolve_interface_name "${1}" "${new_secondary_interface}" "monitor" "${original_phy}" "${original_mac}"); then
 				if ! ip link show dev "${1}" > /dev/null 2>&1; then
 					secondary_wifi_interface=""
 					secondary_phy_interface=""
@@ -11480,6 +11643,11 @@ function exec_enterprise_attack() {
 
 	debug_print
 
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+
 	rm -rf "${tmpdir}${control_enterprise_file}" > /dev/null 2>&1
 	rm -rf "${tmpdir}${enterprisedir}" > /dev/null 2>&1
 	mkdir "${tmpdir}${enterprisedir}" > /dev/null 2>&1
@@ -11509,26 +11677,27 @@ function exec_enterprise_attack() {
 
 				local tmp_interface
 				tmp_interface=$(grep -E "^interface=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_interface}" ]; then
+				if tmp_interface=$(resolve_interface_name "${original_interface}" "${tmp_interface}" "${et_initial_state}" "${original_phy}" "${original_mac}"); then
 					interface="${tmp_interface}"
-				fi
-
-				local tmp_phy_interface
-				tmp_phy_interface=$(grep -E "^phy_interface=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_phy_interface}" ]; then
-					phy_interface="${tmp_phy_interface}"
-				fi
-
-				local tmp_current_iface_on_messages
-				tmp_current_iface_on_messages=$(grep -E "^current_iface_on_messages=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_current_iface_on_messages}" ]; then
-					current_iface_on_messages="${tmp_current_iface_on_messages}"
-				fi
-
-				local tmp_ifacemode
-				tmp_ifacemode=$(grep -E "^ifacemode=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_ifacemode}" ]; then
-					ifacemode="${tmp_ifacemode}"
+					phy_interface=$(physical_interface_finder "${interface}")
+					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+					interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+					current_iface_on_messages="${interface}"
+					ifacemode="${et_initial_state}"
+				else
+					if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+						interface=""
+						phy_interface=""
+						interface_mac=""
+						ifacemode=""
+					fi
+					register_selected_interface "main" "${interface}" "${phy_interface}"
+					echo
+					language_strings "${language}" 855 "red"
+					language_strings "${language}" 115 "read"
+					if [ -z "${interface}" ]; then
+						select_interface
+					fi
 				fi
 
 				register_selected_interface "main" "${interface}" "${phy_interface}"
@@ -13003,6 +13172,8 @@ function set_enterprise_control_script() {
 		#!/usr/bin/env bash
 
 		interface="${interface}"
+		phy_interface="${phy_interface}"
+		interface_mac="$(cat "/sys/class/net/${interface}/address" 2> /dev/null)"
 		et_initial_state="${et_initial_state}"
 		interface_airmon_compatible=${interface_airmon_compatible}
 		iface_monitor_et_deauth="${iface_monitor_et_deauth}"
@@ -13017,8 +13188,17 @@ function set_enterprise_control_script() {
 		done_msg="${yellow_color}${enterprise_texts[${language},9]}${normal_color}"
 		log_reminder_msg="${pink_color}${enterprise_texts[${language},10]}: [${normal_color}${enterprise_completepath}${pink_color}]${normal_color}"
 
+		$(declare -f debug_print)
+		$(declare -f resolve_interface_name)
+
 		#Restore interface to its original state
 		function restore_interface() {
+
+			local original_interface="\${interface}"
+			local original_phy="\${phy_interface}"
+			local original_mac="\${interface_mac}"
+			local restored_mode
+			local new_interface="\${interface}"
 
 			if hash rfkill 2> /dev/null; then
 				rfkill unblock all > /dev/null 2>&1
@@ -13030,24 +13210,38 @@ function set_enterprise_control_script() {
 				ip link set "\${interface}" down > /dev/null 2>&1
 				iw "\${interface}" set type managed > /dev/null 2>&1
 				ip link set "\${interface}" up > /dev/null 2>&1
-				ifacemode="Managed"
 			else
 				if [ "\${interface_airmon_compatible}" -eq 1 ]; then
 					new_interface=\$(\${airmon} start "\${interface}" 2> /dev/null | grep monitor)
 
 					[[ \${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="\${BASH_REMATCH[1]}"
-					if [ "\${interface}" != "\${new_interface}" ]; then
-						interface=\${new_interface}
-						phy_interface=\$(basename "\$(readlink "/sys/class/net/\${interface}/phy80211")" 2> /dev/null)
-						current_iface_on_messages="\${interface}"
-					fi
 				else
 					ip link set "\${interface}" down > /dev/null 2>&1
 					iw "\${interface}" set monitor control > /dev/null 2>&1
 					ip link set "\${interface}" up > /dev/null 2>&1
 				fi
-				ifacemode="Monitor"
 			fi
+
+			if new_interface=\$(resolve_interface_name "\${original_interface}" "\${new_interface}" "\${et_initial_state}" "\${original_phy}" "\${original_mac}"); then
+				interface="\${new_interface}"
+				phy_interface=\$(basename "\$(readlink "/sys/class/net/\${interface}/phy80211")" 2> /dev/null)
+				interface_mac=\$(cat "/sys/class/net/\${interface}/address" 2> /dev/null)
+				current_iface_on_messages="\${interface}"
+				ifacemode="\${et_initial_state}"
+			else
+				if ! ip link show dev "\${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					current_iface_on_messages=""
+					ifacemode=""
+				else
+					restored_mode=\$(iw "\${interface}" info 2> /dev/null | awk '\$1 == "type" {print \$2; exit}')
+					ifacemode="\${restored_mode^}"
+				fi
+				return 1
+			fi
+			return 0
 		}
 
 		#Save some vars to a file to get read from main script
@@ -16926,7 +17120,9 @@ function wpa3_downgrade_prerequisites() {
 	echo
 	language_strings "${language}" 325 "blue"
 
-	prepare_wpa3_downgrade_interface
+	if ! prepare_wpa3_downgrade_interface; then
+		return 1
+	fi
 	exec_wpa3_downgrade_attack
 }
 
@@ -17190,7 +17386,9 @@ function et_prerequisites() {
 	echo
 	language_strings "${language}" 296 "yellow"
 	language_strings "${language}" 115 "read"
-	prepare_et_interface
+	if ! prepare_et_interface; then
+		return 1
+	fi
 
 	rm -rf "${tmpdir}${channelfile}" > /dev/null 2>&1
 	echo "${channel}" > "${tmpdir}${channelfile}"

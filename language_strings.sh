@@ -13070,6 +13070,20 @@ function initialize_language_strings() {
 	arr["TURKISH",854]="\${pending_of_translation} airmon-ng çalıştırıldıktan sonra izleme modundaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
 	arr["ARABIC",854]="\${pending_of_translation} .اختر الواجهة مجددًا للتحقق من اسمها ووضعها الحاليين .airmon-ng بعد تشغيل monitor mode تعذر تحديد الواجهة في وضع"
 	arr["CHINESE",854]="\${pending_of_translation} 运行 airmon-ng 后无法识别处于监听模式的接口。请重新选择接口以检查其当前名称和模式"
+
+	arr["ENGLISH",855]="Unable to identify the interface in the requested mode. Select the interface again to check its current name and mode"
+	arr["SPANISH",855]="No se ha podido identificar la interfaz en el modo solicitado. Vuelve a seleccionar la interfaz para comprobar su nombre y modo actuales"
+	arr["FRENCH",855]="\${pending_of_translation} Impossible d'identifier l'interface dans le mode demandé. Sélectionne à nouveau l'interface pour vérifier son nom et son mode actuels"
+	arr["CATALAN",855]="\${pending_of_translation} No s'ha pogut identificar la interfície en el mode sol·licitat. Torna a seleccionar la interfície per comprovar-ne el nom i el mode actuals"
+	arr["PORTUGUESE",855]="\${pending_of_translation} Não foi possível identificar a interface no modo solicitado. Seleciona novamente a interface para verificar o nome e o modo atuais"
+	arr["RUSSIAN",855]="\${pending_of_translation} Не удалось определить интерфейс в запрошенном режиме. Выбери интерфейс заново, чтобы проверить его текущее имя и режим"
+	arr["GREEK",855]="\${pending_of_translation} Δεν ήταν δυνατή η αναγνώριση της διεπαφής στην κατάσταση που ζητήθηκε. Επίλεξε ξανά τη διεπαφή για να ελέγξεις το τρέχον όνομα και την κατάστασή της"
+	arr["ITALIAN",855]="\${pending_of_translation} Impossibile identificare l'interfaccia nella modalità richiesta. Seleziona di nuovo l'interfaccia per verificarne il nome e la modalità attuali"
+	arr["POLISH",855]="\${pending_of_translation} Nie udało się zidentyfikować interfejsu w żądanym trybie. Wybierz interfejs ponownie, aby sprawdzić jego aktualną nazwę i tryb"
+	arr["GERMAN",855]="\${pending_of_translation} Das Interface im angeforderten Modus konnte nicht ermittelt werden. Wähle das Interface erneut aus, um seinen aktuellen Namen und Modus zu prüfen"
+	arr["TURKISH",855]="\${pending_of_translation} İstenen moddaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
+	arr["ARABIC",855]="\${pending_of_translation} اختر الواجهة مجددًا للتحقق من اسمها ووضعها الحاليين .تعذر تحديد الواجهة في الوضع المطلوب"
+	arr["CHINESE",855]="\${pending_of_translation} 无法识别处于所请求模式的接口。请重新选择接口以检查其当前名称和模式"
 }
 
 #Expand escaped variables in language strings with their current values
