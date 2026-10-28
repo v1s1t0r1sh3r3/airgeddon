@@ -1857,6 +1857,7 @@ function prepare_et_interface() {
 			fi
 		fi
 	fi
+
 	return 0
 }
 
@@ -1929,9 +1930,11 @@ function restore_et_interface() {
 	fi
 
 	control_routing_status "end"
+
 	if [ -z "${interface}" ]; then
 		select_interface
 	fi
+
 	return ${restore_failed}
 }
 
@@ -17386,6 +17389,7 @@ function et_prerequisites() {
 	echo
 	language_strings "${language}" 296 "yellow"
 	language_strings "${language}" 115 "read"
+
 	if ! prepare_et_interface; then
 		return 1
 	fi
