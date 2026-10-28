@@ -13056,6 +13056,20 @@ function initialize_language_strings() {
 	arr["TURKISH",853]="\${pending_of_translation} Geçmişteki destekleri için eski sponsorlarımıza teşekkür ederiz:"
 	arr["ARABIC",853]="\${pending_of_translation} :السابقين دعمهم على شكرًا لرعاتنا"
 	arr["CHINESE",853]="\${pending_of_translation} 感谢以前的赞助商过去给予的支持:"
+
+	arr["ENGLISH",854]="Unable to identify the interface in monitor mode after running airmon-ng. Select the interface again to check its current name and mode"
+	arr["SPANISH",854]="No se ha podido identificar la interfaz en modo monitor tras ejecutar airmon-ng. Vuelve a seleccionar la interfaz para comprobar su nombre y modo actuales"
+	arr["FRENCH",854]="\${pending_of_translation} Impossible d'identifier l'interface en mode moniteur après l'exécution d'airmon-ng. Sélectionne à nouveau l'interface pour vérifier son nom et son mode actuels"
+	arr["CATALAN",854]="\${pending_of_translation} No s'ha pogut identificar la interfície en mode monitor després d'executar airmon-ng. Torna a seleccionar la interfície per comprovar-ne el nom i el mode actuals"
+	arr["PORTUGUESE",854]="\${pending_of_translation} Não foi possível identificar a interface em modo monitor após executar airmon-ng. Seleciona novamente a interface para verificar o nome e o modo atuais"
+	arr["RUSSIAN",854]="\${pending_of_translation} Не удалось определить интерфейс в режиме монитора после запуска airmon-ng. Выбери интерфейс заново, чтобы проверить его текущее имя и режим"
+	arr["GREEK",854]="\${pending_of_translation} Δεν ήταν δυνατή η αναγνώριση της διεπαφής σε κατάσταση παρακολούθησης μετά την εκτέλεση του airmon-ng. Επίλεξε ξανά τη διεπαφή για να ελέγξεις το τρέχον όνομα και την κατάστασή της"
+	arr["ITALIAN",854]="\${pending_of_translation} Impossibile identificare l'interfaccia in modalità monitor dopo l'esecuzione di airmon-ng. Seleziona di nuovo l'interfaccia per verificarne il nome e la modalità attuali"
+	arr["POLISH",854]="\${pending_of_translation} Nie udało się zidentyfikować interfejsu w trybie monitorowania po uruchomieniu airmon-ng. Wybierz interfejs ponownie, aby sprawdzić jego aktualną nazwę i tryb"
+	arr["GERMAN",854]="\${pending_of_translation} Das Interface im Monitor-Modus konnte nach dem Ausführen von airmon-ng nicht ermittelt werden. Wähle das Interface erneut aus, um seinen aktuellen Namen und Modus zu prüfen"
+	arr["TURKISH",854]="\${pending_of_translation} airmon-ng çalıştırıldıktan sonra izleme modundaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
+	arr["ARABIC",854]="\${pending_of_translation} .اختر الواجهة مجددًا للتحقق من اسمها ووضعها الحاليين .airmon-ng بعد تشغيل monitor mode تعذر تحديد الواجهة في وضع"
+	arr["CHINESE",854]="\${pending_of_translation} 运行 airmon-ng 后无法识别处于监听模式的接口。请重新选择接口以检查其当前名称和模式"
 }
 
 #Expand escaped variables in language strings with their current values

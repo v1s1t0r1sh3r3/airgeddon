@@ -975,8 +975,8 @@ function renew_ifaces_and_macs_list() {
 
 	debug_print
 
-	readarray -t IFACES_AND_MACS < <(ip link | grep -E "^[0-9]+" | cut -d ':' -f 2 | awk '{print $1}' | grep -E "^lo$" -v | grep "${interface}" -v)
-	declare -gA ifaces_and_macs
+	readarray -t IFACES_AND_MACS < <(ip link | grep -E "^[0-9]+" | cut -d ':' -f 2 | awk '{print $1}' | grep -E "^lo$" -v)
+	declare -gA ifaces_and_macs=()
 	for iface_name in "${IFACES_AND_MACS[@]}"; do
 		if [ -f "/sys/class/net/${iface_name}/address" ]; then
 			mac_item=$(cat "/sys/class/net/${iface_name}/address" 2> /dev/null)
@@ -986,7 +986,7 @@ function renew_ifaces_and_macs_list() {
 		fi
 	done
 
-	declare -gA ifaces_and_macs_switched
+	declare -gA ifaces_and_macs_switched=()
 	for iface_name in "${!ifaces_and_macs[@]}"; do
 		ifaces_and_macs_switched[${ifaces_and_macs[${iface_name}]}]=${iface_name}
 	done
@@ -1984,9 +1984,17 @@ function monitor_option() {
 
 	debug_print
 
+	local coherent_interface
+	local original_phy
+	local candidate_interface
+	local candidate_interfaces
+	local monitor_candidates=()
+
 	if ! check_to_set_monitor "${1}"; then
 		return 1
 	fi
+
+	original_phy=$(physical_interface_finder "${1}")
 
 	disable_rfkill
 
@@ -2018,17 +2026,54 @@ function monitor_option() {
 				return 1
 			fi
 
-			ifacemode="Monitor"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
 			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface="${new_interface}"
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-				else
-					interface="${new_interface}"
+				coherent_interface=$(check_interface_coherence > /dev/null; printf '%s' "${interface}")
+				if [ "${coherent_interface}" != "${interface}" ] && check_monitor_enabled "${coherent_interface}"; then
+					new_interface="${coherent_interface}"
 				fi
+			fi
+
+			if ! check_monitor_enabled "${new_interface}"; then
+				if check_monitor_enabled "${1}"; then
+					new_interface="${1}"
+				elif [[ "${original_phy}" =~ ^phy[[:digit:]]+$ ]]; then
+					readarray -t candidate_interfaces < <(iw dev 2> /dev/null | awk '$1 == "Interface" {print $2}')
+					for candidate_interface in "${candidate_interfaces[@]}"; do
+						if [ "$(physical_interface_finder "${candidate_interface}")" = "${original_phy}" ] && check_monitor_enabled "${candidate_interface}"; then
+							monitor_candidates+=("${candidate_interface}")
+						fi
+					done
+					if [ "${#monitor_candidates[@]}" -eq 1 ]; then
+						new_interface="${monitor_candidates[0]}"
+					fi
+				fi
+			fi
+
+			if ! check_monitor_enabled "${new_interface}"; then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
+				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+			ifacemode="Monitor"
+
+			if [ "${interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 				current_iface_on_messages="${interface}"
 				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
@@ -2059,6 +2104,35 @@ function monitor_option() {
 			fi
 
 			[[ ${new_secondary_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_secondary_interface="${BASH_REMATCH[1]}"
+
+			if ! check_monitor_enabled "${new_secondary_interface}"; then
+				if check_monitor_enabled "${1}"; then
+					new_secondary_interface="${1}"
+				elif [[ "${original_phy}" =~ ^phy[[:digit:]]+$ ]]; then
+					readarray -t candidate_interfaces < <(iw dev 2> /dev/null | awk '$1 == "Interface" {print $2}')
+					for candidate_interface in "${candidate_interfaces[@]}"; do
+						if [ "$(physical_interface_finder "${candidate_interface}")" = "${original_phy}" ] && check_monitor_enabled "${candidate_interface}"; then
+							monitor_candidates+=("${candidate_interface}")
+						fi
+					done
+					if [ "${#monitor_candidates[@]}" -eq 1 ]; then
+						new_secondary_interface="${monitor_candidates[0]}"
+					fi
+				fi
+			fi
+
+			if ! check_monitor_enabled "${new_secondary_interface}"; then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					secondary_wifi_interface=""
+					secondary_phy_interface=""
+					register_selected_interface "secondary" "" ""
+				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
+				return 1
+			fi
 
 			if [ "${1}" != "${new_secondary_interface}" ]; then
 				secondary_wifi_interface="${new_secondary_interface}"

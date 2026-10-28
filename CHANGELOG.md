@@ -1,4 +1,5 @@
 ### 12.10
+ - Fixed invalid interface selection after enabling monitor mode when parsing airmon-ng output
  - Fixed routing state restoration on forced exit in multi-instance mode
  - Changed multi-instance orchestrator file to use a colon-delimited format
  - Added multi-instance wireless interface conflict detection
