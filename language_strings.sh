@@ -13080,7 +13080,7 @@ function initialize_language_strings() {
 	arr["GREEK",855]="Δεν ήταν δυνατή η αναγνώριση της διεπαφής στην λειτουργία που ζητήθηκε. Επίλεξε ξανά τη διεπαφή για να ελέγξεις την τρέχουσα ονομασία και την λειτουργία της"
 	arr["ITALIAN",855]="\${pending_of_translation} Impossibile identificare l'interfaccia nella modalità richiesta. Seleziona di nuovo l'interfaccia per verificarne il nome e la modalità attuali"
 	arr["POLISH",855]="\${pending_of_translation} Nie udało się zidentyfikować interfejsu w żądanym trybie. Wybierz interfejs ponownie, aby sprawdzić jego aktualną nazwę i tryb"
-	arr["GERMAN",855]="\${pending_of_translation} Das Interface im angeforderten Modus konnte nicht ermittelt werden. Wähle das Interface erneut aus, um seinen aktuellen Namen und Modus zu prüfen"
+	arr["GERMAN",855]="Das Interface im angeforderten Modus konnte nicht ermittelt werden. Wähle das Interface erneut aus, um seinen aktuellen Namen und Modus zu prüfen"
 	arr["TURKISH",855]="\${pending_of_translation} İstenen moddaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
 	arr["ARABIC",855]="\${pending_of_translation} اختر الواجهة مجددًا للتحقق من اسمها ووضعها الحاليين .تعذر تحديد الواجهة في الوضع المطلوب"
 	arr["CHINESE",855]="\${pending_of_translation} 无法识别处于所请求模式的接口。请重新选择接口以检查其当前名称和模式"
