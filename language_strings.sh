@@ -10931,7 +10931,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",702]="Thanks to our current sponsors for their support:"
 	arr["SPANISH",702]="Gracias a nuestros patrocinadores actuales por su apoyo:"
-	arr["FRENCH",702]="\${pending_of_translation} Merci à nos sponsors actuels pour leur soutien:"
+	arr["FRENCH",702]="Merci à nos sponsors actuels pour leur soutien:"
 	arr["CATALAN",702]="\${pending_of_translation} Gràcies als nostres patrocinadors actuals pel seu suport:"
 	arr["PORTUGUESE",702]="\${pending_of_translation} Obrigado aos nossos patrocinadores atuais pelo seu apoio:"
 	arr["RUSSIAN",702]="\${pending_of_translation} Спасибо нашим нынешним спонсорам за поддержку:"
@@ -12989,7 +12989,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",849]="main interface"
 	arr["SPANISH",849]="interfaz principal"
-	arr["FRENCH",849]="\${pending_of_translation} interface principale"
+	arr["FRENCH",849]="interface principale"
 	arr["CATALAN",849]="\${pending_of_translation} interfície principal"
 	arr["PORTUGUESE",849]="\${pending_of_translation} interface principal"
 	arr["RUSSIAN",849]="\${pending_of_translation} основной интерфейс"
@@ -13003,7 +13003,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",850]="secondary interface"
 	arr["SPANISH",850]="interfaz secundaria"
-	arr["FRENCH",850]="\${pending_of_translation} interface secondaire"
+	arr["FRENCH",850]="interface secondaire"
 	arr["CATALAN",850]="\${pending_of_translation} interfície secundària"
 	arr["PORTUGUESE",850]="\${pending_of_translation} interface secundária"
 	arr["RUSSIAN",850]="\${pending_of_translation} дополнительный интерфейс"
@@ -13017,7 +13017,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",851]="Another airgeddon instance already has the same physical wireless adapter registered as its \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
 	arr["SPANISH",851]="Se ha detectado que otra instancia de airgeddon ya tiene registrado el mismo adaptador inalámbrico físico como su \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
-	arr["FRENCH",851]="\${pending_of_translation} Une autre instance d'airgeddon a déjà enregistré le même adaptateur sans fil physique comme \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
+	arr["FRENCH",851]="Une autre instance d'airgeddon a déjà enregistré le même adaptateur sans fil comme \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
 	arr["CATALAN",851]="\${pending_of_translation} Una altra instància d'airgeddon ja té registrat el mateix adaptador sense fil físic com a \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
 	arr["PORTUGUESE",851]="\${pending_of_translation} Outra instância do airgeddon já tem o mesmo adaptador sem fio físico registrado como \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
 	arr["RUSSIAN",851]="\${pending_of_translation} В другом экземпляре airgeddon тот же физический беспроводной адаптер уже зарегистрирован как \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
@@ -13031,7 +13031,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",852]="Simultaneous operations cannot be performed with the same wireless adapter. Errors may occur unless you know exactly what you are doing"
 	arr["SPANISH",852]="No se pueden realizar operaciones simultáneas con el mismo adaptador inalámbrico. Podrían producirse errores a menos que sepas exactamente lo que estás haciendo"
-	arr["FRENCH",852]="\${pending_of_translation} Il est impossible d'effectuer des opérations simultanées avec le même adaptateur sans fil. Des erreurs peuvent survenir à moins que tu ne saches exactement ce que tu fais"
+	arr["FRENCH",852]="C'est impossible d'effectuer des opérations simultanées avec le même adaptateur sans fil. Des erreurs peuvent arriver à moins que tu ne saches exactement ce que tu fais"
 	arr["CATALAN",852]="\${pending_of_translation} No es poden realitzar operacions simultànies amb el mateix adaptador sense fil. Es poden produir errors tret que sàpigues exactament què estàs fent"
 	arr["PORTUGUESE",852]="\${pending_of_translation} Não é possível realizar operações simultâneas com o mesmo adaptador sem fio. Podem ocorrer erros a menos que saibas exatamente o que estás fazendo"
 	arr["RUSSIAN",852]="\${pending_of_translation} Нельзя одновременно выполнять операции с одним и тем же беспроводным адаптером. Возможны ошибки, если вы точно не знаете, что делаете"
@@ -13045,7 +13045,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",853]="Thanks to our former sponsors for their past support:"
 	arr["SPANISH",853]="Gracias a quienes nos patrocinaron anteriormente por su apoyo:"
-	arr["FRENCH",853]="\${pending_of_translation} Merci à nos anciens sponsors pour leur soutien passé:"
+	arr["FRENCH",853]="Merci à nos anciens sponsors pour leur soutien passé:"
 	arr["CATALAN",853]="\${pending_of_translation} Gràcies als nostres antics patrocinadors pel seu suport anterior:"
 	arr["PORTUGUESE",853]="\${pending_of_translation} Obrigado aos nossos antigos patrocinadores pelo apoio no passado:"
 	arr["RUSSIAN",853]="\${pending_of_translation} Спасибо нашим бывшим спонсорам за оказанную ранее поддержку:"
@@ -13059,7 +13059,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",854]="Unable to identify the interface in monitor mode after running airmon-ng. Select the interface again to check its current name and mode"
 	arr["SPANISH",854]="No se ha podido identificar la interfaz en modo monitor tras ejecutar airmon-ng. Vuelve a seleccionar la interfaz para comprobar su nombre y modo actuales"
-	arr["FRENCH",854]="\${pending_of_translation} Impossible d'identifier l'interface en mode moniteur après l'exécution d'airmon-ng. Sélectionne à nouveau l'interface pour vérifier son nom et son mode actuels"
+	arr["FRENCH",854]="C'est Impossible d'identifier l'interface en mode moniteur après l'exécution d'airmon-ng. Sélectionne l'interface un autre fois pour vérifier son nom et son mode actuels"
 	arr["CATALAN",854]="\${pending_of_translation} No s'ha pogut identificar la interfície en mode monitor després d'executar airmon-ng. Torna a seleccionar la interfície per comprovar-ne el nom i el mode actuals"
 	arr["PORTUGUESE",854]="\${pending_of_translation} Não foi possível identificar a interface em modo monitor após executar airmon-ng. Seleciona novamente a interface para verificar o nome e o modo atuais"
 	arr["RUSSIAN",854]="\${pending_of_translation} Не удалось определить интерфейс в режиме монитора после запуска airmon-ng. Выбери интерфейс заново, чтобы проверить его текущее имя и режим"
@@ -13073,7 +13073,7 @@ function initialize_language_strings() {
 
 	arr["ENGLISH",855]="Unable to identify the interface in the requested mode. Select the interface again to check its current name and mode"
 	arr["SPANISH",855]="No se ha podido identificar la interfaz en el modo solicitado. Vuelve a seleccionar la interfaz para comprobar su nombre y modo actuales"
-	arr["FRENCH",855]="\${pending_of_translation} Impossible d'identifier l'interface dans le mode demandé. Sélectionne à nouveau l'interface pour vérifier son nom et son mode actuels"
+	arr["FRENCH",855]="C'est impossible d'identifier l'interface dans le mode demandé. Sélectionne l'interface un autre fois pour vérifier son nom et son mode actuels"
 	arr["CATALAN",855]="\${pending_of_translation} No s'ha pogut identificar la interfície en el mode sol·licitat. Torna a seleccionar la interfície per comprovar-ne el nom i el mode actuals"
 	arr["PORTUGUESE",855]="\${pending_of_translation} Não foi possível identificar a interface no modo solicitado. Seleciona novamente a interface para verificar o nome e o modo atuais"
 	arr["RUSSIAN",855]="\${pending_of_translation} Не удалось определить интерфейс в запрошенном режиме. Выбери интерфейс заново, чтобы проверить его текущее имя и режим"
