@@ -1,4 +1,5 @@
 ### 12.10
+ - Fixed tmux sessions remaining active when the session handoff fails
  - Fixed invalid interface selection when parsing airmon-ng output during mode changes and restoration
  - Fixed routing state restoration on forced exit in multi-instance mode
  - Changed multi-instance orchestrator file to use a colon-delimited format

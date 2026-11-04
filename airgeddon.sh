@@ -20357,6 +20357,7 @@ function initialize_tmux() {
 function start_airgeddon_from_tmux() {
 
 	debug_print
+	local tmux_handoff_rc
 
 	tmux rename-window -t "${session_name}" "${tmux_main_window}"
 	tmux send-keys -t "${session_name}:${tmux_main_window}" "clear;cd ${scriptfolder};bash ${scriptname} \"true\" \"${airgeddon_uid}\"" ENTER
@@ -20365,6 +20366,11 @@ function start_airgeddon_from_tmux() {
 		tmux attach -t "${session_name}"
 	else
 		tmux switch-client -t "${session_name}"
+	fi
+	tmux_handoff_rc=$?
+	if [ "${tmux_handoff_rc}" -ne 0 ]; then
+		tmux kill-session -t "${session_name}" > /dev/null 2>&1
+		return "${tmux_handoff_rc}"
 	fi
 }
 
