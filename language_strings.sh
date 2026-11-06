@@ -10939,7 +10939,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",702]="\${pending_of_translation} Grazie ai nostri sponsor attuali per il loro supporto:"
 	arr["POLISH",702]="Dziękujemy naszym obecnym sponsorom za wsparcie:"
 	arr["GERMAN",702]="Danke an unsere aktuellen Sponsoren für ihre Unterstützung:"
-	arr["TURKISH",702]="\${pending_of_translation} Mevcut sponsorlarımıza destekleri için teşekkür ederiz:"
+	arr["TURKISH",702]="Mevcut sponsorlarımıza destekleri için teşekkür ederiz:"
 	arr["ARABIC",702]="\${pending_of_translation} :الحاليين لرعايتهم شكرًا لرعاتنا"
 	arr["CHINESE",702]="\${pending_of_translation} 感谢当前赞助商的支持:"
 
@@ -12997,7 +12997,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",849]="\${pending_of_translation} interfaccia principale"
 	arr["POLISH",849]="główny interfejs"
 	arr["GERMAN",849]="Hauptschnittstelle"
-	arr["TURKISH",849]="\${pending_of_translation} ana arayüz"
+	arr["TURKISH",849]="ana arayüz"
 	arr["ARABIC",849]="\${pending_of_translation} الواجهة الرئيسية"
 	arr["CHINESE",849]="\${pending_of_translation} 主接口"
 
@@ -13011,7 +13011,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",850]="\${pending_of_translation} interfaccia secondaria"
 	arr["POLISH",850]="dodatkowy interfejs"
 	arr["GERMAN",850]="sekundäre Schnittstelle"
-	arr["TURKISH",850]="\${pending_of_translation} ikincil arayüz"
+	arr["TURKISH",850]="ikincil arayüz"
 	arr["ARABIC",850]="\${pending_of_translation} الواجهة الثانوية"
 	arr["CHINESE",850]="\${pending_of_translation} 辅助接口"
 
@@ -13025,7 +13025,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",851]="\${pending_of_translation} Un'altra istanza di airgeddon ha già registrato lo stesso adattatore wireless fisico come \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
 	arr["POLISH",851]="Inna instancja airgeddon ma już ten sam fizyczny adapter bezprzewodowy zarejestrowany jako \${conflicting_interface_role} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
 	arr["GERMAN",851]="Eine andere airgeddon-Instanz hat denselben physischen WLAN-Adapter bereits als \${conflicting_interface_role} registriert (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
-	arr["TURKISH",851]="\${pending_of_translation} Başka bir airgeddon örneğinde aynı fiziksel kablosuz adaptör \${conflicting_interface_role} olarak zaten kayıtlı (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
+	arr["TURKISH",851]="Başka bir airgeddon örneğinde aynı fiziksel kablosuz adaptör \${conflicting_interface_role} olarak zaten kayıtlı (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color})"
 	arr["ARABIC",851]="\${pending_of_translation} (\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color}) \${conflicting_interface_role} كمحول لاسلكي فعلي نفسه airgeddon قامت نسخة أخرى من بتسجيل"
 	arr["CHINESE",851]="\${pending_of_translation} 另一个 airgeddon 实例已将同一物理无线适配器注册为其 \${conflicting_interface_role}（\${normal_color}\${conflicting_interface_name} / \${conflicting_interface_phy}\${yellow_color}）"
 
@@ -13039,7 +13039,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",852]="\${pending_of_translation} Non è possibile eseguire operazioni simultanee con lo stesso adattatore wireless. Potrebbero verificarsi errori a meno che tu non sappia esattamente cosa stai facendo"
 	arr["POLISH",852]="Nie można wykonywać jednoczesnych operacji przy użyciu tego samego adaptera bezprzewodowego. Mogą wystąpić błędy, jeśli nie wiesz dokładnie, co robisz"
 	arr["GERMAN",852]="Gleichzeitige Vorgänge können nicht mit demselben WLAN-Adapter ausgeführt werden. Es können Fehler auftreten, wenn du nicht genau weißt, was du tust"
-	arr["TURKISH",852]="\${pending_of_translation} Aynı kablosuz adaptörle eş zamanlı işlemler gerçekleştirilemez. Tam olarak ne yaptığını bilmiyorsan hatalar oluşabilir"
+	arr["TURKISH",852]="Aynı kablosuz adaptörle eş zamanlı işlemler gerçekleştirilemez. Tam olarak ne yaptığını bilmiyorsan hatalar oluşabilir"
 	arr["ARABIC",852]="\${pending_of_translation} قد تحدث أخطاء ما لم تكن تعرف بالضبط ما تفعله. لا يمكن تنفيذ عمليات متزامنة باستخدام المحول اللاسلكي نفسه"
 	arr["CHINESE",852]="\${pending_of_translation} 无法使用同一个无线适配器同时执行操作。除非你确切知道自己在做什么，否则可能会发生错误"
 
@@ -13053,7 +13053,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",853]="\${pending_of_translation} Grazie ai nostri precedenti sponsor per il supporto passato:"
 	arr["POLISH",853]="Dziękujemy naszym byłym sponsorom za ich wcześniejsze wsparcie:"
 	arr["GERMAN",853]="Danke an unsere ehemaligen Sponsoren für ihre bisherige Unterstützung:"
-	arr["TURKISH",853]="\${pending_of_translation} Geçmişteki destekleri için eski sponsorlarımıza teşekkür ederiz:"
+	arr["TURKISH",853]="Geçmişteki destekleri için eski sponsorlarımıza teşekkür ederiz:"
 	arr["ARABIC",853]="\${pending_of_translation} :السابقين دعمهم على شكرًا لرعاتنا"
 	arr["CHINESE",853]="\${pending_of_translation} 感谢以前的赞助商过去给予的支持:"
 
@@ -13067,7 +13067,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",854]="\${pending_of_translation} Impossibile identificare l'interfaccia in modalità monitor dopo l'esecuzione di airmon-ng. Seleziona di nuovo l'interfaccia per verificarne il nome e la modalità attuali"
 	arr["POLISH",854]="Nie udało się zidentyfikować interfejsu w trybie monitorowania po uruchomieniu airmon-ng. Wybierz interfejs ponownie, aby sprawdzić jego aktualną nazwę i tryb"
 	arr["GERMAN",854]="Das Interface im Monitor-Modus konnte nach dem Ausführen von airmon-ng nicht ermittelt werden. Wähle das Interface erneut aus, um seinen aktuellen Namen und Modus zu prüfen"
-	arr["TURKISH",854]="\${pending_of_translation} airmon-ng çalıştırıldıktan sonra izleme modundaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
+	arr["TURKISH",854]="airmon-ng çalıştırıldıktan sonra izleme modundaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
 	arr["ARABIC",854]="\${pending_of_translation} .اختر الواجهة مجددًا للتحقق من اسمها ووضعها الحاليين .airmon-ng بعد تشغيل monitor mode تعذر تحديد الواجهة في وضع"
 	arr["CHINESE",854]="\${pending_of_translation} 运行 airmon-ng 后无法识别处于监听模式的接口。请重新选择接口以检查其当前名称和模式"
 
@@ -13081,7 +13081,7 @@ function initialize_language_strings() {
 	arr["ITALIAN",855]="\${pending_of_translation} Impossibile identificare l'interfaccia nella modalità richiesta. Seleziona di nuovo l'interfaccia per verificarne il nome e la modalità attuali"
 	arr["POLISH",855]="Nie udało się zidentyfikować interfejsu w żądanym trybie. Wybierz interfejs ponownie, aby sprawdzić jego aktualną nazwę i tryb"
 	arr["GERMAN",855]="Das Interface im angeforderten Modus konnte nicht ermittelt werden. Wähle das Interface erneut aus, um seinen aktuellen Namen und Modus zu prüfen"
-	arr["TURKISH",855]="\${pending_of_translation} İstenen moddaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
+	arr["TURKISH",855]="İstenen moddaki arayüz belirlenemedi. Geçerli adını ve modunu kontrol etmek için arayüzü yeniden seç"
 	arr["ARABIC",855]="\${pending_of_translation} اختر الواجهة مجددًا للتحقق من اسمها ووضعها الحاليين .تعذر تحديد الواجهة في الوضع المطلوب"
 	arr["CHINESE",855]="\${pending_of_translation} 无法识别处于所请求模式的接口。请重新选择接口以检查其当前名称和模式"
 }
