@@ -2,7 +2,7 @@
 #Title........: airgeddon.sh
 #Description..: This is a multi-use bash script for Linux systems to audit wireless networks.
 #Author.......: v1s1t0r
-#Version......: 12.02
+#Version......: 12.10
 #Usage........: bash airgeddon.sh
 #Bash Version.: 4.2 or later
 
@@ -146,8 +146,8 @@ declare -A possible_alias_names=(
 								)
 
 #General vars
-airgeddon_version="12.02"
-language_strings_expected_version="12.02-1"
+airgeddon_version="12.10"
+language_strings_expected_version="12.10-1"
 standardhandshake_filename="handshake-01.cap"
 standardpmkid_filename="pmkid_hash.txt"
 standardpmkidcap_filename="pmkid.cap"
@@ -396,14 +396,18 @@ known_arm_compatible_distros=(
 							)
 
 #Sponsors
-sponsors=(
+current_sponsors=(
+		"Matthew Ebert"
+		"SkipTooLow"
+		)
+
+past_sponsors=(
 		"Raleigh2016"
 		"hmmlopl"
 		"codythebeast89"
 		"Kaliscandinavia"
 		"Furrycoder"
 		"Jonathon Coy"
-		"Matthew Ebert"
 		"weedhed4lf"
 		)
 
@@ -782,6 +786,7 @@ function debug_print() {
 							"read_yesno"
 							"register_instance_pid"
 							"remove_warnings"
+							"resolve_interface_name"
 							"set_absolute_path"
 							"set_script_paths"
 							"special_text_missed_optional_tool"
@@ -971,8 +976,8 @@ function renew_ifaces_and_macs_list() {
 
 	debug_print
 
-	readarray -t IFACES_AND_MACS < <(ip link | grep -E "^[0-9]+" | cut -d ':' -f 2 | awk '{print $1}' | grep -E "^lo$" -v | grep "${interface}" -v)
-	declare -gA ifaces_and_macs
+	readarray -t IFACES_AND_MACS < <(ip link | grep -E "^[0-9]+" | cut -d ':' -f 2 | awk '{print $1}' | grep -E "^lo$" -v)
+	declare -gA ifaces_and_macs=()
 	for iface_name in "${IFACES_AND_MACS[@]}"; do
 		if [ -f "/sys/class/net/${iface_name}/address" ]; then
 			mac_item=$(cat "/sys/class/net/${iface_name}/address" 2> /dev/null)
@@ -982,7 +987,7 @@ function renew_ifaces_and_macs_list() {
 		fi
 	done
 
-	declare -gA ifaces_and_macs_switched
+	declare -gA ifaces_and_macs_switched=()
 	for iface_name in "${!ifaces_and_macs[@]}"; do
 		ifaces_and_macs_switched[${ifaces_and_macs[${iface_name}]}]=${iface_name}
 	done
@@ -1022,6 +1027,84 @@ function check_interface_coherence() {
 	fi
 
 	return ${interface_auto_change}
+}
+
+#Resolve an interface name after a mode change
+function resolve_interface_name() {
+
+	debug_print
+
+	local original_interface="${1}"
+	local parsed_interface="${2}"
+	local expected_mode="${3,,}"
+	local original_phy="${4}"
+	local interface_mac="${5}"
+	local coherent_interface
+	local candidate_interface
+	local candidate_info
+	local candidate_mode
+	local candidate_phy
+	local candidate_mac
+	local candidate_interfaces
+	local phy_candidates=()
+	local mac_candidates=()
+
+	[[ "${original_phy}" =~ ^phy[[:digit:]]+$ ]] || original_phy=""
+
+	if [ "${original_interface}" = "${interface}" ] && declare -F check_interface_coherence > /dev/null; then
+		coherent_interface=$(check_interface_coherence > /dev/null; printf '%s' "${interface}")
+	fi
+
+	for candidate_interface in "${coherent_interface}" "${parsed_interface}" "${original_interface}"; do
+		if [ -z "${candidate_interface}" ]; then
+			continue
+		fi
+		if ! candidate_info=$(iw "${candidate_interface}" info 2> /dev/null); then
+			continue
+		fi
+		candidate_mode=$(awk '$1 == "type" {print $2; exit}' <<< "${candidate_info}")
+		if [ "${candidate_mode}" != "${expected_mode}" ]; then
+			continue
+		fi
+		candidate_phy=$(basename "$(readlink "/sys/class/net/${candidate_interface}/phy80211")" 2> /dev/null)
+		if [ -n "${original_phy}" ] && [ "${candidate_phy}" != "${original_phy}" ]; then
+			continue
+		fi
+		printf '%s' "${candidate_interface}"
+		return 0
+	done
+
+	readarray -t candidate_interfaces < <(iw dev 2> /dev/null | awk '$1 == "Interface" {print $2}')
+	for candidate_interface in "${candidate_interfaces[@]}"; do
+		candidate_phy=$(basename "$(readlink "/sys/class/net/${candidate_interface}/phy80211")" 2> /dev/null)
+		if [ -n "${original_phy}" ] && [ "${candidate_phy}" != "${original_phy}" ]; then
+			continue
+		fi
+		if ! candidate_info=$(iw "${candidate_interface}" info 2> /dev/null); then
+			continue
+		fi
+		candidate_mode=$(awk '$1 == "type" {print $2; exit}' <<< "${candidate_info}")
+		if [ "${candidate_mode}" != "${expected_mode}" ]; then
+			continue
+		fi
+		if [ -n "${original_phy}" ]; then
+			phy_candidates+=("${candidate_interface}")
+		fi
+		candidate_mac=$(cat "/sys/class/net/${candidate_interface}/address" 2> /dev/null)
+		if [ -n "${interface_mac}" ] && [ "${candidate_mac}" = "${interface_mac}" ]; then
+			mac_candidates+=("${candidate_interface}")
+		fi
+	done
+
+	if [ "${#mac_candidates[@]}" -eq 1 ]; then
+		printf '%s' "${mac_candidates[0]}"
+		return 0
+	fi
+	if [ "${#phy_candidates[@]}" -eq 1 ]; then
+		printf '%s' "${phy_candidates[0]}"
+		return 0
+	fi
+	return 1
 }
 
 #Check if an adapter is compatible to airmon
@@ -1721,6 +1804,11 @@ function prepare_et_interface() {
 
 	debug_print
 
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+
 	et_initial_state=${ifacemode}
 
 	if [ "${ifacemode}" != "Managed" ]; then
@@ -1728,16 +1816,33 @@ function prepare_et_interface() {
 		if [ "${interface_airmon_compatible}" -eq 1 ]; then
 
 			new_interface=$(${airmon} stop "${interface}" 2> /dev/null | grep station | head -n 1)
-			ifacemode="Managed"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface=${new_interface}
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-					current_iface_on_messages="${interface}"
+			if ! new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
 				fi
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+			ifacemode="Managed"
+
+			if [ "${original_interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -1752,12 +1857,20 @@ function prepare_et_interface() {
 			fi
 		fi
 	fi
+
+	return 0
 }
 
 #Restore the state of the interfaces after Evil Twin or Enterprise attack process
 function restore_et_interface() {
 
 	debug_print
+
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	local restore_failed=0
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 
 	echo
 	language_strings "${language}" 299 "blue"
@@ -1783,17 +1896,31 @@ function restore_et_interface() {
 				echo
 				language_strings "${language}" 435 "red"
 				language_strings "${language}" 115 "read"
-				return
+				control_routing_status "end"
+				return 1
 			fi
 
-			ifacemode="Monitor"
-
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
-			if [ "${interface}" != "${new_interface}" ]; then
-				interface=${new_interface}
+			if new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "monitor" "${original_phy}" "${original_mac}"); then
+				interface="${new_interface}"
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				ifacemode="Monitor"
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
+			else
+				restore_failed=1
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
+				fi
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
 			fi
 		else
 			if set_mode_without_airmon "${interface}" "monitor"; then
@@ -1803,12 +1930,23 @@ function restore_et_interface() {
 	fi
 
 	control_routing_status "end"
+
+	if [ -z "${interface}" ]; then
+		select_interface
+	fi
+
+	return ${restore_failed}
 }
 
 #Assure the mode of the interface before the WPA3 downgrade attack process
 function prepare_wpa3_downgrade_interface() {
 
 	debug_print
+
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 
 	downgrade_initial_state=${ifacemode}
 
@@ -1817,16 +1955,34 @@ function prepare_wpa3_downgrade_interface() {
 		if [ "${interface_airmon_compatible}" -eq 1 ]; then
 
 			new_interface=$(${airmon} stop "${interface}" 2> /dev/null | grep station | head -n 1)
-			ifacemode="Managed"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface=${new_interface}
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-					current_iface_on_messages="${interface}"
+			if ! new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
 				fi
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+
+			ifacemode="Managed"
+
+			if [ "${original_interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -1841,12 +1997,19 @@ function prepare_wpa3_downgrade_interface() {
 			fi
 		fi
 	fi
+
+	return 0
 }
 
 #Restore the state of the interfaces after WAP3 downgrade attack process
 function restore_wpa3_downgrade_interface() {
 
 	debug_print
+
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 
 	echo
 	language_strings "${language}" 299 "blue"
@@ -1869,17 +2032,33 @@ function restore_wpa3_downgrade_interface() {
 				echo
 				language_strings "${language}" 435 "red"
 				language_strings "${language}" 115 "read"
-				return
+				return 1
 			fi
 
-			ifacemode="Monitor"
-
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
-			if [ "${interface}" != "${new_interface}" ]; then
-				interface=${new_interface}
+			if new_interface=$(resolve_interface_name "${original_interface}" "${new_interface}" "monitor" "${original_phy}" "${original_mac}"); then
+				interface="${new_interface}"
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+				ifacemode="Monitor"
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
+			else
+				if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
+				fi
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
 			fi
 		else
 			if set_mode_without_airmon "${interface}" "monitor"; then
@@ -1904,9 +2083,15 @@ function managed_option() {
 
 	debug_print
 
+	local original_phy
+	local original_mac
+
 	if ! check_to_set_managed "${1}"; then
 		return 1
 	fi
+
+	original_phy=$(physical_interface_finder "${1}")
+	original_mac=$(cat "/sys/class/net/${1}/address" 2> /dev/null)
 
 	disable_rfkill
 
@@ -1925,18 +2110,34 @@ function managed_option() {
 			fi
 		else
 			new_interface=$(${airmon} stop "${1}" 2> /dev/null | grep station | head -n 1)
-			ifacemode="Managed"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface=${new_interface}
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-				else
-					interface="${new_interface}"
+			if ! new_interface=$(resolve_interface_name "${1}" "${new_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
 				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+			ifacemode="Managed"
+
+			if [ "${interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -1953,9 +2154,24 @@ function managed_option() {
 			new_secondary_interface=$(${airmon} stop "${1}" 2> /dev/null | grep station | head -n 1)
 			[[ ${new_secondary_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_secondary_interface="${BASH_REMATCH[1]}"
 
+			if ! new_secondary_interface=$(resolve_interface_name "${1}" "${new_secondary_interface}" "managed" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					secondary_wifi_interface=""
+					secondary_phy_interface=""
+					register_selected_interface "secondary" "" ""
+				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 855 "red"
+				language_strings "${language}" 115 "read"
+				return 1
+			fi
+
 			if [ "${1}" != "${new_secondary_interface}" ]; then
 				secondary_wifi_interface=${new_secondary_interface}
+				secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 				current_iface_on_messages="${secondary_wifi_interface}"
+				register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}"
 				echo
 				language_strings "${language}" 15 "yellow"
 			fi
@@ -1973,9 +2189,15 @@ function monitor_option() {
 
 	debug_print
 
+	local original_phy
+	local original_mac
+
 	if ! check_to_set_monitor "${1}"; then
 		return 1
 	fi
+
+	original_phy=$(physical_interface_finder "${1}")
+	original_mac=$(cat "/sys/class/net/${1}/address" 2> /dev/null)
 
 	disable_rfkill
 
@@ -2007,18 +2229,34 @@ function monitor_option() {
 				return 1
 			fi
 
-			ifacemode="Monitor"
 			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface="${new_interface}"
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-				else
-					interface="${new_interface}"
+			if ! new_interface=$(resolve_interface_name "${1}" "${new_interface}" "monitor" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					ifacemode=""
+					register_selected_interface "main" "" ""
 				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
+				if [ -z "${interface}" ]; then
+					select_interface
+				fi
+				return 1
+			fi
+			ifacemode="Monitor"
+
+			if [ "${interface}" != "${new_interface}" ]; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+				interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
 				current_iface_on_messages="${interface}"
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 				echo
 				language_strings "${language}" 21 "yellow"
 			fi
@@ -2036,6 +2274,7 @@ function monitor_option() {
 			run_airmon_check_kill "legacy" "show_message"
 
 			secondary_interface_airmon_compatible=1
+			desired_interface_name=""
 			new_secondary_interface=$(${airmon} start "${1}" 2> /dev/null | grep monitor)
 			[[ ${new_secondary_interface} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
 
@@ -2048,9 +2287,24 @@ function monitor_option() {
 
 			[[ ${new_secondary_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_secondary_interface="${BASH_REMATCH[1]}"
 
+			if ! new_secondary_interface=$(resolve_interface_name "${1}" "${new_secondary_interface}" "monitor" "${original_phy}" "${original_mac}"); then
+				if ! ip link show dev "${1}" > /dev/null 2>&1; then
+					secondary_wifi_interface=""
+					secondary_phy_interface=""
+					register_selected_interface "secondary" "" ""
+				fi
+				current_iface_on_messages="${1}"
+				echo
+				language_strings "${language}" 854 "red"
+				language_strings "${language}" 115 "read"
+				return 1
+			fi
+
 			if [ "${1}" != "${new_secondary_interface}" ]; then
 				secondary_wifi_interface="${new_secondary_interface}"
+				secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 				current_iface_on_messages="${secondary_wifi_interface}"
+				register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}"
 				echo
 				language_strings "${language}" 21 "yellow"
 			fi
@@ -3203,6 +3457,7 @@ function select_secondary_interface() {
 			secondary_wifi_interface="${secondary_ifaces[0]}"
 			secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 			check_interface_supported_bands "${secondary_phy_interface}" "secondary_wifi_interface"
+			register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}" "check_conflicts"
 		elif [ "${1}" = "internet" ]; then
 			internet_interface="${secondary_ifaces[0]}"
 		fi
@@ -3302,6 +3557,7 @@ function select_secondary_interface() {
 					secondary_wifi_interface=${item2}
 					secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
 					check_interface_supported_bands "${secondary_phy_interface}" "secondary_wifi_interface"
+					register_selected_interface "secondary" "${secondary_wifi_interface}" "${secondary_phy_interface}" "check_conflicts"
 				elif [ "${1}" = "internet" ]; then
 					internet_interface=${item2}
 				fi
@@ -3427,6 +3683,11 @@ function select_interface() {
 					standard_80211ax=0
 					standard_80211be=0
 					wifi_standard_short=""
+				fi
+				if check_interface_wifi "${interface}"; then
+					register_selected_interface "main" "${interface}" "${phy_interface}" "check_conflicts"
+				else
+					register_selected_interface "main" "" ""
 				fi
 				break
 			fi
@@ -5480,6 +5741,11 @@ function launch_dos_pursuit_mode_attack() {
 
 	debug_print
 
+	local escaped_essid
+	local grep_escaped_essid
+	printf -v escaped_essid "%q" "${essid}"
+	grep_escaped_essid=$(printf "%s" "${essid}" | sed 's/[][\\.^$*]/\\&/g')
+
 	rm -rf "${tmpdir}dos_pm"* > /dev/null 2>&1
 	rm -rf "${tmpdir}nws"* > /dev/null 2>&1
 	rm -rf "${tmpdir}clts.csv" > /dev/null 2>&1
@@ -5539,9 +5805,9 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			iw dev "${interface_pursuit_mode_deauth}" set channel "${channel}" > /dev/null 2>&1
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} b -n '${essid}' -c ${channel} -s 1000 -h" "${1} (DoS Pursuit mode)"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${escaped_essid} -c ${channel} -s 1000 -h" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${essid} -c ${channel} -s 1000 -h"
+				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${grep_escaped_essid} -c ${channel} -s 1000 -h"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -5551,9 +5817,9 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			iw dev "${interface_pursuit_mode_deauth}" set channel "${channel}" > /dev/null 2>&1
-			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e '${essid}' -c ${channel}" "${1} (DoS Pursuit mode)"
+			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${escaped_essid} -c ${channel}" "${1} (DoS Pursuit mode)"
 			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
-				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
+				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${grep_escaped_essid} -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
 			fi
@@ -5653,6 +5919,9 @@ function launch_dos_pursuit_mode_attack() {
 	for item in "${dos_pursuit_mode_pids[@]}"; do
 		echo "${item}" >> "${processes_file}"
 	done
+	if [ -n "${dos_pursuit_mode_ap_pid}" ]; then
+		echo "${dos_pursuit_mode_ap_pid}" >> "${processes_file}"
+	fi
 }
 
 #Parse and control pids for DoS pursuit mode attack
@@ -5707,7 +5976,7 @@ pid_control_pursuit_mode() {
 
 						update_dos_pursuit_mode_hostapd_config
 
-						kill_dos_pursuit_mode_processes
+						kill_dos_pursuit_mode_processes "include_ap"
 						launch_dos_pursuit_mode_attack "${1}" "relaunch"
 						dos_pursuit_mode_relaunched=1
 						break
@@ -5720,9 +5989,16 @@ pid_control_pursuit_mode() {
 			fi
 		fi
 
-		dos_attack_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_attack_pid}$" 2> /dev/null)
-		if [ -z "${dos_attack_alive}" ]; then
-			break
+		if [[ -n "${enterprise_mode}" ]] || [[ -n "${et_mode}" ]]; then
+			dos_scan_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_scan_pid}$" 2> /dev/null)
+			if [ -z "${dos_scan_alive}" ]; then
+				break
+			fi
+		else
+			dos_attack_alive=$(ps uax | awk '{print $2}' | grep -E "^${dos_pursuit_mode_attack_pid}$" 2> /dev/null)
+			if [ -z "${dos_attack_alive}" ]; then
+				break
+			fi
 		fi
 	done
 
@@ -5795,6 +6071,11 @@ function exec_wdsconfusion() {
 
 	debug_print
 
+	local escaped_essid
+	local grep_escaped_essid
+	printf -v escaped_essid "%q" "${essid}"
+	grep_escaped_essid=$(printf "%s" "${essid}" | sed 's/[][\\.^$*]/\\&/g')
+
 	echo
 	language_strings "${language}" 91 "title"
 	language_strings "${language}" 32 "green"
@@ -5814,8 +6095,8 @@ function exec_wdsconfusion() {
 		language_strings "${language}" 33 "yellow"
 		language_strings "${language}" 4 "read"
 		recalculate_windows_sizes
-		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e '${essid}' -c ${channel}" "wids / wips / wds confusion attack" "active"
-		wait_for_process "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack"
+		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e ${escaped_essid} -c ${channel}" "wids / wips / wds confusion attack" "active"
+		wait_for_process "${mdk_command} ${interface} w -e ${grep_escaped_essid} -c ${channel}" "wids / wips / wds confusion attack"
 	fi
 }
 
@@ -5823,6 +6104,11 @@ function exec_wdsconfusion() {
 function exec_beaconflood() {
 
 	debug_print
+
+	local escaped_essid
+	local grep_escaped_essid
+	printf -v escaped_essid "%q" "${essid}"
+	grep_escaped_essid=$(printf "%s" "${essid}" | sed 's/[][\\.^$*]/\\&/g')
 
 	echo
 	language_strings "${language}" 92 "title"
@@ -5843,8 +6129,8 @@ function exec_beaconflood() {
 		language_strings "${language}" 33 "yellow"
 		language_strings "${language}" 4 "read"
 		recalculate_windows_sizes
-		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"beacon flood attack\"" "${mdk_command} ${interface} b -n '${essid}' -c ${channel} -s 1000 -h" "beacon flood attack" "active"
-		wait_for_process "${mdk_command} ${interface} b -n ${essid} -c ${channel} -s 1000 -h" "beacon flood attack"
+		manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"beacon flood attack\"" "${mdk_command} ${interface} b -n ${escaped_essid} -c ${channel} -s 1000 -h" "beacon flood attack" "active"
+		wait_for_process "${mdk_command} ${interface} b -n ${grep_escaped_essid} -c ${channel} -s 1000 -h" "beacon flood attack"
 	fi
 }
 
@@ -7106,6 +7392,8 @@ function initialize_menu_and_print_selections() {
 			et_mode=""
 			et_processes=()
 			secondary_wifi_interface=""
+			secondary_phy_interface=""
+			register_selected_interface "secondary" "" ""
 			et_attack_adapter_prerequisites_ok=0
 			advanced_captive_portal=0
 			print_iface_selected
@@ -7118,6 +7406,8 @@ function initialize_menu_and_print_selections() {
 			et_mode=""
 			et_processes=()
 			secondary_wifi_interface=""
+			secondary_phy_interface=""
+			register_selected_interface "secondary" "" ""
 			et_enterprise_attack_adapter_prerequisites_ok=0
 			print_iface_selected
 			print_all_target_vars
@@ -7215,39 +7505,45 @@ function control_routing_status() {
 	if [ "${1}" = "start" ]; then
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && etset="${BASH_REMATCH[1]}" && agpid="${BASH_REMATCH[2]}"
-			if [ -z "${saved_routing_status_found}" ]; then
-				[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && saved_routing_status_found="${BASH_REMATCH[3]}"
-			fi
+			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01]):main_iface=([^:]+):main_phy=([^:]+):secondary_iface=([^:]+):secondary_phy=([^:]+)$ ]]; then
+				agpid="${BASH_REMATCH[1]}"
+				etset="${BASH_REMATCH[2]}"
+				if [[ -z "${saved_routing_status_found}" ]] && [[ "${BASH_REMATCH[3]}" != "-" ]]; then
+					saved_routing_status_found="${BASH_REMATCH[3]}"
+				fi
 
-			if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" != "et" ]]; then
-				sed -ri "s:^(${agpid}):et\1:" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+				if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" -eq 0 ]]; then
+					sed -ri "s|^(${agpid}:)et0:|\1et1:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+				fi
 			fi
 		done
 
 		if [ -z "${saved_routing_status_found}" ]; then
 			original_routing_status=$(cat /proc/sys/net/ipv4/ip_forward)
-			sed -ri "s:^(et${agpid_to_use})$:\1rs${original_routing_status}:" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+			sed -ri "s|^(${agpid_to_use}:et1:)rs-:|\1rs${original_routing_status}:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
 		fi
 	else
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && etset="${BASH_REMATCH[1]}" && agpid="${BASH_REMATCH[2]}"
-			if [ -z "${saved_routing_status_found}" ]; then
-				[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && saved_routing_status_found="${BASH_REMATCH[3]}"
-			fi
+			if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01]):main_iface=([^:]+):main_phy=([^:]+):secondary_iface=([^:]+):secondary_phy=([^:]+)$ ]]; then
+				agpid="${BASH_REMATCH[1]}"
+				etset="${BASH_REMATCH[2]}"
+				if [[ -z "${saved_routing_status_found}" ]] && [[ "${BASH_REMATCH[3]}" != "-" ]]; then
+					saved_routing_status_found="${BASH_REMATCH[3]}"
+				fi
 
-			if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" = "et" ]]; then
-				sed -ri "s:^(et${agpid}):${agpid}:" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
-			fi
+				if [[ "${agpid_to_use}" = "${agpid}" ]] && [[ "${etset}" -eq 1 ]]; then
+					sed -ri "s|^(${agpid}:)et1:|\1et0:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+				fi
 
-			if [[ "${agpid_to_use}" != "${agpid}" ]] && [[ "${etset}" = "et" ]]; then
-				et_still_running=1
+				if [[ "${agpid_to_use}" != "${agpid}" ]] && [[ "${etset}" -eq 1 ]]; then
+					et_still_running=1
+				fi
 			fi
 		done
 
 		if [[ -n "${saved_routing_status_found}" ]] && [[ "${et_still_running}" -eq 0 ]]; then
-			original_routing_status="${saved_routing_status_found//[^0-9]/}"
+			original_routing_status="${saved_routing_status_found}"
 			echo "${original_routing_status}" > /proc/sys/net/ipv4/ip_forward 2> /dev/null
 		fi
 	fi
@@ -7733,10 +8029,12 @@ function create_instance_orchestrator_file() {
 
 		readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 		for item in "${AIRGEDDON_PIDS[@]}"; do
-			[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && agpid="${BASH_REMATCH[2]}"
-			if ps -p "${agpid}" > /dev/null 2>&1; then
-				airgeddon_pid_alive=1
-				break
+			if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
+				agpid="${BASH_REMATCH[1]}"
+				if ps -p "${agpid}" > /dev/null 2>&1; then
+					airgeddon_pid_alive=1
+					break
+				fi
 			fi
 		done
 
@@ -7763,11 +8061,110 @@ function register_instance_pid() {
 	debug_print
 
 	if [ -f "${system_tmpdir}${ag_orchestrator_file}" ]; then
-		if ! grep -q "${agpid_to_use}" "${system_tmpdir}${ag_orchestrator_file}"; then
+		if ! grep -Eq "^${agpid_to_use}:" "${system_tmpdir}${ag_orchestrator_file}"; then
 			{
-			echo "${agpid_to_use}"
+			echo "${agpid_to_use}:et0:rs-:main_iface=-:main_phy=-:secondary_iface=-:secondary_phy=-"
 			} >> "${system_tmpdir}${ag_orchestrator_file}"
 		fi
+	fi
+}
+
+#Update selected wireless interface data in the orchestrator file
+function update_orchestrator_interface() {
+
+	debug_print
+
+	local interface_role="${1}"
+	local interface_name="${2}"
+	local interface_phy="${3}"
+
+	if [[ -z "${interface_name}" ]] || [[ -z "${interface_phy}" ]]; then
+		interface_name="-"
+		interface_phy="-"
+	fi
+
+	interface_name="${interface_name//\\/\\\\}"
+	interface_name="${interface_name//&/\\&}"
+	interface_name="${interface_name//|/\\|}"
+
+	case "${interface_role}" in
+		"main")
+			sed -ri "s|^(${agpid_to_use}:et[01]:rs[-01]:)main_iface=[^:]+:main_phy=[^:]+:|\1main_iface=${interface_name}:main_phy=${interface_phy}:|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+		;;
+		"secondary")
+			sed -ri "s|^(${agpid_to_use}:et[01]:rs[-01]:main_iface=[^:]+:main_phy=[^:]+:)secondary_iface=[^:]+:secondary_phy=[^:]+$|\1secondary_iface=${interface_name}:secondary_phy=${interface_phy}|" "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null
+		;;
+	esac
+}
+
+#Warn if a wireless interface is selected in another airgeddon instance
+function check_interface_multi_instance_conflict() {
+
+	debug_print
+
+	local selected_interface_phy="${1}"
+	local conflicting_interface_name=""
+	local conflicting_interface_phy=""
+	local conflicting_interface_role=""
+	local conflicting_instance_found=0
+	local agpid=""
+	local main_interface_name=""
+	local main_interface_phy=""
+	local secondary_interface_name=""
+	local secondary_interface_phy=""
+
+	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
+	for item in "${AIRGEDDON_PIDS[@]}"; do
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=([^:]+):main_phy=([^:]+):secondary_iface=([^:]+):secondary_phy=([^:]+)$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			main_interface_name="${BASH_REMATCH[3]}"
+			main_interface_phy="${BASH_REMATCH[4]}"
+			secondary_interface_name="${BASH_REMATCH[5]}"
+			secondary_interface_phy="${BASH_REMATCH[6]}"
+
+			if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				if [ "${selected_interface_phy}" = "${main_interface_phy}" ]; then
+					conflicting_interface_name="${main_interface_name}"
+					conflicting_interface_phy="${main_interface_phy}"
+					conflicting_interface_role=$(replace_string_vars "${language}" 849)
+					echo
+					language_strings "${language}" 851 "yellow"
+					conflicting_instance_found=1
+				fi
+
+				if [ "${selected_interface_phy}" = "${secondary_interface_phy}" ]; then
+					conflicting_interface_name="${secondary_interface_name}"
+					conflicting_interface_phy="${secondary_interface_phy}"
+					conflicting_interface_role=$(replace_string_vars "${language}" 850)
+					echo
+					language_strings "${language}" 851 "yellow"
+					conflicting_instance_found=1
+				fi
+			fi
+		fi
+	done
+
+	if [ "${conflicting_instance_found}" -eq 1 ]; then
+		echo
+		language_strings "${language}" 852 "yellow"
+		language_strings "${language}" 115 "read"
+	fi
+}
+
+#Register a selected wireless interface and optionally check for multi-instance conflicts
+function register_selected_interface() {
+
+	debug_print
+
+	local interface_role="${1}"
+	local interface_name="${2}"
+	local interface_phy="${3}"
+	local check_conflicts="${4}"
+
+	update_orchestrator_interface "${interface_role}" "${interface_name}" "${interface_phy}"
+
+	if [[ "${check_conflicts}" = "check_conflicts" ]] && [[ -n "${interface_phy}" ]]; then
+		check_interface_multi_instance_conflict "${interface_phy}"
 	fi
 }
 
@@ -7780,9 +8177,11 @@ function detect_running_instances() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && agpid="${BASH_REMATCH[2]}"
-		if [[ "${agpid}" != "${BASHPID}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
-			airgeddon_running_instances_counter=$((airgeddon_running_instances_counter + 1))
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			if [[ "${agpid}" != "${BASHPID}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				airgeddon_running_instances_counter=$((airgeddon_running_instances_counter + 1))
+			fi
 		fi
 	done
 
@@ -7798,11 +8197,12 @@ function is_first_routing_modifier_airgeddon_instance() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat <"${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)rs[0-1]$ ]] && agpid="${BASH_REMATCH[2]}"
-
-		if [ "${agpid}" = "${BASHPID}" ]; then
-			clean_all_iptables_nftables=0
-			return 0
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs[01]:main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			if [ "${agpid}" = "${BASHPID}" ]; then
+				clean_all_iptables_nftables=0
+				return 0
+			fi
 		fi
 	done
 
@@ -7818,10 +8218,11 @@ function is_last_airgeddon_instance() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat <"${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && agpid="${BASH_REMATCH[2]}"
-
-		if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
-			return 1
+		if [[ "${item}" =~ ^([0-9]+):et[01]:rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			if [[ "${agpid}" != "${agpid_to_use}" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				return 1
+			fi
 		fi
 	done
 
@@ -11245,6 +11646,11 @@ function exec_enterprise_attack() {
 
 	debug_print
 
+	local original_interface="${interface}"
+	local original_phy="${phy_interface}"
+	local original_mac
+	original_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+
 	rm -rf "${tmpdir}${control_enterprise_file}" > /dev/null 2>&1
 	rm -rf "${tmpdir}${enterprisedir}" > /dev/null 2>&1
 	mkdir "${tmpdir}${enterprisedir}" > /dev/null 2>&1
@@ -11274,27 +11680,30 @@ function exec_enterprise_attack() {
 
 				local tmp_interface
 				tmp_interface=$(grep -E "^interface=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_interface}" ]; then
+				if tmp_interface=$(resolve_interface_name "${original_interface}" "${tmp_interface}" "${et_initial_state}" "${original_phy}" "${original_mac}"); then
 					interface="${tmp_interface}"
+					phy_interface=$(physical_interface_finder "${interface}")
+					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+					interface_mac=$(cat "/sys/class/net/${interface}/address" 2> /dev/null)
+					current_iface_on_messages="${interface}"
+					ifacemode="${et_initial_state}"
+				else
+					if ! ip link show dev "${original_interface}" > /dev/null 2>&1; then
+						interface=""
+						phy_interface=""
+						interface_mac=""
+						ifacemode=""
+					fi
+					register_selected_interface "main" "${interface}" "${phy_interface}"
+					echo
+					language_strings "${language}" 855 "red"
+					language_strings "${language}" 115 "read"
+					if [ -z "${interface}" ]; then
+						select_interface
+					fi
 				fi
 
-				local tmp_phy_interface
-				tmp_phy_interface=$(grep -E "^phy_interface=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_phy_interface}" ]; then
-					phy_interface="${tmp_phy_interface}"
-				fi
-
-				local tmp_current_iface_on_messages
-				tmp_current_iface_on_messages=$(grep -E "^current_iface_on_messages=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_current_iface_on_messages}" ]; then
-					current_iface_on_messages="${tmp_current_iface_on_messages}"
-				fi
-
-				local tmp_ifacemode
-				tmp_ifacemode=$(grep -E "^ifacemode=" "${tmpdir}${enterprisedir}returning_vars.txt" 2> /dev/null | awk -F "=" '{print $2}')
-				if [ -n "${tmp_ifacemode}" ]; then
-					ifacemode="${tmp_ifacemode}"
-				fi
+				register_selected_interface "main" "${interface}" "${phy_interface}"
 
 				rm -rf "${tmpdir}${enterprisedir}returning_vars.txt" > /dev/null 2>&1
 			fi
@@ -11935,13 +12344,12 @@ function launch_fake_ap() {
 		et_processes+=($!)
 		if [ "${dos_pursuit_mode}" -eq 1 ]; then
 			dos_pursuit_mode_ap_pid=$!
-			dos_pursuit_mode_pids+=("${dos_pursuit_mode_ap_pid}")
 		fi
 	else
 		get_tmux_process_id "${command}"
 		et_processes+=("${global_process_pid}")
 		if [ "${dos_pursuit_mode}" -eq 1 ]; then
-			dos_pursuit_mode_pids+=("${global_process_pid}")
+			dos_pursuit_mode_ap_pid="${global_process_pid}"
 		fi
 		global_process_pid=""
 	fi
@@ -12767,6 +13175,8 @@ function set_enterprise_control_script() {
 		#!/usr/bin/env bash
 
 		interface="${interface}"
+		phy_interface="${phy_interface}"
+		interface_mac="$(cat "/sys/class/net/${interface}/address" 2> /dev/null)"
 		et_initial_state="${et_initial_state}"
 		interface_airmon_compatible=${interface_airmon_compatible}
 		iface_monitor_et_deauth="${iface_monitor_et_deauth}"
@@ -12781,8 +13191,17 @@ function set_enterprise_control_script() {
 		done_msg="${yellow_color}${enterprise_texts[${language},9]}${normal_color}"
 		log_reminder_msg="${pink_color}${enterprise_texts[${language},10]}: [${normal_color}${enterprise_completepath}${pink_color}]${normal_color}"
 
+		$(declare -f debug_print)
+		$(declare -f resolve_interface_name)
+
 		#Restore interface to its original state
 		function restore_interface() {
+
+			local original_interface="\${interface}"
+			local original_phy="\${phy_interface}"
+			local original_mac="\${interface_mac}"
+			local restored_mode
+			local new_interface="\${interface}"
 
 			if hash rfkill 2> /dev/null; then
 				rfkill unblock all > /dev/null 2>&1
@@ -12794,24 +13213,38 @@ function set_enterprise_control_script() {
 				ip link set "\${interface}" down > /dev/null 2>&1
 				iw "\${interface}" set type managed > /dev/null 2>&1
 				ip link set "\${interface}" up > /dev/null 2>&1
-				ifacemode="Managed"
 			else
 				if [ "\${interface_airmon_compatible}" -eq 1 ]; then
 					new_interface=\$(\${airmon} start "\${interface}" 2> /dev/null | grep monitor)
 
 					[[ \${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="\${BASH_REMATCH[1]}"
-					if [ "\${interface}" != "\${new_interface}" ]; then
-						interface=\${new_interface}
-						phy_interface=\$(basename "\$(readlink "/sys/class/net/\${interface}/phy80211")" 2> /dev/null)
-						current_iface_on_messages="\${interface}"
-					fi
 				else
 					ip link set "\${interface}" down > /dev/null 2>&1
 					iw "\${interface}" set monitor control > /dev/null 2>&1
 					ip link set "\${interface}" up > /dev/null 2>&1
 				fi
-				ifacemode="Monitor"
 			fi
+
+			if new_interface=\$(resolve_interface_name "\${original_interface}" "\${new_interface}" "\${et_initial_state}" "\${original_phy}" "\${original_mac}"); then
+				interface="\${new_interface}"
+				phy_interface=\$(basename "\$(readlink "/sys/class/net/\${interface}/phy80211")" 2> /dev/null)
+				interface_mac=\$(cat "/sys/class/net/\${interface}/address" 2> /dev/null)
+				current_iface_on_messages="\${interface}"
+				ifacemode="\${et_initial_state}"
+			else
+				if ! ip link show dev "\${original_interface}" > /dev/null 2>&1; then
+					interface=""
+					phy_interface=""
+					interface_mac=""
+					current_iface_on_messages=""
+					ifacemode=""
+				else
+					restored_mode=\$(iw "\${interface}" info 2> /dev/null | awk '\$1 == "type" {print \$2; exit}')
+					ifacemode="\${restored_mode^}"
+				fi
+				return 1
+			fi
+			return 0
 		}
 
 		#Save some vars to a file to get read from main script
@@ -13679,23 +14112,43 @@ function set_captive_portal_page() {
 		echo -e '\t\t\t<center><p>'
 
 		POST_DATA=\$(cat /dev/stdin)
+		password=""
 		if [[ "\${REQUEST_METHOD}" = "POST" ]] && [[ "\${CONTENT_LENGTH}" -gt 0 ]]; then
 			POST_DATA=\${POST_DATA#*=}
-			password=\${POST_DATA//+/ }
-			password=\${password//[*&\/?<>]}
-			password=\$(printf '%b' "\${password//%/\\\x}")
-			password=\${password//[*&\/?<>]}
+			POST_DATA=\${POST_DATA%%&*}
+			for ((i=0; i < \${#POST_DATA}; i++)); do
+				character=\${POST_DATA:i:1}
+				case "\${character}" in
+					"+")
+						password+=" "
+					;;
+					"%")
+						hexadecimal=\${POST_DATA:i+1:2}
+						if [[ ! "\${hexadecimal}" =~ ^[[:xdigit:]]{2}$ ]] || [[ "\${hexadecimal}" = "00" ]]; then
+							password=""
+							break
+						fi
+						printf -v character "%b" "\\x\${hexadecimal}"
+						password+="\${character}"
+						i=\$((i + 2))
+					;;
+					*)
+						password+="\${character}"
+					;;
+				esac
+			done
+			[[ "\${password}" =~ [[:cntrl:]] ]] && password=""
 		fi
 
 		if [[ "\${#password}" -ge 8 ]] && [[ "\${#password}" -le 63 ]]; then
 			rm -rf "${tmpdir}${webdir}${currentpassfile}" > /dev/null 2>&1
-			echo "\${password}" > "${tmpdir}${webdir}${currentpassfile}"
+			printf "%s\n" "\${password}" > "${tmpdir}${webdir}${currentpassfile}"
 			if aircrack-ng -a 2 -b ${bssid} -w "${tmpdir}${webdir}${currentpassfile}" "${et_handshake}" | grep "KEY FOUND!" > /dev/null; then
 				touch "${tmpdir}${webdir}${et_successfile}" > /dev/null 2>&1
 				echo '${et_misc_texts[${captive_portal_language},18]}'
 				et_successful=1
 			else
-				echo "\${password}" >> "${tmpdir}${webdir}${attemptsfile}"
+				printf "%s\n" "\${password}" >> "${tmpdir}${webdir}${attemptsfile}"
 				echo '${et_misc_texts[${captive_portal_language},17]}'
 				et_successful=0
 			fi
@@ -14307,6 +14760,10 @@ function kill_et_windows() {
 
 	if [ "${dos_pursuit_mode}" -eq 1 ]; then
 		kill_dos_pursuit_mode_processes
+		readarray -t DOS_PURSUIT_ET_PROCESSES < <(cat < "${tmpdir}${et_processesfile}" 2> /dev/null)
+		for item in "${DOS_PURSUIT_ET_PROCESSES[@]}"; do
+			kill_pid_and_children_recursive "${item}"
+		done
 	fi
 
 	for item in "${et_processes[@]}"; do
@@ -14328,6 +14785,11 @@ function kill_et_windows() {
 function kill_dos_pursuit_mode_processes() {
 
 	debug_print
+
+	if [[ "${1}" = "include_ap" ]] && [[ -n "${dos_pursuit_mode_ap_pid}" ]]; then
+		kill_pid_and_children_recursive "${dos_pursuit_mode_ap_pid}"
+		dos_pursuit_mode_ap_pid=""
+	fi
 
 	for item in "${dos_pursuit_mode_pids[@]}"; do
 		kill_pid_and_children_recursive "${item}"
@@ -16661,7 +17123,9 @@ function wpa3_downgrade_prerequisites() {
 	echo
 	language_strings "${language}" 325 "blue"
 
-	prepare_wpa3_downgrade_interface
+	if ! prepare_wpa3_downgrade_interface; then
+		return 1
+	fi
 	exec_wpa3_downgrade_attack
 }
 
@@ -16925,7 +17389,10 @@ function et_prerequisites() {
 	echo
 	language_strings "${language}" 296 "yellow"
 	language_strings "${language}" 115 "read"
-	prepare_et_interface
+
+	if ! prepare_et_interface; then
+		return 1
+	fi
 
 	rm -rf "${tmpdir}${channelfile}" > /dev/null 2>&1
 	echo "${channel}" > "${tmpdir}${channelfile}"
@@ -17241,7 +17708,13 @@ function credits_option() {
 	language_strings "${language}" 227 "pink"
 	echo
 	language_strings "${language}" 702 "blue"
-	for i in "${sponsors[@]}"; do
+	for i in "${current_sponsors[@]}"; do
+		echo -ne "${pink_color}\"${i}\" ${normal_color}"
+	done
+	echo
+	echo
+	language_strings "${language}" 853 "blue"
+	for i in "${past_sponsors[@]}"; do
 		echo -ne "${pink_color}\"${i}\" ${normal_color}"
 	done
 	echo
@@ -17499,11 +17972,11 @@ function hardcore_exit() {
 		eval "${networkmanager_cmd} > /dev/null 2>&1"
 	fi
 
-	clean_tmpfiles "exit_script"
-
 	if [ "${routing_modified}" -eq 1 ]; then
 		clean_routing_rules
 	fi
+
+	clean_tmpfiles "exit_script"
 
 	if [[ "${spoofed_mac}" -eq 1 ]] && [[ "${ifacemode}" = "Managed" ]]; then
 		language_strings "${language}" 418 "multiline"
@@ -18567,9 +19040,12 @@ function is_other_evil_twin_instance_running() {
 
 	readarray -t AIRGEDDON_PIDS 2> /dev/null < <(cat < "${system_tmpdir}${ag_orchestrator_file}" 2> /dev/null)
 	for item in "${AIRGEDDON_PIDS[@]}"; do
-		[[ "${item}" =~ ^(et)?([0-9]+)(rs[0-1])?$ ]] && etset="${BASH_REMATCH[1]}" && agpid="${BASH_REMATCH[2]}"
-		if [[ "${agpid}" != "${agpid_to_use}" ]] && [[ "${etset}" = "et" ]] && ps -p "${agpid}" > /dev/null 2>&1; then
-			return 0
+		if [[ "${item}" =~ ^([0-9]+):et([01]):rs(-|[01]):main_iface=[^:]+:main_phy=[^:]+:secondary_iface=[^:]+:secondary_phy=[^:]+$ ]]; then
+			agpid="${BASH_REMATCH[1]}"
+			etset="${BASH_REMATCH[2]}"
+			if [[ "${agpid}" != "${agpid_to_use}" ]] && [[ "${etset}" -eq 1 ]] && ps -p "${agpid}" > /dev/null 2>&1; then
+				return 0
+			fi
 		fi
 	done
 
@@ -19881,6 +20357,7 @@ function initialize_tmux() {
 function start_airgeddon_from_tmux() {
 
 	debug_print
+	local tmux_handoff_rc
 
 	tmux rename-window -t "${session_name}" "${tmux_main_window}"
 	tmux send-keys -t "${session_name}:${tmux_main_window}" "clear;cd ${scriptfolder};bash ${scriptname} \"true\" \"${airgeddon_uid}\"" ENTER
@@ -19889,6 +20366,11 @@ function start_airgeddon_from_tmux() {
 		tmux attach -t "${session_name}"
 	else
 		tmux switch-client -t "${session_name}"
+	fi
+	tmux_handoff_rc=$?
+	if [ "${tmux_handoff_rc}" -ne 0 ]; then
+		tmux kill-session -t "${session_name}" > /dev/null 2>&1
+		return "${tmux_handoff_rc}"
 	fi
 }
 
